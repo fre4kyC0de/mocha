@@ -34,6 +34,7 @@
 #include "dynamic_libs/sys_functions.h"
 #include "dynamic_libs/vpad_functions.h"
 #include "dynamic_libs/socket_functions.h"
+#include "../libs/libc.h"
 #include "cfw_config.h"
 
 #define MAX_CONFIG_SETTINGS_EXPERT          9
@@ -101,7 +102,7 @@ int ShowMenu(cfw_config_t * currentConfig)
     OSScreenFlipBuffersEx(1);
 
     VPADData vpad;
-    int vpadError;
+    long int vpadError;
     int x_offset = -2;
     int initScreen = 1;
     int selected = 0;

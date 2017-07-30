@@ -24,7 +24,7 @@
 #include "common/common.h"
 #include "os_functions.h"
 
-unsigned int coreinit_handle __attribute__((section(".data"))) = 0;
+unsigned long int coreinit_handle __attribute__((section(".data"))) = 0;
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Lib handle functions

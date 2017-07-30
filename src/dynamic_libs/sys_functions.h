@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-extern unsigned int sysapp_handle;
+extern unsigned long int sysapp_handle;
 
 void InitSysFunctionPointers(void);
 void InitAcquireSys(void);

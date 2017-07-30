@@ -65,7 +65,7 @@ extern "C" {
 #define OS_MUTEX_SIZE                   44
 
 /* Handle for coreinit */
-extern unsigned int coreinit_handle;
+extern unsigned long int coreinit_handle;
 void InitOSFunctionPointers(void);
 void InitAcquireOS(void);
 

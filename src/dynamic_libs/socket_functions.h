@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-extern unsigned int nsysnet_handle;
+extern unsigned long int nsysnet_handle;
 
 #include <gctypes.h>
 

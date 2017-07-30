@@ -28,8 +28,8 @@
 extern "C" {
 #endif
 
-extern unsigned int vpad_handle;
-extern unsigned int vpadbase_handle;
+extern unsigned long int vpad_handle;
+extern unsigned long int vpadbase_handle;
 
 #include <gctypes.h>
 

@@ -26,7 +26,7 @@
 
 u32 hostIpAddress = 0;
 
-unsigned int nsysnet_handle __attribute__((section(".data"))) = 0;
+unsigned long int nsysnet_handle __attribute__((section(".data"))) = 0;
 
 EXPORT_DECL(void, socket_lib_init, void);
 EXPORT_DECL(int, socket, int domain, int type, int protocol);

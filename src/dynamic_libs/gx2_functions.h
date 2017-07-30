@@ -30,7 +30,7 @@ extern "C" {
 
 #include "gx2_types.h"
 
-extern unsigned int gx2_handle;
+extern unsigned long int gx2_handle;
 
 void InitGX2FunctionPointers(void);
 void InitAcquireGX2(void);
