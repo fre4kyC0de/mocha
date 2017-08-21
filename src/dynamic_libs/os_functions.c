@@ -24,36 +24,48 @@
 #include "common/common.h"
 #include "os_functions.h"
 
-unsigned long int coreinit_handle __attribute__((section(".data"))) = 0;
+u32 coreinit_handle __attribute__((section(".data"))) = 0;
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Lib handle functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-EXPORT_DECL(int, OSDynLoad_Acquire, const char* rpl, u32 *handle);
-EXPORT_DECL(int, OSDynLoad_FindExport, u32 handle, int isdata, const char *symbol, void *address);
+EXPORT_DECL(s32, OSDynLoad_Acquire, const char* rpl, u32 *handle);
+EXPORT_DECL(s32, OSDynLoad_FindExport, u32 handle, s32 isdata, const char *symbol, void *address);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Security functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-EXPORT_DECL(int, OSGetSecurityLevel, void);
-EXPORT_DECL(int, OSForceFullRelaunch, void);
+EXPORT_DECL(s32, OSGetSecurityLevel, void);
+EXPORT_DECL(s32, OSForceFullRelaunch, void);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Thread functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-EXPORT_DECL(int, OSCreateThread, void *thread, s32 (*callback)(s32, void*), s32 argc, void *args, u32 stack, u32 stack_size, s32 priority, u32 attr);
-EXPORT_DECL(int, OSResumeThread, void *thread);
-EXPORT_DECL(int, OSSuspendThread, void *thread);
-EXPORT_DECL(int, OSIsThreadTerminated, void *thread);
-EXPORT_DECL(int, OSIsThreadSuspended, void *thread);
-EXPORT_DECL(int, OSSetThreadPriority, void * thread, int priority);
-EXPORT_DECL(int, OSJoinThread, void * thread, int * ret_val);
-EXPORT_DECL(void, OSDetachThread, void * thread);
+EXPORT_DECL(s32, OSCreateThread, OSThread *thread, s32 (*callback)(s32, void*), s32 argc, void *args, u32 stack, u32 stack_size, s32 priority, u32 attr);
+EXPORT_DECL(s32, OSResumeThread, OSThread *thread);
+EXPORT_DECL(s32, OSSuspendThread, OSThread *thread);
+EXPORT_DECL(s32, OSIsThreadTerminated, OSThread *thread);
+EXPORT_DECL(s32, OSIsThreadSuspended, OSThread *thread);
+EXPORT_DECL(s32, OSSetThreadPriority, OSThread * thread, s32 priority);
+EXPORT_DECL(s32, OSJoinThread, OSThread * thread, s32 * ret_val);
+EXPORT_DECL(void, OSDetachThread, OSThread * thread);
+EXPORT_DECL(OSThread *,OSGetCurrentThread,void);
+EXPORT_DECL(const char *,OSGetThreadName,OSThread * thread);
+EXPORT_DECL(void ,OSGetActiveThreadLink,OSThread * thread, void* link);
+EXPORT_DECL(u32 ,OSGetThreadAffinity,OSThread * thread);
+EXPORT_DECL(s32 ,OSGetThreadPriority,OSThread * thread);
+EXPORT_DECL(void ,OSSetThreadName,OSThread * thread, const char *name);
 EXPORT_DECL(void, OSSleepTicks, u64 ticks);
 EXPORT_DECL(u64, OSGetTick, void);
 EXPORT_DECL(u64, OSGetTime, void);
 EXPORT_DECL(void, OSTicksToCalendarTime, u64 time, OSCalendarTime * calendarTime);
 
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//! Message functions
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+EXPORT_DECL(void,OSInitMessageQueue,OSMessageQueue *queue, OSMessage *messages, s32 size);
+EXPORT_DECL(u32,OSSendMessage,OSMessageQueue *queue, OSMessage *message, s32 flags);
+EXPORT_DECL(u32,OSReceiveMessage,OSMessageQueue *queue, OSMessage *message, s32 flags);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Mutex functions
@@ -61,75 +73,143 @@ EXPORT_DECL(void, OSTicksToCalendarTime, u64 time, OSCalendarTime * calendarTime
 EXPORT_DECL(void, OSInitMutex, void* mutex);
 EXPORT_DECL(void, OSLockMutex, void* mutex);
 EXPORT_DECL(void, OSUnlockMutex, void* mutex);
-EXPORT_DECL(int, OSTryLockMutex, void* mutex);
+EXPORT_DECL(s32, OSTryLockMutex, void* mutex);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! System functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXPORT_DECL(u64, OSGetTitleID, void);
-EXPORT_DECL(void, OSGetArgcArgv, int* argc, char*** argv);
+EXPORT_DECL(void, OSGetArgcArgv, s32* argc, char*** argv);
 EXPORT_DECL(void, __Exit, void);
 EXPORT_DECL(void, OSFatal, const char* msg);
-EXPORT_DECL(void, OSSetExceptionCallback, u8 exceptionType, exception_callback newCallback);
+EXPORT_DECL(void *, OSSetExceptionCallback, u8 exceptionType, exception_callback newCallback);
+EXPORT_DECL(void *, OSSetExceptionCallbackEx, s32 unkwn, u8 exceptionType, exception_callback newCallback);
+EXPORT_DECL(void , OSLoadContext, OSContext * context);
 EXPORT_DECL(void, DCFlushRange, const void *addr, u32 length);
 EXPORT_DECL(void, DCStoreRange, const void *addr, u32 length);
 EXPORT_DECL(void, DCInvalidateRange, const void *addr, u32 length);
 EXPORT_DECL(void, ICInvalidateRange, const void *addr, u32 length);
 EXPORT_DECL(void*, OSEffectiveToPhysical, const void*);
-EXPORT_DECL(int, __os_snprintf, char* s, int n, const char * format, ...);
-EXPORT_DECL(int *, __gh_errno_ptr, void);
+EXPORT_DECL(s32, __os_snprintf, char* s, s32 n, const char * format, ...);
+EXPORT_DECL(s32 *, __gh_errno_ptr, void);
 
 EXPORT_DECL(void, OSScreenInit, void);
 EXPORT_DECL(void, OSScreenShutdown, void);
-EXPORT_DECL(unsigned int, OSScreenGetBufferSizeEx, unsigned int bufferNum);
-EXPORT_DECL(int, OSScreenSetBufferEx, unsigned int bufferNum, void * addr);
-EXPORT_DECL(int, OSScreenClearBufferEx, unsigned int bufferNum, unsigned int temp);
-EXPORT_DECL(int, OSScreenFlipBuffersEx, unsigned int bufferNum);
-EXPORT_DECL(int, OSScreenPutFontEx, unsigned int bufferNum, unsigned int posX, unsigned int posY, const char * buffer);
-EXPORT_DECL(int, OSScreenEnableEx, unsigned int bufferNum, int enable);
-
-EXPORT_DECL(int, IOS_Ioctl,int fd, unsigned int request, void *input_buffer,unsigned int input_buffer_len, void *output_buffer, unsigned int output_buffer_len);
-EXPORT_DECL(int, IOS_Open,char *path, unsigned int mode);
-EXPORT_DECL(int, IOS_Close,int fd);
+EXPORT_DECL(u32, OSScreenGetBufferSizeEx, u32 bufferNum);
+EXPORT_DECL(s32, OSScreenSetBufferEx, u32 bufferNum, void * addr);
+EXPORT_DECL(s32, OSScreenClearBufferEx, u32 bufferNum, u32 temp);
+EXPORT_DECL(s32, OSScreenFlipBuffersEx, u32 bufferNum);
+EXPORT_DECL(s32, OSScreenPutFontEx, u32 bufferNum, u32 posX, u32 posY, const char * buffer);
+EXPORT_DECL(s32, OSScreenEnableEx, u32 bufferNum, s32 enable);
+EXPORT_DECL(u32, OSScreenPutPixelEx, u32 bufferNum, u32 posX, u32 posY, u32 color);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Memory functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-EXPORT_VAR(unsigned int *, pMEMAllocFromDefaultHeapEx);
-EXPORT_VAR(unsigned int *, pMEMAllocFromDefaultHeap);
-EXPORT_VAR(unsigned int *, pMEMFreeToDefaultHeap);
+EXPORT_VAR(u32 *, pMEMAllocFromDefaultHeapEx);
+EXPORT_VAR(u32 *, pMEMAllocFromDefaultHeap);
+EXPORT_VAR(u32 *, pMEMFreeToDefaultHeap);
 
-EXPORT_DECL(int, MEMGetBaseHeapHandle, int mem_arena);
-EXPORT_DECL(unsigned int, MEMGetAllocatableSizeForFrmHeapEx, int heap, int align);
-EXPORT_DECL(void *, MEMAllocFromFrmHeapEx, int heap, unsigned int size, int align);
-EXPORT_DECL(void, MEMFreeToFrmHeap, int heap, int mode);
-EXPORT_DECL(void *, MEMAllocFromExpHeapEx, int heap, unsigned int size, int align);
-EXPORT_DECL(int , MEMCreateExpHeapEx, void* address, unsigned int size, unsigned short flags);
-EXPORT_DECL(void *, MEMDestroyExpHeap, int heap);
-EXPORT_DECL(void, MEMFreeToExpHeap, int heap, void* ptr);
+EXPORT_DECL(s32, MEMGetBaseHeapHandle, s32 mem_arena);
+EXPORT_DECL(u32, MEMGetAllocatableSizeForFrmHeapEx, s32 heap, s32 align);
+EXPORT_DECL(void *, MEMAllocFromFrmHeapEx, s32 heap, u32 size, s32 align);
+EXPORT_DECL(void, MEMFreeToFrmHeap, s32 heap, s32 mode);
+EXPORT_DECL(void *, MEMAllocFromExpHeapEx, s32 heap, u32 size, s32 align);
+EXPORT_DECL(s32 , MEMCreateExpHeapEx, void* address, u32 size, unsigned short flags);
+EXPORT_DECL(void *, MEMDestroyExpHeap, s32 heap);
+EXPORT_DECL(void, MEMFreeToExpHeap, s32 heap, void* ptr);
+EXPORT_DECL(void *, OSAllocFromSystem, int size, int alignment);
+EXPORT_DECL(void, OSFreeToSystem, void *addr);
+EXPORT_DECL(int, OSIsAddressValid, void *ptr);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! MCP functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-EXPORT_DECL(int, MCP_Open, void);
-EXPORT_DECL(int, MCP_Close, int handle);
-EXPORT_DECL(int, MCP_GetOwnTitleInfo, int handle, void * data);
+EXPORT_DECL(s32, MCP_Open, void);
+EXPORT_DECL(s32, MCP_Close, s32 handle);
+EXPORT_DECL(s32, MCP_GetOwnTitleInfo, s32 handle, void * data);
 
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//! Loader functions (not real rpl)
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//! Kernel function addresses
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//! Other function addresses
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//EXPORT_DECL(void, DCInvalidateRange, void *buffer, u32 length);
+EXPORT_DECL(s32, OSDynLoad_GetModuleName, s32 handle, char *name_buffer, s32 *name_buffer_size);
+
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//! Energy Saver functions
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Burn-in Reduction
+EXPORT_DECL(s32, IMEnableDim,void);
+EXPORT_DECL(s32, IMDisableDim,void);
+EXPORT_DECL(s32, IMIsDimEnabled,s32 * result);
+//Auto power down
+EXPORT_DECL(s32, IMEnableAPD,void);
+EXPORT_DECL(s32, IMDisableAPD,void);
+EXPORT_DECL(s32, IMIsAPDEnabled,s32 * result);
+EXPORT_DECL(s32, IMIsAPDEnabledBySysSettings,s32 * result);
+
+EXPORT_DECL(s32, OSSendAppSwitchRequest,s32 param,void* unknown1,void* unknown2);
+
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//! IOS functions
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+EXPORT_DECL(s32, IOS_Ioctl,s32 fd, u32 request, void *input_buffer,u32 input_buffer_len, void *output_buffer, u32 output_buffer_len);
+EXPORT_DECL(s32, IOS_Open,char *path, u32 mode);
+EXPORT_DECL(s32, IOS_Close,s32 fd);
+
+void _os_find_export(u32 handle, const char *funcName, void *funcPointer)
+{
+    OSDynLoad_FindExport(handle, 0, funcName, funcPointer);
+
+    if(!*(u32 *)funcPointer) {
+        /*
+         * This is effectively OSFatal("Function %s is NULL", funcName),
+         * but we can't rely on any library functions like snprintf or
+         * strcpy at this point.
+         *
+         * Buffer bounds are not checked. Beware!
+         */
+        char buf[256], *bufp = buf;
+        const char a[] = "Function ", b[] = " is NULL", *p;
+        unsigned int i;
+
+        for (i = 0; i < sizeof(a) - 1; i++)
+            *bufp++ = a[i];
+
+        for (p = funcName; *p; p++)
+            *bufp++ = *p;
+
+        for (i = 0; i < sizeof(b) - 1; i++)
+            *bufp++ = b[i];
+
+        *bufp++ = '\0';
+
+        OSFatal(buf);
+    }
+}
 
 void InitAcquireOS(void)
 {
-      //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! Lib handle functions
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    EXPORT_FUNC_WRITE(OSDynLoad_Acquire, (int (*)(const char*, unsigned *))OS_SPECIFICS->addr_OSDynLoad_Acquire);
-    EXPORT_FUNC_WRITE(OSDynLoad_FindExport, (int (*)(u32, int, const char *, void *))OS_SPECIFICS->addr_OSDynLoad_FindExport);
+    EXPORT_FUNC_WRITE(OSDynLoad_Acquire, (s32 (*)(const char*, unsigned *))OS_SPECIFICS->addr_OSDynLoad_Acquire);
+    EXPORT_FUNC_WRITE(OSDynLoad_FindExport, (s32 (*)(u32, s32, const char *, void *))OS_SPECIFICS->addr_OSDynLoad_FindExport);
 
     OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
 }
 
 void InitOSFunctionPointers(void)
 {
-    unsigned int *funcPointer = 0;
+    u32 *funcPointer = 0;
 
     InitAcquireOS();
 
@@ -145,6 +225,8 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, OSGetTitleID);
     OS_FIND_EXPORT(coreinit_handle, OSGetArgcArgv);
     OS_FIND_EXPORT(coreinit_handle, OSSetExceptionCallback);
+    OS_FIND_EXPORT(coreinit_handle, OSSetExceptionCallbackEx);
+    OS_FIND_EXPORT(coreinit_handle, OSLoadContext);
     OS_FIND_EXPORT(coreinit_handle, DCFlushRange);
     OS_FIND_EXPORT(coreinit_handle, DCStoreRange);
     OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
@@ -163,10 +245,7 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, OSScreenFlipBuffersEx);
     OS_FIND_EXPORT(coreinit_handle, OSScreenPutFontEx);
     OS_FIND_EXPORT(coreinit_handle, OSScreenEnableEx);
-
-    OS_FIND_EXPORT(coreinit_handle, IOS_Ioctl);
-    OS_FIND_EXPORT(coreinit_handle, IOS_Open);
-    OS_FIND_EXPORT(coreinit_handle, IOS_Close);
+    OS_FIND_EXPORT(coreinit_handle, OSScreenPutPixelEx);
 
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! Thread functions
@@ -179,10 +258,24 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, OSJoinThread);
     OS_FIND_EXPORT(coreinit_handle, OSSetThreadPriority);
     OS_FIND_EXPORT(coreinit_handle, OSDetachThread);
+    OS_FIND_EXPORT(coreinit_handle, OSGetCurrentThread);
+    OS_FIND_EXPORT(coreinit_handle, OSGetThreadName);
+    OS_FIND_EXPORT(coreinit_handle, OSGetActiveThreadLink);
+    OS_FIND_EXPORT(coreinit_handle, OSGetThreadAffinity);
+    OS_FIND_EXPORT(coreinit_handle, OSGetThreadPriority);
+    OS_FIND_EXPORT(coreinit_handle, OSSetThreadName);
+
     OS_FIND_EXPORT(coreinit_handle, OSSleepTicks);
     OS_FIND_EXPORT(coreinit_handle, OSGetTick);
     OS_FIND_EXPORT(coreinit_handle, OSGetTime);
     OS_FIND_EXPORT(coreinit_handle, OSTicksToCalendarTime);
+
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //! Message functions
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    OS_FIND_EXPORT(coreinit_handle, OSInitMessageQueue);
+    OS_FIND_EXPORT(coreinit_handle, OSSendMessage);
+    OS_FIND_EXPORT(coreinit_handle, OSReceiveMessage);
 
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! Mutex functions
@@ -191,6 +284,7 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, OSLockMutex);
     OS_FIND_EXPORT(coreinit_handle, OSUnlockMutex);
     OS_FIND_EXPORT(coreinit_handle, OSTryLockMutex);
+
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! MCP functions
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -213,4 +307,35 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, MEMCreateExpHeapEx);
     OS_FIND_EXPORT(coreinit_handle, MEMDestroyExpHeap);
     OS_FIND_EXPORT(coreinit_handle, MEMFreeToExpHeap);
+    OS_FIND_EXPORT(coreinit_handle, OSAllocFromSystem);
+    OS_FIND_EXPORT(coreinit_handle, OSFreeToSystem);
+    OS_FIND_EXPORT(coreinit_handle, OSIsAddressValid);
+
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //! Other function addresses
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
+    OS_FIND_EXPORT(coreinit_handle, OSDynLoad_GetModuleName);
+
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //! Energy Saver functions
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //Burn-in Reduction
+    OS_FIND_EXPORT(coreinit_handle, IMEnableDim);
+    OS_FIND_EXPORT(coreinit_handle, IMDisableDim);
+    OS_FIND_EXPORT(coreinit_handle, IMIsDimEnabled);
+    //Auto power down
+    OS_FIND_EXPORT(coreinit_handle, IMEnableAPD);
+    OS_FIND_EXPORT(coreinit_handle, IMDisableAPD);
+    OS_FIND_EXPORT(coreinit_handle, IMIsAPDEnabled);
+    OS_FIND_EXPORT(coreinit_handle, IMIsAPDEnabledBySysSettings);
+
+    OS_FIND_EXPORT(coreinit_handle, OSSendAppSwitchRequest);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //! IOS functions
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    OS_FIND_EXPORT(coreinit_handle, IOS_Ioctl);
+    OS_FIND_EXPORT(coreinit_handle, IOS_Open);
+    OS_FIND_EXPORT(coreinit_handle, IOS_Close);
 }

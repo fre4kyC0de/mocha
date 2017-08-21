@@ -45,8 +45,8 @@ typedef struct _sd_fat_private_t {
 
 typedef struct _sd_fat_file_state_t {
     sd_fat_private_t *dev;
-    int fd;                                     /* File descriptor */
-    int flags;                                  /* Opening flags */
+    s32 fd;                                     /* File descriptor */
+    s32 flags;                                  /* Opening flags */
     bool read;                                  /* True if allowed to read from file */
     bool write;                                 /* True if allowed to write to file */
     bool append;                                /* True if allowed to append to file */
@@ -58,7 +58,7 @@ typedef struct _sd_fat_file_state_t {
 
 typedef struct _sd_fat_dir_entry_t {
     sd_fat_private_t *dev;
-    int dirHandle;
+    s32 dirHandle;
 } sd_fat_dir_entry_t;
 
 static sd_fat_private_t *sd_fat_get_device_data(const char *path)
@@ -145,7 +145,7 @@ static int sd_fat_open_r (struct _reent *r, void *fileStruct, const char *path, 
         return -1;
     }
 
-    int fd = -1;
+    s32 fd = -1;
 
     OSLockMutex(dev->pMutex);
 
@@ -156,7 +156,7 @@ static int sd_fat_open_r (struct _reent *r, void *fileStruct, const char *path, 
         return -1;
     }
 
-    int result = FSOpenFile(dev->pClient, dev->pCmd, real_path, mode_str, &fd, -1);
+    s32 result = FSOpenFile(dev->pClient, dev->pCmd, real_path, mode_str, &fd, -1);
 
     free(real_path);
 
@@ -716,9 +716,9 @@ static DIR_ITER *sd_fat_diropen_r (struct _reent *r, DIR_ITER *dirState, const c
         return NULL;
     }
 
-    int dirHandle;
+    s32 dirHandle;
 
-    int result = FSOpenDir(dev->pClient, dev->pCmd, real_path, &dirHandle, -1);
+    s32 result = FSOpenDir(dev->pClient, dev->pCmd, real_path, &dirHandle, -1);
 
     free(real_path);
 

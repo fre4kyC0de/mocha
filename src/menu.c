@@ -236,6 +236,8 @@ int ShowMenu(cfw_config_t * currentConfig)
 
             console_print_pos(x_offset, 16, "Credits go to everyone who contributed to Wii U scene publicly.");
             console_print_pos(x_offset, 17, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
+            console_print_pos(x_offset, 18, "FSHax implementation by Maschell.");
+            console_print_pos(x_offset, 19, "Multiple small fixed by fre4kyC0de.");
 
             // Flip buffers
             OSScreenFlipBuffersEx(0);
@@ -244,7 +246,7 @@ int ShowMenu(cfw_config_t * currentConfig)
             initScreen = 0;
         }
 
-        usleep(20000);
+        os_usleep(20000);
     }
 
     OSScreenShutdown();

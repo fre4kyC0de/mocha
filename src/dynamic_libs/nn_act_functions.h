@@ -21,31 +21,27 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#include "os_functions.h"
+#ifndef __NN_ACT_FUNCTIONS_H_
+#define __NN_ACT_FUNCTIONS_H_
 
-u32 sysapp_handle __attribute__((section(".data"))) = 0;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-EXPORT_DECL(s32, _SYSLaunchTitleByPathFromLauncher, const char* path, s32 len, s32 zero);
-EXPORT_DECL(s32, SYSRelaunchTitle, s32 argc, char** argv);
-EXPORT_DECL(s32, SYSLaunchMenu, void);
-EXPORT_DECL(s32, SYSCheckTitleExists, u64 titleId);
-EXPORT_DECL(s32, SYSLaunchTitle, u64 titleId);
-EXPORT_DECL(s32, SYSLaunchSettings, s32 unk);
+#include <gctypes.h>
 
-void InitAcquireSys(void)
-{
-    OSDynLoad_Acquire("sysapp.rpl", &sysapp_handle);
+extern u32 nn_act_handle;
+
+extern void(* nn_act_Initialize)(void);
+extern void(* nn_act_Finalize)(void);
+extern u8(* nn_act_GetSlotNo)(void);
+extern u32(*nn_act_GetPersistentIdEx)(u8 slot);
+
+void InitACTFunctionPointers(void);
+void InitAcquireACT(void);
+
+#ifdef __cplusplus
 }
+#endif
 
-void InitSysFunctionPointers(void)
-{
-    u32 *funcPointer = 0;
-    InitAcquireSys();
-
-    OS_FIND_EXPORT(sysapp_handle, _SYSLaunchTitleByPathFromLauncher);
-    OS_FIND_EXPORT(sysapp_handle, SYSRelaunchTitle);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchMenu);
-    OS_FIND_EXPORT(sysapp_handle, SYSCheckTitleExists);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchTitle);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchSettings);
-}
+#endif // __NN_ACT_FUNCTIONS_H_

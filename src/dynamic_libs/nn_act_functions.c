@@ -22,30 +22,27 @@
  * distribution.
  ***************************************************************************/
 #include "os_functions.h"
+#include "nn_act_functions.h"
 
-u32 sysapp_handle __attribute__((section(".data"))) = 0;
+u32 nn_act_handle __attribute__((section(".data"))) = 0;
 
-EXPORT_DECL(s32, _SYSLaunchTitleByPathFromLauncher, const char* path, s32 len, s32 zero);
-EXPORT_DECL(s32, SYSRelaunchTitle, s32 argc, char** argv);
-EXPORT_DECL(s32, SYSLaunchMenu, void);
-EXPORT_DECL(s32, SYSCheckTitleExists, u64 titleId);
-EXPORT_DECL(s32, SYSLaunchTitle, u64 titleId);
-EXPORT_DECL(s32, SYSLaunchSettings, s32 unk);
+EXPORT_DECL(void, nn_act_Initialize, void);
+EXPORT_DECL(void, nn_act_Finalize, void);
+EXPORT_DECL(u8, nn_act_GetSlotNo, void);
+EXPORT_DECL(u32, nn_act_GetPersistentIdEx, u8 slot);
 
-void InitAcquireSys(void)
+void InitAcquireACT(void)
 {
-    OSDynLoad_Acquire("sysapp.rpl", &sysapp_handle);
+    OSDynLoad_Acquire("nn_act.rpl", &nn_act_handle);
 }
 
-void InitSysFunctionPointers(void)
+void InitACTFunctionPointers(void)
 {
     u32 *funcPointer = 0;
-    InitAcquireSys();
+    InitAcquireACT();
 
-    OS_FIND_EXPORT(sysapp_handle, _SYSLaunchTitleByPathFromLauncher);
-    OS_FIND_EXPORT(sysapp_handle, SYSRelaunchTitle);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchMenu);
-    OS_FIND_EXPORT(sysapp_handle, SYSCheckTitleExists);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchTitle);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchSettings);
+    OS_FIND_EXPORT_EX(nn_act_handle, Initialize__Q2_2nn3actFv, nn_act_Initialize)
+	OS_FIND_EXPORT_EX(nn_act_handle, Finalize__Q2_2nn3actFv, nn_act_Finalize)
+	OS_FIND_EXPORT_EX(nn_act_handle, GetSlotNo__Q2_2nn3actFv, nn_act_GetSlotNo)
+	OS_FIND_EXPORT_EX(nn_act_handle, GetPersistentIdEx__Q2_2nn3actFUc, nn_act_GetPersistentIdEx)
 }
