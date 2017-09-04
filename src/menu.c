@@ -102,7 +102,7 @@ int ShowMenu(cfw_config_t * currentConfig)
     OSScreenFlipBuffersEx(1);
 
     VPADData vpad;
-    long int vpadError;
+    s32 vpadError;
     int x_offset = -2;
     int initScreen = 1;
     int selected = 0;
