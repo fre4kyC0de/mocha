@@ -51,7 +51,6 @@ struct {
     { "Config view mode", "expert", "default" },
     { "Skip this menu on launch", "on", "off" },
     { "Show launch image", "on", "off" },
-    { "Don't relaunch OS", "on", "off" },
     { "Launch System Menu", "on", "off" },
     { "redNAND", "on", "off" },
     { "SEEPROM redirection", "on", "off" },
@@ -160,21 +159,18 @@ int ShowMenu(cfw_config_t * currentConfig)
                     config.launchImage = !config.launchImage;
                     break;
                 case 3:
-                    config.noIosReload = !config.noIosReload;
-                    break;
-                case 4:
                     config.launchSysMenu = !config.launchSysMenu;
                     break;
-                case 5:
+                case 4:
                     config.redNAND = !config.redNAND;
                     break;
-                case 6:
+                case 5:
                     config.seeprom_red = !config.seeprom_red;
                     break;
-                case 7:
+                case 6:
                     config.otp_red = !config.otp_red;
                     break;
-                case 8:
+                case 7:
                     config.syshaxXml = !config.syshaxXml;
                     break;
                 default:
@@ -191,15 +187,7 @@ int ShowMenu(cfw_config_t * currentConfig)
                         config.otp_red = 1;
                     }
                 }
-                if(config.noIosReload)
-                {
-                    config.launchImage = 0;
-                    config.redNAND = 0;
-                }
-                else
-                {
-                    config.launchSysMenu = 1;
-                }
+                config.launchSysMenu = 1;
 
                 if(config.redNAND == 0)
                 {
@@ -234,10 +222,10 @@ int ShowMenu(cfw_config_t * currentConfig)
                                   TEXT_SEL(configPtr[idx], " ", "<"), selection_options[idx].disabled, TEXT_SEL(configPtr[idx], " ", ">"));
             }
 
-            console_print_pos(x_offset, 16, "Credits go to everyone who contributed to Wii U scene publicly.");
-            console_print_pos(x_offset, 17, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
-            console_print_pos(x_offset, 18, "FSHax implementation by Maschell.");
-            console_print_pos(x_offset, 19, "Multiple small fixed by fre4kyC0de.");
+            console_print_pos(x_offset, 15, "Credits go to everyone who contributed to Wii U scene publicly.");
+            console_print_pos(x_offset, 16, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
+            console_print_pos(x_offset, 17, "FSHax implementation by Maschell.");
+            console_print_pos(x_offset, 18, "Multiple small fixed by fre4kyC0de.");
 
             // Flip buffers
             OSScreenFlipBuffersEx(0);

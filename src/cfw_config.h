@@ -33,7 +33,6 @@ typedef struct
     int viewMode;
     int directLaunch;
     int launchImage;
-    int noIosReload;
     int launchSysMenu;
     int redNAND;
     int seeprom_red;

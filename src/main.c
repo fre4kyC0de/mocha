@@ -81,18 +81,9 @@ int Menu_Main(void)
         int res = ExecuteIOSExploit(&config);
         if(res == 0)
         {
-            if(config.noIosReload == 0)
-            {
-                OSForceFullRelaunch();
-                SYSLaunchMenu();
-                returnCode = EXIT_RELAUNCH_ON_LOAD;
-            }
-            else if(config.launchSysMenu)
-            {
-                SYSLaunchMenu();
-                exitToHBLOnLaunch = 1;
-                returnCode = EXIT_RELAUNCH_ON_LOAD;
-            }
+            OSForceFullRelaunch();
+            SYSLaunchMenu();
+            returnCode = EXIT_RELAUNCH_ON_LOAD;
         }
     }
 
