@@ -11,6 +11,7 @@
 #include "dynamic_libs/sys_functions.h"
 #include "dynamic_libs/vpad_functions.h"
 #include "dynamic_libs/socket_functions.h"
+#include "dynamic_libs/nn_act_functions.h"
 #include "fs/fs_utils.h"
 #include "fs/sd_fat_devoptab.h"
 #include "system/memory.h"
@@ -31,8 +32,14 @@ int Menu_Main(void)
     InitFSFunctionPointers();
     InitSocketFunctionPointers();
     InitVPadFunctionPointers();
+    InitACTFunctionPointers();
 
     u64 currenTitleId = OSGetTitleID();
+
+    nn_act_Initialize();
+    unsigned char slot = nn_act_GetSlotNo();
+    unsigned char defaultSlot = nn_act_GetDefaultAccount();
+    nn_act_Finalize();
 
     // in case we are not in mii maker or HBL channel but in system menu or another channel we need to exit here
     if (currenTitleId != 0x000500101004A200 && // mii maker eur
@@ -82,7 +89,11 @@ int Menu_Main(void)
         if(res == 0)
         {
             OSForceFullRelaunch();
-            SYSLaunchMenu();
+            //SYSLaunchMenu();
+            if(defaultSlot) //normal menu boot
+                SYSLaunchMenu();
+            else //show mii select
+                _SYSLaunchMenuWithCheckingAccount(slot);
             returnCode = EXIT_RELAUNCH_ON_LOAD;
         }
     }
