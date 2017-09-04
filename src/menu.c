@@ -37,7 +37,7 @@
 #include "../libs/libc.h"
 #include "cfw_config.h"
 
-#define MAX_CONFIG_SETTINGS_EXPERT          9
+#define MAX_CONFIG_SETTINGS_EXPERT          7
 #define MAX_CONFIG_SETTINGS_DEFAULT         (MAX_CONFIG_SETTINGS_EXPERT - 3)
 
 #define TEXT_SEL(x, text1, text2)           ((x) ? (text1) : (text2))
@@ -159,18 +159,15 @@ int ShowMenu(cfw_config_t * currentConfig)
                     config.launchImage = !config.launchImage;
                     break;
                 case 3:
-                    config.launchSysMenu = !config.launchSysMenu;
-                    break;
-                case 4:
                     config.redNAND = !config.redNAND;
                     break;
-                case 5:
+                case 4:
                     config.seeprom_red = !config.seeprom_red;
                     break;
-                case 6:
+                case 5:
                     config.otp_red = !config.otp_red;
                     break;
-                case 7:
+                case 6:
                     config.syshaxXml = !config.syshaxXml;
                     break;
                 default:
@@ -187,7 +184,6 @@ int ShowMenu(cfw_config_t * currentConfig)
                         config.otp_red = 1;
                     }
                 }
-                config.launchSysMenu = 1;
 
                 if(config.redNAND == 0)
                 {
@@ -222,10 +218,10 @@ int ShowMenu(cfw_config_t * currentConfig)
                                   TEXT_SEL(configPtr[idx], " ", "<"), selection_options[idx].disabled, TEXT_SEL(configPtr[idx], " ", ">"));
             }
 
-            console_print_pos(x_offset, 15, "Credits go to everyone who contributed to Wii U scene publicly.");
-            console_print_pos(x_offset, 16, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
-            console_print_pos(x_offset, 17, "FSHax implementation by Maschell.");
-            console_print_pos(x_offset, 18, "Multiple small fixed by fre4kyC0de.");
+            console_print_pos(x_offset, 14, "Credits go to everyone who contributed to Wii U scene publicly.");
+            console_print_pos(x_offset, 15, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
+            console_print_pos(x_offset, 16, "FSHax implementation by Maschell.");
+            console_print_pos(x_offset, 17, "Multiple small fixed by fre4kyC0de.");
 
             // Flip buffers
             OSScreenFlipBuffersEx(0);

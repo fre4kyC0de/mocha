@@ -79,7 +79,6 @@ void default_config(cfw_config_t * config)
     config->viewMode = 0;
     config->directLaunch = 0;
     config->launchImage = 1;
-    config->launchSysMenu = 1;
     config->redNAND = 0;
     config->seeprom_red = 0;
     config->otp_red = 0;
@@ -117,8 +116,6 @@ int read_config(cfw_config_t * config)
                 config->syshaxXml = atoi(value);
             else if(strcmp(option, "viewMode") == 0)
                 config->viewMode = atoi(value);
-            else if(strcmp(option, "launchSysMenu") == 0)
-                config->launchSysMenu = atoi(value);
         }
     }
 
@@ -138,7 +135,6 @@ int write_config(cfw_config_t * config)
     fprintf(pFile, "viewMode=%i\n", config->viewMode);
     fprintf(pFile, "directLaunch=%i\n", config->directLaunch);
     fprintf(pFile, "launchImage=%i\n", config->launchImage);
-    fprintf(pFile, "launchSysMenu=%i\n", config->launchSysMenu);
     fprintf(pFile, "redNAND=%i\n", config->redNAND);
     fprintf(pFile, "seeprom_red=%i\n", config->seeprom_red);
     fprintf(pFile, "otp_red=%i\n", config->otp_red);
