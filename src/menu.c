@@ -222,7 +222,7 @@ int ShowMenu(cfw_config_t * currentConfig)
             console_print_pos(x_offset, 14, "Credits go to everyone who contributed to Wii U scene publicly.");
             console_print_pos(x_offset, 15, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
             console_print_pos(x_offset, 16, "FSHax implementation by Maschell.");
-            console_print_pos(x_offset, 17, "Multiple small fixed by fre4kyC0de.");
+            console_print_pos(x_offset, 17, "Multiple small changes by fre4kyC0de.");
 
             // Flip buffers
             OSScreenFlipBuffersEx(0);
