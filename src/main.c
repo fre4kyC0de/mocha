@@ -21,6 +21,7 @@
 #include "menu.h"
 #include "main.h"
 #include "ios_exploit.h"
+#include "id.h"
 
 static int exitToHBLOnLaunch = 0;
 
@@ -34,7 +35,9 @@ int Menu_Main(void)
     InitVPadFunctionPointers();
     InitACTFunctionPointers();
 
-    u64 currenTitleId = OSGetTitleID();
+    currentTitleId = OSGetTitleID();
+    shortTilteId_low = (u32)(currentTitleId & 0xFFFFFFFF);
+    shortTilteId_high = (u32)((currentTitleId & 0xFFFFFFFF00000000) >> 32);
 
     nn_act_Initialize();
     unsigned char slot = nn_act_GetSlotNo();
@@ -42,10 +45,10 @@ int Menu_Main(void)
     nn_act_Finalize();
 
     // in case we are not in mii maker or HBL channel but in system menu or another channel we need to exit here
-    if (currenTitleId != 0x000500101004A200 && // mii maker eur
-        currenTitleId != 0x000500101004A100 && // mii maker usa
-        currenTitleId != 0x000500101004A000 && // mii maker jpn
-        currenTitleId != 0x0005000013374842)    // HBL channel
+    if (currentTitleId != TitleId_MiiMakerEUR && // mii maker eur
+        currentTitleId != TitleId_MiiMakerUSA && // mii maker usa
+        currentTitleId != TitleId_MiiMakerJPN && // mii maker jpn
+        currentTitleId != TitleId_HBLChannel)    // HBL channel
     {
         return EXIT_RELAUNCH_ON_LOAD;
     }

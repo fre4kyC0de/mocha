@@ -36,6 +36,7 @@
 #include "dynamic_libs/socket_functions.h"
 #include "../libs/libc.h"
 #include "cfw_config.h"
+#include "id.h"
 
 #define MAX_CONFIG_SETTINGS_EXPERT          7
 #define MAX_CONFIG_SETTINGS_DEFAULT         (MAX_CONFIG_SETTINGS_EXPERT - 3)
@@ -200,7 +201,7 @@ int ShowMenu(cfw_config_t * currentConfig)
             OSScreenClearBufferEx(0, 0);
             OSScreenClearBufferEx(1, 0);
 
-            console_print_pos(x_offset, 1, "                -- MOCHA CFW %s by Dimok --", APP_VERSION);
+            console_print_pos(x_offset, 1, "      -- MOCHA CFW %s by Dimok (Title: %08X%08X) --", APP_VERSION, shortTilteId_high, shortTilteId_low);
 
             console_print_pos(x_offset, 3, "Select your options and press A to launch.");
             console_print_pos(x_offset, 4, "Press HOME to exit back to HBL.");
