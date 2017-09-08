@@ -24,6 +24,7 @@
 #include "types.h"
 #include "elf_patcher.h"
 #include "ios_fs_patches.h"
+#include "config.h"
 #include "../../ios_fs/ios_fs_syms.h"
 
 #define FS_PHYS_DIFF                                0
@@ -63,19 +64,22 @@ void fs_run_patches(u32 ios_elf_start)
     // patch FS logging
     section_write_word(ios_elf_start, FS_PRINTF_SYSLOG, ARM_B(FS_PRINTF_SYSLOG, FS_SYSLOG_OUTPUT));
 
-    section_write_word(ios_elf_start, CALL_FS_REGISTERMDPHYSICALDEVICE, ARM_BL(CALL_FS_REGISTERMDPHYSICALDEVICE, registerMdDevice_hook));
-    section_write_word(ios_elf_start, FS_GETMDDEVICEBYID + 8, ARM_BL((FS_GETMDDEVICEBYID + 8), getMdDeviceById_hook));
+    if(cfw_config.redNAND)
+    {
+        section_write_word(ios_elf_start, CALL_FS_REGISTERMDPHYSICALDEVICE, ARM_BL(CALL_FS_REGISTERMDPHYSICALDEVICE, registerMdDevice_hook));
+        section_write_word(ios_elf_start, FS_GETMDDEVICEBYID + 8, ARM_BL((FS_GETMDDEVICEBYID + 8), getMdDeviceById_hook));
 
-    section_write_word(ios_elf_start, FS_SDCARD_READ1, ARM_B(FS_SDCARD_READ1, sdcardRead_patch));
-    section_write_word(ios_elf_start, FS_SDCARD_WRITE1, ARM_B(FS_SDCARD_WRITE1, sdcardWrite_patch));
+        section_write_word(ios_elf_start, FS_SDCARD_READ1, ARM_B(FS_SDCARD_READ1, sdcardRead_patch));
+        section_write_word(ios_elf_start, FS_SDCARD_WRITE1, ARM_B(FS_SDCARD_WRITE1, sdcardWrite_patch));
 
-    section_write_word(ios_elf_start, FS_SLC_READ1, ARM_B(FS_SLC_READ1, slcRead1_patch));
-    section_write_word(ios_elf_start, FS_SLC_READ2, ARM_B(FS_SLC_READ2, slcRead2_patch));
-    section_write_word(ios_elf_start, FS_SLC_WRITE1, ARM_B(FS_SLC_WRITE1, slcWrite1_patch));
-    section_write_word(ios_elf_start, FS_SLC_WRITE2, ARM_B(FS_SLC_WRITE2, slcWrite2_patch));
+        section_write_word(ios_elf_start, FS_SLC_READ1, ARM_B(FS_SLC_READ1, slcRead1_patch));
+        section_write_word(ios_elf_start, FS_SLC_READ2, ARM_B(FS_SLC_READ2, slcRead2_patch));
+        section_write_word(ios_elf_start, FS_SLC_WRITE1, ARM_B(FS_SLC_WRITE1, slcWrite1_patch));
+        section_write_word(ios_elf_start, FS_SLC_WRITE2, ARM_B(FS_SLC_WRITE2, slcWrite2_patch));
 
-    //section_write_word(ios_elf_start, FS_USB_READ, ARM_B(FS_USB_READ, usbRead_patch));
-    //section_write_word(ios_elf_start, FS_USB_WRITE, ARM_B(FS_USB_WRITE, usbWrite_patch));
+        //section_write_word(ios_elf_start, FS_USB_READ, ARM_B(FS_USB_READ, usbRead_patch));
+        //section_write_word(ios_elf_start, FS_USB_WRITE, ARM_B(FS_USB_WRITE, usbWrite_patch));
+    }
 
     section_write_word(ios_elf_start, FS_CREATEDEVTHREAD_HOOK, ARM_B(FS_CREATEDEVTHREAD_HOOK, createDevThread_hook));
 

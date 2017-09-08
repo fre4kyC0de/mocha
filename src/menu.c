@@ -35,7 +35,7 @@
 #include "dynamic_libs/vpad_functions.h"
 #include "dynamic_libs/socket_functions.h"
 #include "../libs/libc.h"
-#include "cfw_config.h"
+#include "menu.h"
 #include "id.h"
 
 #define MAX_CONFIG_SETTINGS_EXPERT          7
@@ -52,7 +52,6 @@ struct {
     { "Config view mode", "expert", "default" },
     { "Skip this menu on launch", "on", "off" },
     { "Show launch image", "on", "off" },
-    { "Launch System Menu", "on", "off" },
     { "redNAND", "on", "off" },
     { "SEEPROM redirection", "on", "off" },
     { "OTP redirection", "on", "off" },
