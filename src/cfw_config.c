@@ -79,6 +79,7 @@ void default_config(cfw_config_t * config)
     config->viewMode = 0;
     config->directLaunch = 0;
     config->launchImage = 1;
+    config->sd_access = 0;
     config->redNAND = 0;
     config->seeprom_red = 0;
     config->otp_red = 0;
@@ -102,10 +103,14 @@ int read_config(cfw_config_t * config)
 
         if(split_string(line, '=', option, value, sizeof(option)) == 1)
         {
-            if(strcmp(option, "directLaunch") == 0)
+            if(strcmp(option, "viewMode") == 0)
+                config->viewMode = atoi(value);
+            else if(strcmp(option, "directLaunch") == 0)
                 config->directLaunch = atoi(value);
             else if(strcmp(option, "launchImage") == 0)
                 config->launchImage = atoi(value);
+            else if(strcmp(option, "sd_access") == 0)
+                config->sd_access = atoi(value);
             else if(strcmp(option, "redNAND") == 0)
                 config->redNAND = atoi(value);
             else if(strcmp(option, "seeprom_red") == 0)
@@ -114,8 +119,6 @@ int read_config(cfw_config_t * config)
                 config->otp_red = atoi(value);
             else if(strcmp(option, "syshaxXml") == 0)
                 config->syshaxXml = atoi(value);
-            else if(strcmp(option, "viewMode") == 0)
-                config->viewMode = atoi(value);
         }
     }
 
@@ -135,6 +138,7 @@ int write_config(cfw_config_t * config)
     fprintf(pFile, "viewMode=%i\n", config->viewMode);
     fprintf(pFile, "directLaunch=%i\n", config->directLaunch);
     fprintf(pFile, "launchImage=%i\n", config->launchImage);
+    fprintf(pFile, "sd_access=%i\n", config->sd_access);
     fprintf(pFile, "redNAND=%i\n", config->redNAND);
     fprintf(pFile, "seeprom_red=%i\n", config->seeprom_red);
     fprintf(pFile, "otp_red=%i\n", config->otp_red);

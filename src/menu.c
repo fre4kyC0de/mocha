@@ -38,7 +38,7 @@
 #include "menu.h"
 #include "id.h"
 
-#define MAX_CONFIG_SETTINGS_EXPERT          7
+#define MAX_CONFIG_SETTINGS_EXPERT          8
 #define MAX_CONFIG_SETTINGS_DEFAULT         (MAX_CONFIG_SETTINGS_EXPERT - 3)
 
 #define TEXT_SEL(x, text1, text2)           ((x) ? (text1) : (text2))
@@ -50,8 +50,9 @@ struct {
 } selection_options[] =
 {
     { "Config view mode", "expert", "default" },
-    { "Skip this menu on launch", "on", "off" },
+    { "Display this menu on launch", "hide", "show" },
     { "Show launch image", "on", "off" },
+    { "Unrestrict SD access", "on", "off" },
     { "redNAND", "on", "off" },
     { "SEEPROM redirection", "on", "off" },
     { "OTP redirection", "on", "off" },
@@ -159,15 +160,18 @@ int ShowMenu(cfw_config_t * currentConfig)
                     config.launchImage = !config.launchImage;
                     break;
                 case 3:
-                    config.redNAND = !config.redNAND;
+                    config.sd_access = !config.sd_access;
                     break;
                 case 4:
-                    config.seeprom_red = !config.seeprom_red;
+                    config.redNAND = !config.redNAND;
                     break;
                 case 5:
-                    config.otp_red = !config.otp_red;
+                    config.seeprom_red = !config.seeprom_red;
                     break;
                 case 6:
+                    config.otp_red = !config.otp_red;
+                    break;
+                case 7:
                     config.syshaxXml = !config.syshaxXml;
                     break;
                 default:
@@ -218,10 +222,9 @@ int ShowMenu(cfw_config_t * currentConfig)
                                   TEXT_SEL(configPtr[idx], " ", "<"), selection_options[idx].disabled, TEXT_SEL(configPtr[idx], " ", ">"));
             }
 
-            console_print_pos(x_offset, 14, "Credits go to everyone who contributed to Wii U scene publicly.");
-            console_print_pos(x_offset, 15, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
-            console_print_pos(x_offset, 16, "FSHax implementation by Maschell.");
-            console_print_pos(x_offset, 17, "Multiple small changes by fre4kyC0de.");
+            console_print_pos(x_offset, 15, "Credits go to everyone who contributed to Wii U scene publicly.");
+            console_print_pos(x_offset, 16, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
+            console_print_pos(x_offset, 17, "FSHax by Maschell. Multiple small changes by fre4kyC0de.");
 
             // Flip buffers
             OSScreenFlipBuffersEx(0);

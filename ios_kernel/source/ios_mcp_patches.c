@@ -46,7 +46,17 @@ void mcp_run_patches(u32 ios_elf_start)
 
     section_write_word(ios_elf_start, 0x05056718, ARM_BL(0x05056718, _text_start));
 
-    section_write_word(ios_elf_start, 0x05002BBE, THUMB_BL(0x05002BBE, patch_SD_access_check));
+    if(cfw_config.sd_access)
+    {
+        section_write_word(ios_elf_start, 0x05002BBE, THUMB_BL(0x05002BBE, patch_SD_access_check));
+    }
+
+    /*if(cfw_config.redNAND)
+    {
+        // run vWii mode using OSv1 instead of OSv0 [patch by jagotu]
+        section_write_word(ios_elf_start, 0x050623C4, 0x10004001);
+        section_write_word(ios_elf_start, 0x0506240C, 0x10004001);
+    }*/
 
     if(cfw_config.syshaxXml)
     {
