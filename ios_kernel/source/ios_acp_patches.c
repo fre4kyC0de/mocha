@@ -46,8 +46,8 @@ void acp_run_patches(u32 ios_elf_start)
     section_write_word(ios_elf_start, 0xE00601F0, ARM_BL(0xE00601F0, ACP_FSARawRead_hook));
 
     // patch logs to output more info
-    //section_write_word(ios_elf_start, 0xE009801C, ARM_B(0xE009801C, 0xE00C4D54));
-    //section_write_word(ios_elf_start, 0xE00D87B0, ARM_B(0xE00D87B0, 0xE00C4D54));
-    //section_write_word(ios_elf_start, 0xE00D6DE8, ARM_B(0xE00D6DE8, 0xE00C4D54));
-    //section_write_word(ios_elf_start, 0xE009A0C4, 0xE3A00000);
+    section_write_word(ios_elf_start, 0xE009801C, ARM_B(0xE009801C, 0xE00C4D54));
+    section_write_word(ios_elf_start, 0xE00D87B0, ARM_B(0xE00D87B0, 0xE00C4D54));
+    section_write_word(ios_elf_start, 0xE00D6DE8, ARM_B(0xE00D6DE8, 0xE00C4D54));
+    section_write_word(ios_elf_start, 0xE009A0C4, 0xE3A00000);
 }

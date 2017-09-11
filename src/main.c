@@ -92,11 +92,12 @@ int Menu_Main(void)
         if(res == 0)
         {
             OSForceFullRelaunch();
-            //SYSLaunchMenu();
+
             if(defaultSlot) //normal menu boot
                 SYSLaunchMenu();
             else //show mii select
                 _SYSLaunchMenuWithCheckingAccount(slot);
+
             returnCode = EXIT_RELAUNCH_ON_LOAD;
         }
     }
