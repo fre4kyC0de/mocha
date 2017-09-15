@@ -128,12 +128,12 @@ struct OSThread_ {
 
     char _[0x394 - 0x330];
 
-	void *stackBase;
-	void *stackEnd;
+    void *stackBase;
+    void *stackEnd;
 
-	ThreadFunc entryPoint;
+    ThreadFunc entryPoint;
 
-	char _3A0[0x6A0 - 0x3A0];
+    char _3A0[0x6A0 - 0x3A0];
 };
 
 typedef struct _OSCalendarTime {

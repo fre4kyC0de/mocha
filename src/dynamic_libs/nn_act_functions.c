@@ -43,8 +43,8 @@ void InitACTFunctionPointers(void)
     InitAcquireACT();
 
     OS_FIND_EXPORT_EX(nn_act_handle, Initialize__Q2_2nn3actFv, nn_act_Initialize)
-	OS_FIND_EXPORT_EX(nn_act_handle, Finalize__Q2_2nn3actFv, nn_act_Finalize)
-	OS_FIND_EXPORT_EX(nn_act_handle, GetSlotNo__Q2_2nn3actFv, nn_act_GetSlotNo)
-	OS_FIND_EXPORT_EX(nn_act_handle, GetDefaultAccount__Q2_2nn3actFv, nn_act_GetDefaultAccount)
-	OS_FIND_EXPORT_EX(nn_act_handle, GetPersistentIdEx__Q2_2nn3actFUc, nn_act_GetPersistentIdEx)
+    OS_FIND_EXPORT_EX(nn_act_handle, Finalize__Q2_2nn3actFv, nn_act_Finalize)
+    OS_FIND_EXPORT_EX(nn_act_handle, GetSlotNo__Q2_2nn3actFv, nn_act_GetSlotNo)
+    OS_FIND_EXPORT_EX(nn_act_handle, GetDefaultAccount__Q2_2nn3actFv, nn_act_GetDefaultAccount)
+    OS_FIND_EXPORT_EX(nn_act_handle, GetPersistentIdEx__Q2_2nn3actFUc, nn_act_GetPersistentIdEx)
 }

@@ -46,7 +46,7 @@ void InitSysFunctionPointers(void)
     OS_FIND_EXPORT(sysapp_handle, _SYSLaunchTitleByPathFromLauncher);
     OS_FIND_EXPORT(sysapp_handle, SYSRelaunchTitle);
     OS_FIND_EXPORT(sysapp_handle, SYSLaunchMenu);
-	OS_FIND_EXPORT(sysapp_handle, _SYSLaunchMenuWithCheckingAccount);
+    OS_FIND_EXPORT(sysapp_handle, _SYSLaunchMenuWithCheckingAccount);
     OS_FIND_EXPORT(sysapp_handle, SYSCheckTitleExists);
     OS_FIND_EXPORT(sysapp_handle, SYSLaunchTitle);
     OS_FIND_EXPORT(sysapp_handle, SYSLaunchSettings);
