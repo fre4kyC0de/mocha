@@ -27,9 +27,9 @@ static int exitToHBLOnLaunch = 0;
 
 int Menu_Main(void)
 {
-	//!---------INIT---------
-	InitOSFunctionPointers();
-	InitSysFunctionPointers();
+    //!---------INIT---------
+    InitOSFunctionPointers();
+    InitSysFunctionPointers();
     InitFSFunctionPointers();
     InitSocketFunctionPointers();
     InitVPadFunctionPointers();

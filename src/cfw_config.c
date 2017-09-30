@@ -78,7 +78,7 @@ void default_config(cfw_config_t * config)
     memset(config, 0, sizeof(cfw_config_t));
     config->viewMode = 0;
     config->directLaunch = 0;
-    config->launchImage = 1;
+    config->launchImage = 0;
     config->sd_access = 0;
     config->redNAND = 0;
     config->seeprom_red = 0;
@@ -107,8 +107,6 @@ int read_config(cfw_config_t * config)
                 config->viewMode = atoi(value);
             else if(strcmp(option, "directLaunch") == 0)
                 config->directLaunch = atoi(value);
-            else if(strcmp(option, "launchImage") == 0)
-                config->launchImage = atoi(value);
             else if(strcmp(option, "sd_access") == 0)
                 config->sd_access = atoi(value);
             else if(strcmp(option, "redNAND") == 0)
@@ -123,6 +121,9 @@ int read_config(cfw_config_t * config)
     }
 
     fclose(pFile);
+	
+	config->launchImage = 0;
+	
     return 0;
 }
 
@@ -137,7 +138,6 @@ int write_config(cfw_config_t * config)
     fprintf(pFile, "[MOCHA]\n");
     fprintf(pFile, "viewMode=%i\n", config->viewMode);
     fprintf(pFile, "directLaunch=%i\n", config->directLaunch);
-    fprintf(pFile, "launchImage=%i\n", config->launchImage);
     fprintf(pFile, "sd_access=%i\n", config->sd_access);
     fprintf(pFile, "redNAND=%i\n", config->redNAND);
     fprintf(pFile, "seeprom_red=%i\n", config->seeprom_red);
