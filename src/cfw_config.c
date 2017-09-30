@@ -122,7 +122,7 @@ int read_config(cfw_config_t * config)
 
     fclose(pFile);
 	
-	config->launchImage = 0;
+    config->launchImage = 0;
 	
     return 0;
 }
