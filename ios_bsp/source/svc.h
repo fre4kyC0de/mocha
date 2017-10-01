@@ -1,7 +1,7 @@
 #ifndef SVC_H
 #define SVC_H
 
-#include "types.h"
+#include "../../common/types.h"
 
 typedef struct
 {

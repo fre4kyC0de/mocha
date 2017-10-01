@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "types.h"
+#include "../../common/types.h"
 #include "devices.h"
 #include "imports.h"
 #include "sdio.h"

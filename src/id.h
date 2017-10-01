@@ -2,7 +2,7 @@
 #ifndef _ID_H_
 #define _ID_H_
 
-#include "common/types.h"
+#include "../common/types.h"
 
 u64 currentTitleId;
 u32 shortTilteId_low;

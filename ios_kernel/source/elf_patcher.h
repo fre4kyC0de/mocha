@@ -24,7 +24,7 @@
 #ifndef _ELF_PATCHER_H
 #define _ELF_PATCHER_H
 
-#include "types.h"
+#include "../../common/types.h"
 
 #define ARM_B(addr, func)       (0xEA000000 | ((((u32)(func) - (u32)(addr) - 8) >> 2) & 0x00FFFFFF))                                                        // +-32MB
 #define ARM_BL(addr, func)      (0xEB000000 | ((((u32)(func) - (u32)(addr) - 8) >> 2) & 0x00FFFFFF))                                                        // +-32MB

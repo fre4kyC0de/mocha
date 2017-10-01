@@ -1,7 +1,7 @@
 #ifndef NET_IFMGR_NCL
 #define NET_IFMGR_NCL
 
-#include "types.h"
+#include "../../common/types.h"
 
 int ifmgrnclInit();
 int ifmgrnclExit();

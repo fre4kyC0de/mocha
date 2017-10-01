@@ -21,7 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#include "types.h"
+#include "../../common/types.h"
 #include "elf_patcher.h"
 #include "ios_bsp_patches.h"
 #include "../../ios_bsp/ios_bsp_syms.h"

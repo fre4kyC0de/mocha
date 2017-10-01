@@ -21,7 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#include "types.h"
+#include "../../common/types.h"
 #include "utils.h"
 
 #define svcAlloc            ((void *(*)(u32 heapid, u32 size))0x081234E4)

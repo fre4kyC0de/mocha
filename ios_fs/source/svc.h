@@ -1,7 +1,7 @@
 #ifndef SVC_H
 #define SVC_H
 
-#include "types.h"
+#include "../../common/types.h"
 
 #define SHUTDOWN_TYPE_POWER_OFF             0
 #define SHUTDOWN_TYPE_REBOOT                1

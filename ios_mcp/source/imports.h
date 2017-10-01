@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include "types.h"
+#include "../../common/types.h"
 
 #define MCP_SVC_BASE ((void*)0x050567EC)
 

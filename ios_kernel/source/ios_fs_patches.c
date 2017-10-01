@@ -21,7 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#include "types.h"
+#include "../../common/types.h"
 #include "elf_patcher.h"
 #include "ios_fs_patches.h"
 #include "config.h"

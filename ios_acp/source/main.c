@@ -21,7 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
- #include "types.h"
+ #include "../../common/types.h"
 
 int ACP_FSARawRead_hook(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle)
 {
