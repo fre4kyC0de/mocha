@@ -3,14 +3,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "../common/types.h"
-#include "common/fs_defs.h"
+#include "dynamic_libs/fs_defs.h"
 #include "dynamic_libs/fs_functions.h"
 
-
-int MountFS(void *pClient, void *pCmd, char **mount_path)
+s32 MountFS(void *pClient, void *pCmd, char **mount_path)
 {
-    int result = -1;
+    s32 result = -1;
 
     void *mountSrc = malloc(FS_MOUNT_SOURCE_SIZE);
     if(!mountSrc)
@@ -19,6 +17,7 @@ int MountFS(void *pClient, void *pCmd, char **mount_path)
     char* mountPath = (char*) malloc(FS_MAX_MOUNTPATH_SIZE);
     if(!mountPath) {
         free(mountSrc);
+        mountSrc = NULL;
         return -4;
     }
 
@@ -38,25 +37,29 @@ int MountFS(void *pClient, void *pCmd, char **mount_path)
 
     free(mountPath);
     free(mountSrc);
+
+    mountPath = NULL;
+    mountSrc = NULL;
+
     return result;
 }
 
-int UmountFS(void *pClient, void *pCmd, const char *mountPath)
+s32 UmountFS(void *pClient, void *pCmd, const char *mountPath)
 {
-    int result = -1;
+    s32 result = -1;
     result = FSUnmount(pClient, pCmd, mountPath, -1);
 
     return result;
 }
 
-int LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
+s32 LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
 {
     //! always initialze input
 	*inbuffer = NULL;
     if(size)
         *size = 0;
 
-    int iFd = open(filepath, O_RDONLY);
+    s32 iFd = open(filepath, O_RDONLY);
 	if (iFd < 0)
 		return -1;
 
@@ -72,7 +75,7 @@ int LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
 
     u32 blocksize = 0x4000;
     u32 done = 0;
-    int readBytes = 0;
+    s32 readBytes = 0;
 
 	while(done < filesize)
     {
@@ -90,21 +93,21 @@ int LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
 	if (done != filesize)
 	{
 		free(buffer);
+		buffer = NULL;
 		return -3;
 	}
 
 	*inbuffer = buffer;
 
     //! sign is optional input
-    if(size)
-    {
+    if(size){
         *size = filesize;
     }
 
 	return filesize;
 }
 
-int CheckFile(const char * filepath)
+s32 CheckFile(const char * filepath)
 {
 	if(!filepath)
 		return 0;
@@ -129,17 +132,17 @@ int CheckFile(const char * filepath)
 	return 0;
 }
 
-int CreateSubfolder(const char * fullpath)
+s32 CreateSubfolder(const char * fullpath)
 {
 	if(!fullpath)
 		return 0;
 
-	int result = 0;
+	s32 result = 0;
 
 	char dirnoslash[strlen(fullpath)+1];
 	strcpy(dirnoslash, fullpath);
 
-	int pos = strlen(dirnoslash)-1;
+	s32 pos = strlen(dirnoslash)-1;
 	while(dirnoslash[pos] == '/')
 	{
 		dirnoslash[pos] = '\0';

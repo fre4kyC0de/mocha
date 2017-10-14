@@ -51,10 +51,11 @@ static const char exception_print_formats[18][45] = {
       "%p:  %08X %08X %08X %08X\n",                         // 17
 };
 
-static unsigned char exception_cb(OSContext * context, unsigned char exception_type) {
+static unsigned char exception_cb(void * c, unsigned char exception_type) {
     char buf[850];
     int pos = 0;
 
+    OSContext *context = (OSContext *) c;
     /*
      * This part is mostly from libogc. Thanks to the devs over there.
      */
@@ -119,10 +120,7 @@ static unsigned char exception_cb(OSContext * context, unsigned char exception_t
 		for (i = 0; i < 8; i += 4)
             pos += sprintf(buf + pos, exception_print_formats[17], &(pAdd[i]),pAdd[i], pAdd[i+1], pAdd[i+2], pAdd[i+3]);
 	//}
-    #if DEBUG_LOGGER == 1 
-        log_print(buf);
-    #endif
-    
+    log_print(buf);   
     OSFatal(buf);
     return 1;
 }
