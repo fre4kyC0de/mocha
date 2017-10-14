@@ -28,12 +28,12 @@ typedef struct
 {
     int viewMode;
     int directLaunch;
-    int launchImage;
     int sd_access;
     int redNAND;
     int seeprom_red;
     int otp_red;
     int syshaxXml;
+    int launchImage;
 } cfw_config_t;
 
 #endif
