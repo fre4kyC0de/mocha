@@ -12,6 +12,7 @@
 #include "dynamic_libs/vpad_functions.h"
 #include "dynamic_libs/socket_functions.h"
 #include "dynamic_libs/nn_act_functions.h"
+#include "dynamic_libs/nn_nim_functions.h"
 #include "fs/fs_utils.h"
 #include "fs/sd_fat_devoptab.h"
 #include "system/memory.h"
@@ -22,6 +23,7 @@
 #include "main.h"
 #include "ios_exploit.h"
 #include "id.h"
+#include "nnu.h"
 
 static int exitToHBLOnLaunch = 0;
 
@@ -34,6 +36,7 @@ int Menu_Main(void)
     InitSocketFunctionPointers();
     InitVPadFunctionPointers();
     InitACTFunctionPointers();
+    InitNimFunctionPointers();
 
     currentTitleId = OSGetTitleID();
     shortTilteId_low = (u32)(currentTitleId & 0xFFFFFFFF);
@@ -101,6 +104,8 @@ int Menu_Main(void)
             returnCode = EXIT_RELAUNCH_ON_LOAD;
         }
     }
+
+    //nnupatcher();
 
     unmount_sd_fat("sd");
 
