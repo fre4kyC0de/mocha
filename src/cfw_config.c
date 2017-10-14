@@ -82,6 +82,7 @@ void default_config(cfw_config_t * config)
     config->launchImage = 0;
     config->sd_access = 0;
     config->redNAND = 0;
+    config->wupserver = 0;
     config->seeprom_red = 0;
     config->otp_red = 0;
     config->syshaxXml = 0;
@@ -112,6 +113,8 @@ int read_config(cfw_config_t * config)
                 config->sd_access = atoi(value);
             else if(strcmp(option, "redNAND") == 0)
                 config->redNAND = atoi(value);
+            else if(strcmp(option, "wupserver") == 0)
+                config->wupserver = atoi(value);
             else if(strcmp(option, "seeprom_red") == 0)
                 config->seeprom_red = atoi(value);
             else if(strcmp(option, "otp_red") == 0)
@@ -141,6 +144,7 @@ int write_config(cfw_config_t * config)
     fprintf(pFile, "directLaunch=%i\n", config->directLaunch);
     fprintf(pFile, "sd_access=%i\n", config->sd_access);
     fprintf(pFile, "redNAND=%i\n", config->redNAND);
+    fprintf(pFile, "wupserver=%i\n", config->wupserver);
     fprintf(pFile, "seeprom_red=%i\n", config->seeprom_red);
     fprintf(pFile, "otp_red=%i\n", config->otp_red);
     fprintf(pFile, "syshaxXml=%i\n", config->syshaxXml);
