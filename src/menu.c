@@ -47,18 +47,19 @@ struct {
     const char *option;
     const char *enabled;
     const char *disabled;
+    int *pSetting;
 } selection_options[] =
 {
     /* default options */
-    { "Config view mode", "expert", "default" },
-    { "Display this menu on launch", "hide", "show" },
-    { "Unrestrict SD access", "on", "off" },
-    { "redNAND", "on", "off" },
-    { "Start wupserver", "yes", "no" },
+    { "Config view mode", "expert", "default", NULL },
+    { "Display this menu on launch", "hide", "show", NULL },
+    { "Unrestrict SD access", "on", "off", NULL },
+    { "redNAND", "on", "off", NULL },
+    { "Start wupserver", "yes", "no", NULL },
     /* expert options */
-    { "SEEPROM redirection", "on", "off" },
-    { "OTP redirection", "on", "off" },
-    { "Use syshax.xml (coldboothax)", "on", "off" },
+    { "SEEPROM redirection", "on", "off", NULL },
+    { "OTP redirection", "on", "off", NULL },
+    { "Use syshax.xml (coldboothax)", "on", "off", NULL },
 };
 
 static void console_print_pos(int x, int y, const char *format, ...)
@@ -112,6 +113,17 @@ int ShowMenu(cfw_config_t * currentConfig)
     cfw_config_t config;
     memcpy(&config, currentConfig, sizeof(cfw_config_t));
 
+    // declare pointers
+    selection_options[0].pSetting = &config.viewMode;
+    selection_options[1].pSetting = &config.directLaunch;
+    selection_options[2].pSetting = &config.sd_access;
+    selection_options[3].pSetting = &config.redNAND;
+    selection_options[4].pSetting = &config.wupserver;
+    selection_options[5].pSetting = &config.seeprom_red;
+    selection_options[6].pSetting = &config.otp_red;
+    selection_options[7].pSetting = &config.syshaxXml;
+
+    int option_count = sizeof(selection_options) / sizeof(selection_options[0]);
     int max_config_item = config.viewMode ? MAX_CONFIG_SETTINGS_EXPERT : MAX_CONFIG_SETTINGS_DEFAULT;
 
     while(1)
@@ -149,36 +161,13 @@ int ShowMenu(cfw_config_t * currentConfig)
             }
             else if(vpad.btns_d & (VPAD_BUTTON_LEFT | VPAD_BUTTON_RIGHT))
             {
-                switch(selected)
-                {
-                case 0:
-                    config.viewMode = !config.viewMode;
-                    max_config_item = config.viewMode ? MAX_CONFIG_SETTINGS_EXPERT : MAX_CONFIG_SETTINGS_DEFAULT;
-                    break;
-                case 1:
-                    config.directLaunch = !config.directLaunch;
-                    break;
-                case 2:
-                    config.sd_access = !config.sd_access;
-                    break;
-                case 3:
-                    config.redNAND = !config.redNAND;
-                    break;
-                case 4:
-                    config.wupserver = !config.wupserver;
-                    break;
-                case 5:
-                    config.seeprom_red = !config.seeprom_red;
-                    break;
-                case 6:
-                    config.otp_red = !config.otp_red;
-                    break;
-                case 7:
-                    config.syshaxXml = !config.syshaxXml;
-                    break;
-                default:
-                    break;
+                if (selected >= 0 && selected <= (option_count - 1)) { // should never cause problems, but just to be sure
+                    if (selection_options[selected].pSetting != NULL) {
+                        *selection_options[selected].pSetting = !(*selection_options[selected].pSetting);
+                    }
                 }
+
+                max_config_item = config.viewMode ? MAX_CONFIG_SETTINGS_EXPERT : MAX_CONFIG_SETTINGS_DEFAULT;
 
                 if(!config.viewMode)
                 {
@@ -213,57 +202,15 @@ int ShowMenu(cfw_config_t * currentConfig)
             console_print_pos(x_offset, 5, "Hold B on start to force enter this menu");
 
             int y_offset = 6;
-            int option_count = sizeof(selection_options) / sizeof(selection_options[0]);
             int idx;
-            /*int * configPtr = &config.viewMode;*/
 
             for(idx = 0; idx < option_count && idx < max_config_item; idx++)
             {
-                switch(idx)
-				{
-                case 0:
+                if (selection_options[idx].pSetting != NULL) {
                     console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.viewMode, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.viewMode, ">", " "),
-                                      TEXT_SEL(config.viewMode, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.viewMode, " ", ">"));
-                    break;
-                case 1:
-                    console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.directLaunch, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.directLaunch, ">", " "),
-                                      TEXT_SEL(config.directLaunch, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.directLaunch, " ", ">"));
-                    break;
-                case 2:
-                    console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.sd_access, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.sd_access, ">", " "),
-                                      TEXT_SEL(config.sd_access, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.sd_access, " ", ">"));
-                    break;
-                case 3:
-                    console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.redNAND, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.redNAND, ">", " "),
-                                      TEXT_SEL(config.redNAND, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.redNAND, " ", ">"));
-                    break;
-                case 4:
-                    console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.wupserver, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.wupserver, ">", " "),
-                                      TEXT_SEL(config.wupserver, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.wupserver, " ", ">"));
-                    break;
-                case 5:
-                    console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.seeprom_red, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.seeprom_red, ">", " "),
-                                      TEXT_SEL(config.seeprom_red, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.seeprom_red, " ", ">"));
-                    break;
-                case 6:
-                    console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.otp_red, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.otp_red, ">", " "),
-                                      TEXT_SEL(config.otp_red, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.otp_red, " ", ">"));
-                    break;
-                case 7:
-                    console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-                                      TEXT_SEL(config.syshaxXml, "<", " "), selection_options[idx].enabled,  TEXT_SEL(config.syshaxXml, ">", " "),
-                                      TEXT_SEL(config.syshaxXml, " ", "<"), selection_options[idx].disabled, TEXT_SEL(config.syshaxXml, " ", ">"));
-                    break;
-                default:
-                    break;
-				}
+                                      TEXT_SEL(*selection_options[idx].pSetting, "<", " "), selection_options[idx].enabled,  TEXT_SEL(*selection_options[idx].pSetting, ">", " "),
+                                      TEXT_SEL(*selection_options[idx].pSetting, " ", "<"), selection_options[idx].disabled, TEXT_SEL(*selection_options[idx].pSetting, " ", ">"));
+                }
             }
 
             console_print_pos(x_offset, 15, "Credits go to everyone who contributed to Wii U scene publicly.");
