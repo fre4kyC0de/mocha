@@ -110,6 +110,8 @@ int ShowMenu(cfw_config_t * currentConfig)
     int initScreen = 1;
     int selected = 0;
     int launch = 0;
+	char* indent;
+	int indent_counter, indent_counter_bak;
     cfw_config_t config;
     memcpy(&config, currentConfig, sizeof(cfw_config_t));
 
@@ -195,7 +197,22 @@ int ShowMenu(cfw_config_t * currentConfig)
             OSScreenClearBufferEx(0, 0);
             OSScreenClearBufferEx(1, 0);
 
-            console_print_pos(x_offset, 1, "      -- MOCHA CFW %s by Dimok (Title: %08X%08X) --", APP_VERSION, shortTilteId_high, shortTilteId_low);
+			indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand)
+			indent_counter -= 35; // == strlen(TITLE)
+			indent_counter -= strlen(APP_VERSION);
+			indent_counter -= (2 * 8); // == strlen(shortTilteId_high) + strlen(shortTilteId_low)
+
+			indent_counter_bak = indent_counter;
+			indent_counter /= 2;
+			if ((indent_counter * 2) > indent_counter_bak) // just to be sure
+				indent_counter -= 1;
+
+			indent = (char*)malloc(34); // 68 / 2 =(aufgerundet)= 34
+			memset(indent, '\0', 34);
+			for (int i = 0; i <= (indent_counter - 1); i++)
+				indent[i] = ' ';
+
+            console_print_pos(x_offset, 1, "%s-- MOCHA CFW %s by Dimok (Title: %08X%08X) --", indent, APP_VERSION, shortTilteId_high, shortTilteId_low);
 
             console_print_pos(x_offset, 3, "Select your options and press A to launch.");
             console_print_pos(x_offset, 4, "Press HOME to exit back to HBL.");
@@ -213,9 +230,9 @@ int ShowMenu(cfw_config_t * currentConfig)
                 }
             }
 
-            console_print_pos(x_offset, 15, "Credits go to everyone who contributed to Wii U scene publicly.");
-            console_print_pos(x_offset, 16, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek.");
-            console_print_pos(x_offset, 17, "FSHax by Zarklord1 and Maschell. Multiple small changes by fre4kyC0de.");
+            console_print_pos(x_offset, 15, "Credits go to everyone who contributed to Wii U scene publicly");
+            console_print_pos(x_offset, 16, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek");
+            console_print_pos(x_offset, 17, "FSHax by Zarklord1 and Maschell; multiple small changes by fre4kyC0de");
 
             // Flip buffers
             OSScreenFlipBuffersEx(0);
