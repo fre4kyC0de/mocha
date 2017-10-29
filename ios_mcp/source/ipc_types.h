@@ -1,7 +1,7 @@
 #ifndef _IPC_TYPES_H_
 #define _IPC_TYPES_H_
 
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 
 #define IOS_COMMAND_INVALID     0x00
 #define IOS_OPEN                0x01

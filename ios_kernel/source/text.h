@@ -1,7 +1,7 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 
 void drawSplashScreen(void);
 void clearScreen(u32 color);

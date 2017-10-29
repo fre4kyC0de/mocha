@@ -22,7 +22,7 @@
  * distribution.
  ***************************************************************************/
 #include <stdio.h>
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 #include "devices.h"
 #include "imports.h"
 #include "fsa.h"

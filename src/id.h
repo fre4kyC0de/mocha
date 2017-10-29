@@ -2,7 +2,7 @@
 #ifndef _ID_H_
 #define _ID_H_
 
-#include "../common/types.h"
+#include "dynamic_libs/os_types.h"
 
 u64 currentTitleId;
 u32 shortTilteId_low;

@@ -27,7 +27,7 @@
 #include <malloc.h>
 #include <unistd.h>
 #include <stdio.h>
-#include "../common/types.h"
+#include "dynamic_libs/os_types.h"
 #include "cfw_config.h"
 #include "fs/fs_utils.h"
 

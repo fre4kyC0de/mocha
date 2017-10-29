@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include "config.h"
 #include "utils.h"
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 #include "elf_patcher.h"
 #include "kernel_patches.h"
 #include "ios_mcp_patches.h"

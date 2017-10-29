@@ -1,13 +1,11 @@
 #ifndef FS_DEFS_H
 #define FS_DEFS_H
 
-#include <gctypes.h>
+#include "os_types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "os_types.h"
 
 /* FS defines and types */
 #define FS_MAX_LOCALPATH_SIZE           511

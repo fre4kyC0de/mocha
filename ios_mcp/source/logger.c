@@ -1,6 +1,6 @@
 #include <stdarg.h>
 #include <string.h>
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 #include "imports.h"
 #include "socket.h"
 #include "logger.h"

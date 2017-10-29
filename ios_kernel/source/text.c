@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 #include "font_bin.h"
 
 #define FRAMEBUFFER_ADDRESS (0x14000000+0x38C0000)

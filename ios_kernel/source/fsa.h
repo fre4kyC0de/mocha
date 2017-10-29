@@ -24,7 +24,7 @@
 #ifndef FSA_H
 #define FSA_H
 
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 
 #define NAND_DUMP_SIGNATURE_SECTOR          0x01
 #define NAND_MAX_DESC_TYPES                 5

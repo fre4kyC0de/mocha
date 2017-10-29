@@ -1,7 +1,7 @@
 #ifndef NET_IFMGR_NCL
 #define NET_IFMGR_NCL
 
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 
 int ifmgrnclInit();
 int ifmgrnclExit();

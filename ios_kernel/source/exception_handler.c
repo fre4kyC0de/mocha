@@ -22,7 +22,7 @@
  * distribution.
  ***************************************************************************/
 #include "text.h"
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 
 void crash_handler(unsigned int *context, int type)
 {

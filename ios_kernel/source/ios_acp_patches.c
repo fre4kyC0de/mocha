@@ -21,7 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#include "../../common/types.h"
+#include "../../src/dynamic_libs/os_types.h"
 #include "elf_patcher.h"
 #include "config.h"
 #include "ios_acp_patches.h"
