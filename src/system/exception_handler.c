@@ -51,11 +51,12 @@ static const char exception_print_formats[18][45] = {
       "%p:  %08X %08X %08X %08X\n",                         // 17
 };
 
-static unsigned char exception_cb(void * c, unsigned char exception_type) {
+//static unsigned char exception_cb(void * c, unsigned char exception_type) {
+static unsigned char exception_cb(OSContext * context, unsigned char exception_type) {
     char buf[850];
     int pos = 0;
 
-    OSContext *context = (OSContext *) c;
+    //OSContext *context = (OSContext *) c;
     /*
      * This part is mostly from libogc. Thanks to the devs over there.
      */

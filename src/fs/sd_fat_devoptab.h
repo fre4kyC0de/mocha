@@ -30,7 +30,7 @@ extern "C" {
 
 s32 mount_sd_fat(const char *path);
 s32 unmount_sd_fat(const char *path);
-
+void deleteDevTabsNames();
 #ifdef __cplusplus
 }
 #endif
