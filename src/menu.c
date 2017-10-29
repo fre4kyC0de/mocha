@@ -207,8 +207,8 @@ int ShowMenu(cfw_config_t * currentConfig)
 			if ((indent_counter * 2) > indent_counter_bak) // just to be sure
 				indent_counter -= 1;
 
-			indent = (char*)malloc(34); // 68 / 2 =(aufgerundet)= 34
-			memset(indent, '\0', 34);
+			indent = (char*)malloc(35); // 34 [== 68 / 2] + 1 ('\0')
+			memset(indent, '\0', 35);
 			for (int i = 0; i <= (indent_counter - 1); i++)
 				indent[i] = ' ';
 
