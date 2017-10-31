@@ -111,7 +111,7 @@ int ShowMenu(cfw_config_t * currentConfig)
     int selected = 0;
     int launch = 0;
 	char* indent;
-	int indent_counter, indent_counter_bak;
+    int indent_counter, indent_counter_bak;
     cfw_config_t config;
     memcpy(&config, currentConfig, sizeof(cfw_config_t));
 
@@ -197,20 +197,23 @@ int ShowMenu(cfw_config_t * currentConfig)
             OSScreenClearBufferEx(0, 0);
             OSScreenClearBufferEx(1, 0);
 
-			indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand)
-			indent_counter -= 35; // == strlen(TITLE)
-			indent_counter -= strlen(APP_VERSION);
-			indent_counter -= (2 * 8); // == strlen(shortTilteId_high) + strlen(shortTilteId_low)
+            indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand)
+            indent_counter -= 35; // == strlen(TITLE)
+            indent_counter -= strlen(APP_VERSION);
+            indent_counter -= (2 * 8); // == strlen(shortTilteId_high) + strlen(shortTilteId_low)
+            if ((indent_counter < 0) || (indent_counter > 68))
+                indent_counter = 0;
 
-			indent_counter_bak = indent_counter;
-			indent_counter /= 2;
-			if ((indent_counter * 2) > indent_counter_bak) // just to be sure
-				indent_counter -= 1;
+            indent_counter_bak = indent_counter;
+            indent_counter /= 2;
+            if ((indent_counter * 2) > indent_counter_bak) // just to be sure
+                indent_counter -= 1;
 
-			indent = (char*)malloc(35); // 34 [== 68 / 2] + 1 ('\0')
-			memset(indent, '\0', 35);
-			for (int i = 0; i <= (indent_counter - 1); i++)
-				indent[i] = ' ';
+            indent = (char*)malloc(35); // 34 [== 68 / 2] + 1 ('\0')
+            memset(indent, '\0', 35);
+			if ((indent_counter > 0) && (indent_counter < 35))
+                for (int i = 0; i <= (indent_counter - 1); i++)
+                    indent[i] = ' ';
 
             console_print_pos(x_offset, 1, "%s-- MOCHA CFW %s by Dimok (Title: %08X%08X) --", indent, APP_VERSION, shortTilteId_high, shortTilteId_low);
 
