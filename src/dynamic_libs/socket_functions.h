@@ -41,7 +41,7 @@ extern u32 hostIpAddress;
 
 #define SHUT_RD         0
 #define SHUT_WR         1
-#define SHUT-RDWR       2
+#define SHUT_RDWR       2
 
 #define SOCK_STREAM     1
 #define SOCK_DGRAM      2
