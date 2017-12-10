@@ -13,9 +13,6 @@ patch_MCP_authentication_check:
 patch_IOSC_VerifyPubkeySign:
 patch_cert_verification:
 patch_cached_cert_check:
-patch_bootMovie_check:
-patch_bootLogoTex_check:
-patch_region_launch_check:
 	.arm
 	mov r0, #0
 	bx lr
@@ -31,9 +28,5 @@ mcp_patches_table:
      .word 0x05054D6C,      patch_cached_cert_check,                8
 # over an hour, MCP crash prevention
      .word 0x05022474,      0xFFFFFFFF,                             4
-# MCP patches end here actually but lets tread the ACP patches as MCP as there are only patches
-     .word 0xE0030D68,      patch_bootMovie_check,                  4
-     .word 0xE0030D34,      patch_bootLogoTex_check,                4
-     .word 0xE0030498,      patch_region_launch_check,              4
 mcp_patches_table_end:
 

@@ -50,4 +50,7 @@ void acp_run_patches(u32 ios_elf_start)
     section_write_word(ios_elf_start, 0xE00D87B0, ARM_B(0xE00D87B0, 0xE00C4D54));
     section_write_word(ios_elf_start, 0xE00D6DE8, ARM_B(0xE00D6DE8, 0xE00C4D54));
     section_write_word(ios_elf_start, 0xE009A0C4, 0xE3A00000);
+
+    u32 patch_count = (u32)(((u8*)acp_patches_table_end) - ((u8*)acp_patches_table)) / sizeof(patch_table_t);
+    patch_table_entries(ios_elf_start, acp_patches_table, patch_count);
 }
