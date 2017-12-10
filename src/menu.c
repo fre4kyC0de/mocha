@@ -115,7 +115,7 @@ int ShowMenu(cfw_config_t * currentConfig)
     cfw_config_t config;
     memcpy(&config, currentConfig, sizeof(cfw_config_t));
 
-    // declare pointers
+    // declare pointers [fre4kyC0de-style]
     selection_options[0].pSetting = &config.viewMode;
     selection_options[1].pSetting = &config.directLaunch;
     selection_options[2].pSetting = &config.sd_access;
@@ -197,7 +197,7 @@ int ShowMenu(cfw_config_t * currentConfig)
             OSScreenClearBufferEx(0, 0);
             OSScreenClearBufferEx(1, 0);
 
-            indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand)
+            indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand einhalten)
             indent_counter -= 35; // == strlen(TITLE)
             indent_counter -= strlen(APP_VERSION);
             indent_counter -= (2 * 8); // == strlen(shortTilteId_high) + strlen(shortTilteId_low)
@@ -211,7 +211,7 @@ int ShowMenu(cfw_config_t * currentConfig)
 
             indent = (char*)malloc(35); // 34 [== 68 / 2] + 1 ('\0')
             memset(indent, '\0', 35);
-			if ((indent_counter > 0) && (indent_counter < 35))
+            if ((indent_counter > 0) && (indent_counter < 35))
                 for (int i = 0; i <= (indent_counter - 1); i++)
                     indent[i] = ' ';
 
