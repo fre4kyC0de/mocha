@@ -122,20 +122,27 @@ int _main()
     // run all instant patches as necessary
     instant_patches_setup();
 
-	*(volatile u32*)(0x1555500) = 0;
+    *(volatile u32*)(0x1555500) = 0;
 
-	/* REENABLE MMU */
-	restore_mmu(control_register);
+    /*// check for boot1hax
+    u32 boot1_ancast_magic = *(u32 *)0x1000A000;
+    if (boot1_ancast_magic == 0xEFA282D9) {
+        // device is running on boot1hax, will fix the corruption now
+        *(u32 *)(0x1000A200 + 0xAA75) = 0x0800000D;
+    }*/
+	
+    /* REENABLE MMU */
+    restore_mmu(control_register);
 
-	invalidate_dcache(0x081298BC, 0x4001); // giving a size >= 0x4000 invalidates all cache
-	invalidate_icache();
+    invalidate_dcache(0x081298BC, 0x4001); // giving a size >= 0x4000 invalidates all cache
+    invalidate_icache();
 
-	enable_interrupts(level);
+    enable_interrupts(level);
 
     if(cfw_config.redNAND)
     {
-	    redirection_setup();
+        redirection_setup();
     }
 
-	return 0;
+    return 0;
 }
