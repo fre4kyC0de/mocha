@@ -51,6 +51,16 @@ void log_print_(const char *str){
     log_lock = 0;
 }
 
+void OSFatal_printf(const char *format, ...){
+	char * tmp = NULL;
+	va_list va;
+	va_start(va, format);
+	if((vasprintf(&tmp, format, va) >= 0) && tmp){
+        OSFatal(tmp);
+	}
+	va_end(va);
+}
+
 void log_printf_(const char *format, ...)
 {
     if(log_socket < 0) {
