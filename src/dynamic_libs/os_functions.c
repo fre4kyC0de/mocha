@@ -120,6 +120,8 @@ EXPORT_DECL(bool, DisassemblePPCOpcode, u32 *, char *, u32, DisasmGetSym, u32);
 EXPORT_DECL(void*, OSGetSymbolName, u32, u8 *, u32);
 EXPORT_DECL(int, OSIsDebuggerInitialized, void);
 
+EXPORT_DECL(bool, OSGetSharedData, u32 type, u32 unk_r4, u8 *addr, u32 *size);
+
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Memory functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -127,7 +129,12 @@ EXPORT_VAR(u32 *, pMEMAllocFromDefaultHeapEx);
 EXPORT_VAR(u32 *, pMEMAllocFromDefaultHeap);
 EXPORT_VAR(u32 *, pMEMFreeToDefaultHeap);
 
+EXPORT_DECL(void *, MEMAllocFromAllocator, void * allocator, u32 size);
+EXPORT_DECL(void, MEMFreeToAllocator, void * allocator, void* address);
+
 EXPORT_DECL(s32, MEMGetBaseHeapHandle, s32 mem_arena);
+EXPORT_DECL(u32, MEMGetTotalFreeSizeForExpHeap, s32 heap);
+EXPORT_DECL(u32, MEMGetAllocatableSizeForExpHeapEx, s32 heap, s32 align);
 EXPORT_DECL(u32, MEMGetAllocatableSizeForFrmHeapEx, s32 heap, s32 align);
 EXPORT_DECL(void *, MEMAllocFromFrmHeapEx, s32 heap, u32 size, s32 align);
 EXPORT_DECL(void, MEMFreeToFrmHeap, s32 heap, s32 mode);
@@ -138,12 +145,16 @@ EXPORT_DECL(void, MEMFreeToExpHeap, s32 heap, void* ptr);
 EXPORT_DECL(void *, OSAllocFromSystem, u32 size, s32 alignment);
 EXPORT_DECL(void, OSFreeToSystem, void *addr);
 EXPORT_DECL(s32, OSIsAddressValid, const void *ptr);
+EXPORT_DECL(s32, MEMFindParentHeap, s32 heap);
+EXPORT_DECL(s32, OSGetMemBound, s32 type, u32 * startAddress, u32 * size);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! MCP functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXPORT_DECL(s32, MCP_Open, void);
 EXPORT_DECL(s32, MCP_Close, s32 handle);
+EXPORT_DECL(s32, MCP_TitleCount, s32 handle);
+EXPORT_DECL(s32, MCP_TitleList, s32 handle, s32 *res, void *data, s32 count);
 EXPORT_DECL(s32, MCP_GetOwnTitleInfo, s32 handle, void * data);
 EXPORT_DECL(void*, MCP_GetDeviceId, s32 handle, u32 * id);
 
@@ -160,6 +171,8 @@ EXPORT_DECL(void*, MCP_GetDeviceId, s32 handle, u32 * id);
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //EXPORT_DECL(void, DCInvalidateRange, void *buffer, u32 length);
 EXPORT_DECL(s32, OSDynLoad_GetModuleName, s32 handle, char *name_buffer, s32 *name_buffer_size);
+EXPORT_DECL(s32, OSIsHomeButtonMenuEnabled, void);
+EXPORT_DECL(s32, OSSetScreenCapturePermissionEx, s32 tvEnabled, s32 drcEnabled);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Energy Saver functions
@@ -272,6 +285,9 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, DisassemblePPCOpcode);
     OS_FIND_EXPORT(coreinit_handle, OSGetSymbolName);
     OS_FIND_EXPORT(coreinit_handle, OSIsDebuggerInitialized);
+
+    OS_FIND_EXPORT(coreinit_handle, OSGetSharedData);
+
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! Thread functions
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -324,6 +340,8 @@ void InitOSFunctionPointers(void)
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     OS_FIND_EXPORT(coreinit_handle, MCP_Open);
     OS_FIND_EXPORT(coreinit_handle, MCP_Close);
+    OS_FIND_EXPORT(coreinit_handle, MCP_TitleCount);
+    OS_FIND_EXPORT(coreinit_handle, MCP_TitleList);
     OS_FIND_EXPORT(coreinit_handle, MCP_GetOwnTitleInfo);
     OS_FIND_EXPORT(coreinit_handle, MCP_GetDeviceId);
 
@@ -334,7 +352,11 @@ void InitOSFunctionPointers(void)
     OSDynLoad_FindExport(coreinit_handle, 1, "MEMAllocFromDefaultHeap", &pMEMAllocFromDefaultHeap);
     OSDynLoad_FindExport(coreinit_handle, 1, "MEMFreeToDefaultHeap", &pMEMFreeToDefaultHeap);
 
+    OS_FIND_EXPORT(coreinit_handle, MEMAllocFromAllocator);
+    OS_FIND_EXPORT(coreinit_handle, MEMFreeToAllocator);
     OS_FIND_EXPORT(coreinit_handle, MEMGetBaseHeapHandle);
+    OS_FIND_EXPORT(coreinit_handle, MEMGetTotalFreeSizeForExpHeap);
+    OS_FIND_EXPORT(coreinit_handle, MEMGetAllocatableSizeForExpHeapEx);
     OS_FIND_EXPORT(coreinit_handle, MEMGetAllocatableSizeForFrmHeapEx);
     OS_FIND_EXPORT(coreinit_handle, MEMAllocFromFrmHeapEx);
     OS_FIND_EXPORT(coreinit_handle, MEMFreeToFrmHeap);
@@ -345,12 +367,16 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, OSAllocFromSystem);
     OS_FIND_EXPORT(coreinit_handle, OSFreeToSystem);
     OS_FIND_EXPORT(coreinit_handle, OSIsAddressValid);
+    OS_FIND_EXPORT(coreinit_handle, MEMFindParentHeap);
+    OS_FIND_EXPORT(coreinit_handle, OSGetMemBound);
 
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! Other function addresses
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
     OS_FIND_EXPORT(coreinit_handle, OSDynLoad_GetModuleName);
+    OS_FIND_EXPORT(coreinit_handle, OSIsHomeButtonMenuEnabled);
+    OS_FIND_EXPORT(coreinit_handle, OSSetScreenCapturePermissionEx);
 
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! Energy Saver functions
