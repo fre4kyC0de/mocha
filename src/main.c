@@ -19,6 +19,7 @@
 #include "utils/logger.h"
 #include "utils/utils.h"
 #include "common/common.h"
+#include "osscreen.h"
 #include "menu.h"
 #include "main.h"
 #include "ios_exploit.h"
@@ -60,6 +61,32 @@ int Menu_Main(void)
         return 0;
     }
 
+    // Init screen and screen buffers
+	int y_offset = 3;
+    OSScreenInit();
+    u32 screen_buf0_size = OSScreenGetBufferSizeEx(0);
+    u32 screen_buf1_size = OSScreenGetBufferSizeEx(1);
+    u8 * screenBuffer = (u8*) memalign(0x100, screen_buf0_size + screen_buf1_size);
+    OSScreenSetBufferEx(0, (void *)screenBuffer);
+    OSScreenSetBufferEx(1, (void *)(screenBuffer + screen_buf0_size));
+    OSScreenEnableEx(0, 1);
+    OSScreenEnableEx(1, 1);
+    // Clear screens
+    OSScreenClearBufferEx(0, 0);
+    OSScreenClearBufferEx(1, 0);
+    // Flip buffers
+    OSScreenFlipBuffersEx(0);
+    OSScreenFlipBuffersEx(1);
+
+    console_print_header();
+
+    console_print_pos(x_offset, y_offset, "Initializing VPAD...");
+    y_offset += 1;
+    // Flip buffers
+    OSScreenFlipBuffersEx(0);
+    OSScreenFlipBuffersEx(1);
+    os_usleep(20000);
+
     VPADInit();
     int forceMenu = 0;
 
@@ -74,7 +101,21 @@ int Menu_Main(void)
         }
     }
 
+    console_print_pos(x_offset, y_offset, "Mounting SD...");
+    y_offset += 1;
+    // Flip buffers
+    OSScreenFlipBuffersEx(0);
+    OSScreenFlipBuffersEx(1);
+    os_usleep(20000);
+
     mount_sd_fat("sd");
+
+    console_print_pos(x_offset, y_offset, "Reading config...");
+    y_offset += 1;
+    // Flip buffers
+    OSScreenFlipBuffersEx(0);
+    OSScreenFlipBuffersEx(1);
+    os_usleep(20000);
 
     cfw_config_t config;
     default_config(&config);
@@ -84,16 +125,47 @@ int Menu_Main(void)
 
     if(forceMenu || config.directLaunch == 0)
     {
+        console_print_pos(x_offset, y_offset, "Displaying menu...");
+        y_offset += 1;
+        // Flip buffers
+        OSScreenFlipBuffersEx(0);
+        OSScreenFlipBuffersEx(1);
+
         launch = ShowMenu(&config);
+
+		console_clear();
+		console_print_header();
+		y_offset = 3;
+		// Flip buffers
+		OSScreenFlipBuffersEx(0);
+		OSScreenFlipBuffersEx(1);
+		os_usleep(20000);
     }
 
     int returnCode = 0;
 
     if(launch)
     {
+        console_print_pos(x_offset, y_offset, "Handing over control to IOSUHAX...");
+        y_offset += 1;
+        // Flip buffers
+        OSScreenFlipBuffersEx(0);
+        OSScreenFlipBuffersEx(1);
+        os_usleep(20000);
+
         int res = ExecuteIOSExploit(&config);
         if(res == 0)
         {
+            console_print_pos(x_offset, y_offset, "OSForceFullRelaunch()");
+            y_offset += 1;
+            // Flip buffers
+            OSScreenFlipBuffersEx(0);
+            OSScreenFlipBuffersEx(1);
+            os_usleep(20000);
+
+            OSScreenShutdown();
+            free(screenBuffer);
+		
             OSForceFullRelaunch();
 
             if(defaultSlot) //normal menu boot
@@ -103,7 +175,10 @@ int Menu_Main(void)
 
             returnCode = EXIT_RELAUNCH_ON_LOAD;
         }
-    }
+    } else {
+        OSScreenShutdown();
+        free(screenBuffer);
+	}
 
     //nnupatcher();
 

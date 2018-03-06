@@ -21,16 +21,9 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#ifndef _CFW_CONFIG_H_
-#define _CFW_CONFIG_H_
+#ifndef _VERSION_H_
+#define _VERSION_H_
 
-#define APP_PATH            "sd:/wiiu/apps/mocha"
-#define CONFIG_PATH         (APP_PATH "/config.ini")
-
-#include "../common/config_types.h"
-
-void default_config(cfw_config_t * config);
-int read_config(cfw_config_t * config);
-int write_config(cfw_config_t * config);
+#define APP_VERSION         "v0.2"
 
 #endif

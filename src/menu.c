@@ -34,9 +34,8 @@
 #include "dynamic_libs/sys_functions.h"
 #include "dynamic_libs/vpad_functions.h"
 #include "dynamic_libs/socket_functions.h"
-#include "../libs/libc.h"
+#include "osscreen.h"
 #include "menu.h"
-#include "id.h"
 
 #define MAX_CONFIG_SETTINGS_EXPERT          8
 #define MAX_CONFIG_SETTINGS_DEFAULT         (MAX_CONFIG_SETTINGS_EXPERT - 3)
@@ -62,56 +61,13 @@ struct {
     { "Use syshax.xml (coldboothax)", "on", "off", NULL },
 };
 
-static void console_print_pos(int x, int y, const char *format, ...)
-{
-	char * tmp = NULL;
-
-	va_list va;
-	va_start(va, format);
-	if((vasprintf(&tmp, format, va) >= 0) && tmp)
-	{
-        if(strlen(tmp) > 79)
-            tmp[79] = 0;
-
-        OSScreenPutFontEx(0, x, y, tmp);
-        OSScreenPutFontEx(1, x, y, tmp);
-
-	}
-	va_end(va);
-
-	if(tmp)
-        free(tmp);
-}
-
 int ShowMenu(cfw_config_t * currentConfig)
 {
-    // Init screen and screen buffers
-    OSScreenInit();
-    u32 screen_buf0_size = OSScreenGetBufferSizeEx(0);
-    u32 screen_buf1_size = OSScreenGetBufferSizeEx(1);
-    u8 * screenBuffer = (u8*) memalign(0x100, screen_buf0_size + screen_buf1_size);
-    OSScreenSetBufferEx(0, (void *)screenBuffer);
-    OSScreenSetBufferEx(1, (void *)(screenBuffer + screen_buf0_size));
-
-    OSScreenEnableEx(0, 1);
-    OSScreenEnableEx(1, 1);
-
-    // Clear screens
-    OSScreenClearBufferEx(0, 0);
-    OSScreenClearBufferEx(1, 0);
-
-    // Flip buffers
-    OSScreenFlipBuffersEx(0);
-    OSScreenFlipBuffersEx(1);
-
     VPADData vpad;
     s32 vpadError;
-    int x_offset = -2;
-    int initScreen = 1;
+    int refreshScreen = 1;
     int selected = 0;
     int launch = 0;
-	char* indent;
-    int indent_counter, indent_counter_bak;
     cfw_config_t config;
     memcpy(&config, currentConfig, sizeof(cfw_config_t));
 
@@ -151,7 +107,7 @@ int ShowMenu(cfw_config_t * currentConfig)
                 if(selected >= max_config_item)
                     selected = 0;
 
-                initScreen = 1;
+                refreshScreen = 1;
             }
             else if(vpad.btns_d & VPAD_BUTTON_UP)
             {
@@ -159,7 +115,7 @@ int ShowMenu(cfw_config_t * currentConfig)
                 if(selected < 0)
                     selected = max_config_item - 1;
 
-                initScreen = 1;
+                refreshScreen = 1;
             }
             else if(vpad.btns_d & (VPAD_BUTTON_LEFT | VPAD_BUTTON_RIGHT))
             {
@@ -188,34 +144,15 @@ int ShowMenu(cfw_config_t * currentConfig)
                     config.otp_red = 0;
                 }
 
-                initScreen = 1;
+                refreshScreen = 1;
             }
         }
 
-        if(initScreen)
+        if(refreshScreen)
         {
-            OSScreenClearBufferEx(0, 0);
-            OSScreenClearBufferEx(1, 0);
+            console_clear();
 
-            indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand einhalten)
-            indent_counter -= 35; // == strlen(TITLE)
-            indent_counter -= strlen(APP_VERSION);
-            indent_counter -= (2 * 8); // == strlen(shortTilteId_high) + strlen(shortTilteId_low)
-            if ((indent_counter < 0) || (indent_counter > 68))
-                indent_counter = 0;
-
-            indent_counter_bak = indent_counter;
-            indent_counter /= 2;
-            if ((indent_counter * 2) > indent_counter_bak) // just to be sure
-                indent_counter -= 1;
-
-            indent = (char*)malloc(35); // 34 [== 68 / 2] + 1 ('\0')
-            memset(indent, '\0', 35);
-            if ((indent_counter > 0) && (indent_counter < 35))
-                for (int i = 0; i <= (indent_counter - 1); i++)
-                    indent[i] = ' ';
-
-            console_print_pos(x_offset, 1, "%s-- MOCHA CFW %s by Dimok (Title: %08X%08X) --", indent, APP_VERSION, shortTilteId_high, shortTilteId_low);
+            console_print_header();
 
             console_print_pos(x_offset, 3, "Select your options and press A to launch.");
             console_print_pos(x_offset, 4, "Press HOME to exit back to HBL.");
@@ -233,22 +170,20 @@ int ShowMenu(cfw_config_t * currentConfig)
                 }
             }
 
-            console_print_pos(x_offset, 15, "Credits go to everyone who contributed to Wii U scene publicly");
-            console_print_pos(x_offset, 16, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek");
-            console_print_pos(x_offset, 17, "FSHax by Zarklord1 and Maschell; multiple small changes by fre4kyC0de");
+			y_offset += 1;
+			console_print_pos(x_offset, y_offset++, "Credits go to everyone who contributed to Wii U scene publicly");
+            console_print_pos(x_offset, y_offset++, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek");
+            console_print_pos(x_offset, y_offset++, "FSHax by Zarklord1 and Maschell; multiple small changes by fre4kyC0de");
 
             // Flip buffers
             OSScreenFlipBuffersEx(0);
             OSScreenFlipBuffersEx(1);
 
-            initScreen = 0;
+            refreshScreen = 0;
         }
 
         os_usleep(20000);
     }
-
-    OSScreenShutdown();
-    free(screenBuffer);
 
     if(memcmp(currentConfig, &config, sizeof(cfw_config_t)) != 0)
     {
