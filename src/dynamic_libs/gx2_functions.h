@@ -110,8 +110,7 @@ extern void (*GX2CallDisplayList)(void * list, u32 size);
 extern void (*GX2ExpandAAColorBuffer)(GX2ColorBuffer * buffer);
 extern void (*GX2ResolveAAColorBuffer)(const GX2ColorBuffer * srcBuffer, GX2Surface * dstSurface,u32 dstMip,u32 dstSlice);
 
-static inline void GX2InitDepthBuffer(GX2DepthBuffer *depthBuffer, s32 dimension, u32 width, u32 height, u32 depth, s32 format, s32 aa)
-{
+static inline void GX2InitDepthBuffer(GX2DepthBuffer *depthBuffer, s32 dimension, u32 width, u32 height, u32 depth, s32 format, s32 aa) {
     depthBuffer->surface.dimension = dimension;
     depthBuffer->surface.width = width;
     depthBuffer->surface.height = height;
@@ -133,8 +132,7 @@ static inline void GX2InitDepthBuffer(GX2DepthBuffer *depthBuffer, s32 dimension
     GX2InitDepthBufferRegs(depthBuffer);
 }
 
-static inline void GX2InitColorBuffer(GX2ColorBuffer *colorBuffer, s32 dimension, u32 width, u32 height, u32 depth, s32 format, s32 aa)
-{
+static inline void GX2InitColorBuffer(GX2ColorBuffer *colorBuffer, s32 dimension, u32 width, u32 height, u32 depth, s32 format, s32 aa) {
     colorBuffer->surface.dimension = dimension;
     colorBuffer->surface.width = width;
     colorBuffer->surface.height = height;
@@ -166,8 +164,7 @@ static inline void GX2InitColorBuffer(GX2ColorBuffer *colorBuffer, s32 dimension
     GX2InitColorBufferRegs(colorBuffer);
 }
 
-static inline void GX2InitAttribStream(GX2AttribStream* attr, u32 location, u32 buffer, u32 offset, s32 format)
-{
+static inline void GX2InitAttribStream(GX2AttribStream* attr, u32 location, u32 buffer, u32 offset, s32 format) {
     attr->location = location;
     attr->buffer = buffer;
     attr->offset = offset;
@@ -178,8 +175,7 @@ static inline void GX2InitAttribStream(GX2AttribStream* attr, u32 location, u32 
     attr->endian_swap  = GX2_ENDIANSWAP_DEFAULT;
 }
 
-static inline void GX2InitTexture(GX2Texture *tex, u32 width, u32 height, u32 depth, u32 num_mips, s32 format, s32 dimension, s32 tile)
-{
+static inline void GX2InitTexture(GX2Texture *tex, u32 width, u32 height, u32 depth, u32 num_mips, s32 format, s32 dimension, s32 tile) {
     tex->surface.dimension = dimension;
     tex->surface.width = width;
     tex->surface.height = height;

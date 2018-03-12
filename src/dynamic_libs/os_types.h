@@ -140,8 +140,7 @@ typedef struct OSContext_ {
     u32 mmcr1;
 } OSContext;
 
-typedef enum OSExceptionType
-{
+typedef enum OSExceptionType {
    OS_EXCEPTION_TYPE_SYSTEM_RESET         = 0,
    OS_EXCEPTION_TYPE_MACHINE_CHECK        = 1,
    OS_EXCEPTION_TYPE_DSI                  = 2,

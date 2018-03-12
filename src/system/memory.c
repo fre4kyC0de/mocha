@@ -49,8 +49,7 @@ extern void (* MEMFreeToExpHeap)(s32 heap, void* ptr);*/
 static s32 mem1_heap = -1;
 static s32 bucket_heap = -1;
 
-void memoryInitialize(void)
-{
+void memoryInitialize(void) {
     s32 mem1_heap_handle = MEMGetBaseHeapHandle(MEMORY_ARENA_1);
     u32 mem1_allocatable_size = MEMGetAllocatableSizeForFrmHeapEx(mem1_heap_handle, 4);
     void *mem1_memory = MEMAllocFromFrmHeapEx(mem1_heap_handle, mem1_allocatable_size, 4);
@@ -64,8 +63,7 @@ void memoryInitialize(void)
         bucket_heap = MEMCreateExpHeapEx(bucket_memory, bucket_allocatable_size, 0);
 }
 
-void memoryRelease(void)
-{
+void memoryRelease(void) {
     MEMDestroyExpHeap(mem1_heap);
     MEMFreeToFrmHeap(MEMGetBaseHeapHandle(MEMORY_ARENA_1), 3);
     mem1_heap = -1;
@@ -78,14 +76,12 @@ void memoryRelease(void)
 //!-------------------------------------------------------------------------------------------
 //! wraps
 //!-------------------------------------------------------------------------------------------
-void *__wrap_malloc(size_t size)
-{
+void *__wrap_malloc(size_t size) {
     // pointer to a function resolve
 	return ((void * (*)(size_t))(*pMEMAllocFromDefaultHeap))(size);
 }
 
-void *__wrap_memalign(size_t align, size_t size)
-{
+void *__wrap_memalign(size_t align, size_t size) {
     if (align < 4)
         align = 4;
 
@@ -93,15 +89,13 @@ void *__wrap_memalign(size_t align, size_t size)
     return ((void * (*)(size_t, size_t))(*pMEMAllocFromDefaultHeapEx))(size, align);
 }
 
-void __wrap_free(void *p)
-{
+void __wrap_free(void *p) {
     // pointer to a function resolve
     if(p != 0)
         ((void (*)(void *))(*pMEMFreeToDefaultHeap))(p);
 }
 
-void *__wrap_calloc(size_t n, size_t size)
-{
+void *__wrap_calloc(size_t n, size_t size) {
     void *p = __wrap_malloc(n * size);
 	if (p != 0) {
 		memset(p, 0, n * size);
@@ -109,22 +103,24 @@ void *__wrap_calloc(size_t n, size_t size)
 	return p;
 }
 
-size_t __wrap_malloc_usable_size(void *p)
-{
+size_t __wrap_malloc_usable_size(void *p) {
     //! TODO: this is totally wrong and needs to be addressed
 	return 0x7FFFFFFF;
 }
 
-void *__wrap_realloc(void *ptr, size_t size)
-{
+void *__wrap_realloc(void *ptr, size_t size) {
     void *newPtr;
 
     if (!ptr) {
         newPtr = __wrap_malloc(size);
-        if (!newPtr) { goto error; }
+        if (!newPtr) {
+            goto error;
+        }
     } else {
         newPtr = __wrap_malloc(size);
-        if (!newPtr) { goto error; }
+        if (!newPtr) {
+            goto error;
+        }
 
         memcpy(newPtr, ptr, size);
 
@@ -148,69 +144,57 @@ error:
 //!-------------------------------------------------------------------------------------------
 //! reent versions
 //!-------------------------------------------------------------------------------------------
-void *__wrap__malloc_r(struct _reent *r, size_t size)
-{
+void *__wrap__malloc_r(struct _reent *r, size_t size) {
 	return __wrap_malloc(size);
 }
 
-void *__wrap__calloc_r(struct _reent *r, size_t n, size_t size)
-{
+void *__wrap__calloc_r(struct _reent *r, size_t n, size_t size) {
     return __wrap_calloc(n, size);
 }
 
-void *__wrap__memalign_r(struct _reent *r, size_t align, size_t size)
-{
+void *__wrap__memalign_r(struct _reent *r, size_t align, size_t size) {
     return __wrap_memalign(align, size);
 }
 
-void __wrap__free_r(struct _reent *r, void *p)
-{
+void __wrap__free_r(struct _reent *r, void *p) {
     __wrap_free(p);
 }
 
-size_t __wrap__malloc_usable_size_r(struct _reent *r, void *p)
-{
+size_t __wrap__malloc_usable_size_r(struct _reent *r, void *p) {
     return __wrap_malloc_usable_size(p);
 }
 
-void *__wrap__realloc_r(struct _reent *r, void *p, size_t size)
-{
+void *__wrap__realloc_r(struct _reent *r, void *p, size_t size) {
     return __wrap_realloc(p, size);
 }
 
 //!-------------------------------------------------------------------------------------------
 //! some wrappers
 //!-------------------------------------------------------------------------------------------
-void * MEM2_alloc(u32 size, u32 align)
-{
+void * MEM2_alloc(u32 size, u32 align) {
     return __wrap_memalign(align, size);
 }
 
-void MEM2_free(void *ptr)
-{
+void MEM2_free(void *ptr) {
     __wrap_free(ptr);
 }
 
-void * MEM1_alloc(u32 size, u32 align)
-{
+void * MEM1_alloc(u32 size, u32 align) {
     if (align < 4)
         align = 4;
     return MEMAllocFromExpHeapEx(mem1_heap, size, align);
 }
 
-void MEM1_free(void *ptr)
-{
+void MEM1_free(void *ptr) {
     MEMFreeToExpHeap(mem1_heap, ptr);
 }
 
-void * MEMBucket_alloc(u32 size, u32 align)
-{
+void * MEMBucket_alloc(u32 size, u32 align) {
     if (align < 4)
         align = 4;
     return MEMAllocFromExpHeapEx(bucket_heap, size, align);
 }
 
-void MEMBucket_free(void *ptr)
-{
+void MEMBucket_free(void *ptr) {
     MEMFreeToExpHeap(bucket_heap, ptr);
 }

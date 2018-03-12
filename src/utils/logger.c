@@ -61,8 +61,7 @@ void OSFatal_printf(const char *format, ...){
 	va_end(va);
 }
 
-void log_printf_(const char *format, ...)
-{
+void log_printf_(const char *format, ...) {
     if(log_socket < 0) {
         return;
     }
@@ -71,8 +70,7 @@ void log_printf_(const char *format, ...)
 
 	va_list va;
 	va_start(va, format);
-	if((vasprintf(&tmp, format, va) >= 0) && tmp)
-	{
+	if((vasprintf(&tmp, format, va) >= 0) && tmp) {
         log_print_(tmp);
 	}
 	va_end(va);

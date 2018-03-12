@@ -77,8 +77,7 @@ s32 LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
     u32 done = 0;
     s32 readBytes = 0;
 
-	while(done < filesize)
-    {
+	while(done < filesize) {
         if(done + blocksize > filesize) {
             blocksize = filesize - done;
         }
@@ -90,8 +89,7 @@ s32 LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
 
     close(iFd);
 
-	if (done != filesize)
-	{
+	if (done != filesize) {
 		free(buffer);
 		buffer = NULL;
 		return -3;
@@ -143,24 +141,19 @@ s32 CreateSubfolder(const char * fullpath)
 	strcpy(dirnoslash, fullpath);
 
 	s32 pos = strlen(dirnoslash)-1;
-	while(dirnoslash[pos] == '/')
-	{
+	while(dirnoslash[pos] == '/') {
 		dirnoslash[pos] = '\0';
 		pos--;
 	}
 
-	if(CheckFile(dirnoslash))
-	{
+	if(CheckFile(dirnoslash)) {
 		return 1;
-	}
-	else
-	{
+	} else {
 		char parentpath[strlen(dirnoslash)+2];
 		strcpy(parentpath, dirnoslash);
 		char * ptr = strrchr(parentpath, '/');
 
-		if(!ptr)
-		{
+		if(!ptr) {
 			//!Device root directory (must be with '/')
 			strcat(parentpath, "/");
 			struct stat filestat;
@@ -179,8 +172,7 @@ s32 CreateSubfolder(const char * fullpath)
 	if(!result)
 		return 0;
 
-	if (mkdir(dirnoslash, 0777) == -1)
-	{
+	if (mkdir(dirnoslash, 0777) == -1) {
 		return 0;
 	}
 
