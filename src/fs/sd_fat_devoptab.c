@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include "dynamic_libs/fs_functions.h"
 #include "dynamic_libs/os_functions.h"
+#include <sys/iosupport.h> // Fix for devkitPPC r32 and newer
 
 #include "fs_utils.h"
 #include "sd_fat_devoptab.h"

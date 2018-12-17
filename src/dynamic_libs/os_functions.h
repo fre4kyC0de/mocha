@@ -107,7 +107,8 @@ extern void InitOSFunctionPointers(void);
 //! Lib handle functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 extern s32 (* OSDynLoad_Acquire)(const char* rpl, u32 *handle);
-extern s32 (* OSDynLoad_FindExport)(u32 handle, s32 isdata, const char *symbol, void *address);
+extern s32 (* OSDynLoad_FindExport)(u32 handle, s32 isdata, const char *symbol, void *address););
+extern void (* OSDynLoad_Release)(u32 handle);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Security functions
@@ -148,6 +149,7 @@ extern s32 (* OSGetCoreId)(void);
 extern void (* OSSleepTicks)(u64 ticks);
 extern u64 (* OSGetTick)(void);
 extern u64 (* OSGetTime)(void);
+extern u64 (* OSGetSystemTime)(void);
 extern void (*OSTicksToCalendarTime)(u64 time, OSCalendarTime *calendarTime);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -200,6 +202,7 @@ extern void (* OSLoadContext)(OSContext * context);
 extern void (*DisassemblePPCRange)(void *rangeStart, void *rangeEnd, DisasmReport disasmReport, DisasmGetSym disasmGetSym, u32 disasmOptions);
 extern bool (*DisassemblePPCOpcode)(u32 *opcode, char *outputBuffer, u32 bufferSize, DisasmGetSym disasmGetSym, u32 disasmOptions);
 extern void *(*OSGetSymbolName)(u32 addr, u8 *symbolName, u32 nameBufSize);
+extern void *(*OSGetSymbolNameEx)(u32 addr, u8 *symbolName, u32 nameBufSize);
 extern int (*OSIsDebuggerInitialized)(void);
 
 extern bool (*OSGetSharedData)(u32 type, u32 unk_r4, u8 *addr, u32 *size);
@@ -221,6 +224,7 @@ extern void* (* MEMAllocFromFrmHeapEx)(s32 heap, u32 size, s32 align);
 extern void (* MEMFreeToFrmHeap)(s32 heap, s32 mode);
 extern void *(* MEMAllocFromExpHeapEx)(s32 heap, u32 size, s32 align);
 extern s32 (* MEMCreateExpHeapEx)(void* address, u32 size, unsigned short flags);
+extern s32 (* MEMCreateFrmHeapEx)(void* address, u32 size, unsigned short flags);
 extern void *(* MEMDestroyExpHeap)(s32 heap);
 extern void (* MEMFreeToExpHeap)(s32 heap, void* ptr);
 extern void* (* OSAllocFromSystem)(u32 size, s32 alignment);
@@ -251,6 +255,7 @@ extern void* (* MCP_GetDeviceId)(s32 handle, u32 * id);
 //extern void (*DCInvalidateRange)(void *buffer, u32 length);
 extern s32 (*OSDynLoad_GetModuleName)(s32 handle, char *name_buffer, s32 *name_buffer_size);
 extern s32 (*OSIsHomeButtonMenuEnabled) (void);
+extern void (*OSEnableHomeButtonMenu) (s32);
 extern s32 (*OSSetScreenCapturePermissionEx) (s32 tvEnabled, s32 drcEnabled);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -31,6 +31,7 @@ u32 coreinit_handle __attribute__((section(".data"))) = 0;
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 EXPORT_DECL(s32, OSDynLoad_Acquire, const char* rpl, u32 *handle);
 EXPORT_DECL(s32, OSDynLoad_FindExport, u32 handle, s32 isdata, const char *symbol, void *address);
+EXPORT_DECL(void, OSDynLoad_Release, u32 handle);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Security functions
@@ -68,6 +69,7 @@ EXPORT_DECL(s32, OSGetCoreId, void);
 EXPORT_DECL(void, OSSleepTicks, u64 ticks);
 EXPORT_DECL(u64, OSGetTick, void);
 EXPORT_DECL(u64, OSGetTime, void);
+EXPORT_DECL(u64, OSGetSystemTime, void);
 EXPORT_DECL(void, OSTicksToCalendarTime, u64 time, OSCalendarTime * calendarTime);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,6 +120,7 @@ EXPORT_DECL(u32, OSScreenPutPixelEx, u32 bufferNum, u32 posX, u32 posY, u32 colo
 EXPORT_DECL(void, DisassemblePPCRange, void *, void *, DisasmReport, DisasmGetSym, u32);
 EXPORT_DECL(bool, DisassemblePPCOpcode, u32 *, char *, u32, DisasmGetSym, u32);
 EXPORT_DECL(void*, OSGetSymbolName, u32, u8 *, u32);
+EXPORT_DECL(void*, OSGetSymbolNameEx, u32, u8 *, u32);
 EXPORT_DECL(int, OSIsDebuggerInitialized, void);
 
 EXPORT_DECL(bool, OSGetSharedData, u32 type, u32 unk_r4, u8 *addr, u32 *size);
@@ -140,6 +143,7 @@ EXPORT_DECL(void *, MEMAllocFromFrmHeapEx, s32 heap, u32 size, s32 align);
 EXPORT_DECL(void, MEMFreeToFrmHeap, s32 heap, s32 mode);
 EXPORT_DECL(void *, MEMAllocFromExpHeapEx, s32 heap, u32 size, s32 align);
 EXPORT_DECL(s32 , MEMCreateExpHeapEx, void* address, u32 size, unsigned short flags);
+EXPORT_DECL(s32 , MEMCreateFrmHeapEx, void* address, u32 size, unsigned short flags);
 EXPORT_DECL(void *, MEMDestroyExpHeap, s32 heap);
 EXPORT_DECL(void, MEMFreeToExpHeap, s32 heap, void* ptr);
 EXPORT_DECL(void *, OSAllocFromSystem, u32 size, s32 alignment);
@@ -172,6 +176,7 @@ EXPORT_DECL(void*, MCP_GetDeviceId, s32 handle, u32 * id);
 //EXPORT_DECL(void, DCInvalidateRange, void *buffer, u32 length);
 EXPORT_DECL(s32, OSDynLoad_GetModuleName, s32 handle, char *name_buffer, s32 *name_buffer_size);
 EXPORT_DECL(s32, OSIsHomeButtonMenuEnabled, void);
+EXPORT_DECL(void, OSEnableHomeButtonMenu, s32);
 EXPORT_DECL(s32, OSSetScreenCapturePermissionEx, s32 tvEnabled, s32 drcEnabled);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -229,9 +234,6 @@ void _os_find_export(u32 handle, const char *funcName, void *funcPointer) {
 
 void InitAcquireOS(void)
 {
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Lib handle functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     EXPORT_FUNC_WRITE(OSDynLoad_Acquire, (s32 (*)(const char*, unsigned *))OS_SPECIFICS->addr_OSDynLoad_Acquire);
     EXPORT_FUNC_WRITE(OSDynLoad_FindExport, (s32 (*)(u32, s32, const char *, void *))OS_SPECIFICS->addr_OSDynLoad_FindExport);
 
@@ -242,7 +244,11 @@ void InitOSFunctionPointers(void)
 {
     u32 *funcPointer = 0;
 
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //! Lib handle functions
+    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     InitAcquireOS();
+    OS_FIND_EXPORT(coreinit_handle, OSDynLoad_Release);
 
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //! Security functions
@@ -283,6 +289,7 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, DisassemblePPCRange);
     OS_FIND_EXPORT(coreinit_handle, DisassemblePPCOpcode);
     OS_FIND_EXPORT(coreinit_handle, OSGetSymbolName);
+    OS_FIND_EXPORT(coreinit_handle, OSGetSymbolNameEx);
     OS_FIND_EXPORT(coreinit_handle, OSIsDebuggerInitialized);
 
     OS_FIND_EXPORT(coreinit_handle, OSGetSharedData);
@@ -317,6 +324,7 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, OSSleepTicks);
     OS_FIND_EXPORT(coreinit_handle, OSGetTick);
     OS_FIND_EXPORT(coreinit_handle, OSGetTime);
+    OS_FIND_EXPORT(coreinit_handle, OSGetSystemTime);
     OS_FIND_EXPORT(coreinit_handle, OSTicksToCalendarTime);
 
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -361,6 +369,7 @@ void InitOSFunctionPointers(void)
     OS_FIND_EXPORT(coreinit_handle, MEMFreeToFrmHeap);
     OS_FIND_EXPORT(coreinit_handle, MEMAllocFromExpHeapEx);
     OS_FIND_EXPORT(coreinit_handle, MEMCreateExpHeapEx);
+    OS_FIND_EXPORT(coreinit_handle, MEMCreateFrmHeapEx);
     OS_FIND_EXPORT(coreinit_handle, MEMDestroyExpHeap);
     OS_FIND_EXPORT(coreinit_handle, MEMFreeToExpHeap);
     OS_FIND_EXPORT(coreinit_handle, OSAllocFromSystem);
@@ -375,6 +384,7 @@ void InitOSFunctionPointers(void)
     //OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
     OS_FIND_EXPORT(coreinit_handle, OSDynLoad_GetModuleName);
     OS_FIND_EXPORT(coreinit_handle, OSIsHomeButtonMenuEnabled);
+    OS_FIND_EXPORT(coreinit_handle, OSEnableHomeButtonMenu);
     OS_FIND_EXPORT(coreinit_handle, OSSetScreenCapturePermissionEx);
 
     //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
