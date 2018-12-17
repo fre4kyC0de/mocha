@@ -107,7 +107,7 @@ extern void InitOSFunctionPointers(void);
 //! Lib handle functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 extern s32 (* OSDynLoad_Acquire)(const char* rpl, u32 *handle);
-extern s32 (* OSDynLoad_FindExport)(u32 handle, s32 isdata, const char *symbol, void *address););
+extern s32 (* OSDynLoad_FindExport)(u32 handle, s32 isdata, const char *symbol, void *address);
 extern void (* OSDynLoad_Release)(u32 handle);
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
