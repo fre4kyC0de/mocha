@@ -175,10 +175,6 @@ int ShowMenu(cfw_config_t * currentConfig)
             console_print_pos(x_offset, y_offset++, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek");
             console_print_pos(x_offset, y_offset++, "FSHax by Zarklord1 and Maschell; multiple small changes by fre4kyC0de");
 
-            // Flip buffers
-            OSScreenFlipBuffersEx(0);
-            OSScreenFlipBuffersEx(1);
-
             refreshScreen = 0;
         }
 

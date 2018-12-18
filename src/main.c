@@ -28,6 +28,8 @@
 
 static int exitToHBLOnLaunch = 0;
 
+#define	usleep_TimeOut	-1
+
 int Menu_Main(void)
 {
     //!---------INIT---------
@@ -72,20 +74,15 @@ int Menu_Main(void)
     OSScreenEnableEx(0, 1);
     OSScreenEnableEx(1, 1);
     // Clear screens
-    OSScreenClearBufferEx(0, 0);
-    OSScreenClearBufferEx(1, 0);
-    // Flip buffers
-    OSScreenFlipBuffersEx(0);
-    OSScreenFlipBuffersEx(1);
+	console_clear();
 
     console_print_header();
 
     console_print_pos(x_offset, y_offset, "Initializing VPAD...");
     y_offset += 1;
-    // Flip buffers
-    OSScreenFlipBuffersEx(0);
-    OSScreenFlipBuffersEx(1);
-    os_usleep(20000);
+	if (usleep_TimeOut > 0) {
+		os_usleep(usleep_TimeOut);
+	}
 
     VPADInit();
     int forceMenu = 0;
@@ -103,19 +100,17 @@ int Menu_Main(void)
 
     console_print_pos(x_offset, y_offset, "Mounting SD...");
     y_offset += 1;
-    // Flip buffers
-    OSScreenFlipBuffersEx(0);
-    OSScreenFlipBuffersEx(1);
-    os_usleep(20000);
+	if (usleep_TimeOut > 0) {
+		os_usleep(usleep_TimeOut);
+	}
 
     mount_sd_fat("sd");
 
     console_print_pos(x_offset, y_offset, "Reading config...");
     y_offset += 1;
-    // Flip buffers
-    OSScreenFlipBuffersEx(0);
-    OSScreenFlipBuffersEx(1);
-    os_usleep(20000);
+	if (usleep_TimeOut > 0) {
+		os_usleep(usleep_TimeOut);
+	}
 
     cfw_config_t config;
     default_config(&config);
@@ -127,19 +122,15 @@ int Menu_Main(void)
     {
         console_print_pos(x_offset, y_offset, "Displaying menu...");
         y_offset += 1;
-        // Flip buffers
-        OSScreenFlipBuffersEx(0);
-        OSScreenFlipBuffersEx(1);
 
         launch = ShowMenu(&config);
 
 		console_clear();
 		console_print_header();
 		y_offset = 3;
-		// Flip buffers
-		OSScreenFlipBuffersEx(0);
-		OSScreenFlipBuffersEx(1);
-		os_usleep(20000);
+		if (usleep_TimeOut > 0) {
+			os_usleep(usleep_TimeOut);
+		}
     }
 
     int returnCode = 0;
@@ -148,20 +139,18 @@ int Menu_Main(void)
     {
         console_print_pos(x_offset, y_offset, "Handing over control to IOSUHAX...");
         y_offset += 1;
-        // Flip buffers
-        OSScreenFlipBuffersEx(0);
-        OSScreenFlipBuffersEx(1);
-        os_usleep(20000);
+		if (usleep_TimeOut > 0) {
+			os_usleep(usleep_TimeOut);
+		}
 
         int res = ExecuteIOSExploit(&config);
         if(res == 0)
         {
             console_print_pos(x_offset, y_offset, "OSForceFullRelaunch()");
             y_offset += 1;
-            // Flip buffers
-            OSScreenFlipBuffersEx(0);
-            OSScreenFlipBuffersEx(1);
-            os_usleep(20000);
+			if (usleep_TimeOut > 0) {
+				os_usleep(usleep_TimeOut);
+			}
 
             OSScreenShutdown();
             free(screenBuffer);
