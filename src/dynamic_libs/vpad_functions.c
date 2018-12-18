@@ -93,6 +93,10 @@ EXPORT_DECL(samplingCallback, VPADSetSamplingCallback, s32 chan, samplingCallbac
 
 void InitAcquireVPad(void)
 {
+    if(coreinit_handle == 0) {
+        InitAcquireOS();
+    };
+
     OSDynLoad_Acquire("vpad.rpl", &vpad_handle);
     OSDynLoad_Acquire("vpadbase.rpl", &vpadbase_handle);
 }

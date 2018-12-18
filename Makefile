@@ -13,6 +13,7 @@ export PATH			:=	$(DEVKITPPC)/bin:$(PORTLIBS)/bin:$(PATH)
 export LIBOGC_INC	:=	$(DEVKITPRO)/libogc/include
 export LIBOGC_LIB	:=	$(DEVKITPRO)/libogc/lib/wii
 export PORTLIBS		:=	$(DEVKITPRO)/portlibs/ppc
+export GCC_VER      := $(shell $(DEVKITPPC)/bin/powerpc-eabi-gcc -dumpversion)
 
 PREFIX	:=	powerpc-eabi-
 
@@ -64,7 +65,7 @@ LIBS	:=
 #---------------------------------------------------------------------------------
 LIBDIRS	:=	$(CURDIR)	\
 			$(DEVKITPPC)/lib  \
-			$(DEVKITPPC)/lib/gcc/powerpc-eabi/4.8.2
+			$(DEVKITPPC)/lib/gcc/powerpc-eabi/$(GCC_VER)
 
 
 #---------------------------------------------------------------------------------

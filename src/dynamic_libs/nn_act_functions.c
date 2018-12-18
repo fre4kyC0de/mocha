@@ -34,6 +34,10 @@ EXPORT_DECL(u32, nn_act_GetPersistentIdEx, u8 slot);
 
 void InitAcquireACT(void)
 {
+    if(coreinit_handle == 0) {
+        InitAcquireOS();
+    };
+
     OSDynLoad_Acquire("nn_act.rpl", &nn_act_handle);
 }
 

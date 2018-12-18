@@ -60,6 +60,10 @@ EXPORT_DECL(s32, NSSLCreateConnection, s32 context, const char* host, s32 hotlen
 
 void InitAcquireSocket(void)
 {
+    if(coreinit_handle == 0) {
+        InitAcquireOS();
+    };
+
     OSDynLoad_Acquire("nsysnet.rpl", &nsysnet_handle);
 }
 

@@ -36,6 +36,10 @@ EXPORT_DECL(u64, _SYSGetSystemApplicationTitleId, s32);
 
 void InitAcquireSys(void)
 {
+    if(coreinit_handle == 0) {
+        InitAcquireOS();
+    };
+
     OSDynLoad_Acquire("sysapp.rpl", &sysapp_handle);
 }
 

@@ -104,12 +104,17 @@ EXPORT_DECL(void, GX2ClearBuffersEx, GX2ColorBuffer * colorBuffer,GX2DepthBuffer
 
 void InitAcquireGX2(void)
 {
+    if(coreinit_handle == 0) {
+        InitAcquireOS();
+    };
+
     OSDynLoad_Acquire("gx2.rpl", &gx2_handle);
 }
 
 void InitGX2FunctionPointers(void)
 {
     u32 *funcPointer = 0;
+
     InitAcquireGX2();
 
     OS_FIND_EXPORT(gx2_handle, GX2Init);
