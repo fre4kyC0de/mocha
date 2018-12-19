@@ -892,7 +892,9 @@ static const devoptab_t devops_sd_fat = {
 	sd_fat_chdir_r,
 	sd_fat_rename_r,
 	sd_fat_mkdir_r,
+	
 	sizeof (sd_fat_dir_entry_t),
+	
 	sd_fat_diropen_r,
 	sd_fat_dirreset_r,
 	sd_fat_dirnext_r,
@@ -900,10 +902,15 @@ static const devoptab_t devops_sd_fat = {
 	sd_fat_statvfs_r,
 	sd_fat_ftruncate_r,
 	sd_fat_fsync_r,
+	
 	NULL,	// Device data
+	
 	NULL,	// sd_fat_chmod_r
 	NULL,	// sd_fat_fchmod_r
-	NULL 	// sd_fat_rmdir_r
+	
+	NULL, 	// sd_fat_rmdir_r
+	NULL, 	// sd_fat_lstat_r
+	NULL 	// sd_fat_utimes_r
 };
 
 static int sd_fat_add_device (const char *name, const char *mount_path, void *pClient, void *pCmd)
