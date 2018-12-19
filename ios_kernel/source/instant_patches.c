@@ -31,20 +31,20 @@
 
 typedef struct
 {
-    u32 paddr;
-    u32 vaddr;
-    u32 size;
-    u32 domain;
-    u32 type;
-    u32 cached;
+	u32 paddr;
+	u32 vaddr;
+	u32 size;
+	u32 domain;
+	u32 type;
+	u32 cached;
 } ios_map_shared_info_t;
 
 void instant_patches_setup(void)
 {
-    // apply IOS ELF launch hook
+	// apply IOS ELF launch hook
 	*(volatile u32*)0x0812A120 = ARM_BL(0x0812A120, kernel_launch_ios);
 
-    // patch FSA raw access
+	// patch FSA raw access
 	*(volatile u32*)0x1070FAE8 = 0x05812070;
 	*(volatile u32*)0x1070FAEC = 0xEAFFFFF9;
 }

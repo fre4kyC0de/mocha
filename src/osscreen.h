@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#define x_offset	-2
+#define	x_offset	-2
 
 void console_print_pos(int x, int y, const char *format, ...);
 void console_print_header();

@@ -8,7 +8,7 @@ SECTIONS
 		*(.text*)
 		*(.rodata*)
 	}
-    _text_end = .;
+	_text_end = .;
 
 	.bss 0x050BD000 : {
 		_bss_start = .;
@@ -20,4 +20,3 @@ SECTIONS
 		*(*);
 	}
 }
-

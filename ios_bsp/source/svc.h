@@ -8,7 +8,7 @@ typedef struct
 	void* ptr;
 	u32 len;
 	u32 unk;
-}iovec_s;
+} iovec_s;
 
 void* svcAlloc(u32 heapid, u32 size);
 void* svcAllocAlign(u32 heapid, u32 size, u32 align);

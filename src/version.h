@@ -24,6 +24,6 @@
 #ifndef _VERSION_H_
 #define _VERSION_H_
 
-#define APP_VERSION         "v0.2"
+#define	APP_VERSION		"v0.2"
 
 #endif

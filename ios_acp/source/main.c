@@ -26,9 +26,9 @@
 
 int ACP_FSARawRead_hook(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle)
 {
-    int (*ACP_FSARawRead)(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle) = (void*)0xE00BAF74;
+	int (*ACP_FSARawRead)(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle) = (void*)0xE00BAF74;
 
-    int res = ACP_FSARawRead(fd, data, offset, cnt, blocksize, device_handle);
+	int res = ACP_FSARawRead(fd, data, offset, cnt, blocksize, device_handle);
 
-    return res;
+	return res;
 }

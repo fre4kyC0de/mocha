@@ -11,7 +11,7 @@ patch_kernel_domains_end:
 
 .globl kernel_patches_table, kernel_patches_table_end
 kernel_patches_table:
-#          origin           data                                    size
-     .word 0x081253C4,      patch_kernel_domains,                   (kernel_patches_table_end - kernel_patches_table)
+#	origin					data									size
+	.word 0x081253C4,		patch_kernel_domains,					(kernel_patches_table_end - kernel_patches_table)
 kernel_patches_table_end:
 

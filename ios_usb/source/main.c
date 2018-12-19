@@ -1,6 +1,5 @@
 void _main()
 {
-
 	void(*ios_shutdown)(int) = (void(*)(int))0x1012EE4C;
 
 	int(*reply)(int, int) = (int(*)(int, int))0x1012ED04;
@@ -20,7 +19,4 @@ void _main()
 		"newlr: .word 0x1012EACC\n"
 		"newr0: .word 0x10146080\n"
 		"newpc: .word 0x10111164\n");
-
-
-
 }

@@ -3,15 +3,15 @@
 
 #include "../../src/dynamic_libs/os_types.h"
 
-#define SHUTDOWN_TYPE_POWER_OFF             0
-#define SHUTDOWN_TYPE_REBOOT                1
+#define	SHUTDOWN_TYPE_POWER_OFF		0
+#define	SHUTDOWN_TYPE_REBOOT		1
 
 typedef struct
 {
 	void* ptr;
 	u32 len;
 	u32 unk;
-}iovec_s;
+} iovec_s;
 
 void* svcAlloc(u32 heapid, u32 size);
 void* svcAllocAlign(u32 heapid, u32 size, u32 align);

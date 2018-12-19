@@ -8,10 +8,9 @@ SECTIONS
 		*(.text*);
 		*(.rodata*);
 	}
-    _text_end = .;
+	_text_end = .;
 
 	/DISCARD/ : {
 		*(*);
 	}
 }
-

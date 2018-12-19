@@ -24,8 +24,8 @@
 #ifndef _CFW_CONFIG_H_
 #define _CFW_CONFIG_H_
 
-#define APP_PATH            "sd:/wiiu/apps/mocha"
-#define CONFIG_PATH         (APP_PATH "/config.ini")
+#define	APP_PATH			"sd:/wiiu/apps/mocha"
+#define	CONFIG_PATH			(APP_PATH "/config.ini")
 
 #include "../common/config_types.h"
 

@@ -3,7 +3,7 @@ OUTPUT_ARCH(arm)
 SECTIONS
 {
 	.text (0x10700000 + 0x000F8200) : {
-	    _text_start = .;
+		_text_start = .;
 		*(.text*);
 		*(.rodata*);
 	}
@@ -23,4 +23,3 @@ SECTIONS
 		*(*);
 	}
 }
-

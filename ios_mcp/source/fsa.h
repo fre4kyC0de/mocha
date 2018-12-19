@@ -3,10 +3,10 @@
 
 typedef struct
 {
-    u32 flag;
-    u32 permission;
-    u32 owner_id;
-    u32 group_id;
+	u32 flag;
+	u32 permission;
+	u32 owner_id;
+	u32 group_id;
 	u32 size; // size in bytes
 	u32 physsize; // physical size on disk in bytes
 	u32 unk[3];
@@ -14,18 +14,18 @@ typedef struct
 	u32 ctime;
 	u32 mtime;
 	u32 unk2[0x0D];
-}fileStat_s;
+} fileStat_s;
 
 typedef struct
 {
-    fileStat_s stat;
+	fileStat_s stat;
 	char name[0x100];
-}directoryEntry_s;
+} directoryEntry_s;
 
-#define DIR_ENTRY_IS_DIRECTORY      0x80000000
+#define	DIR_ENTRY_IS_DIRECTORY		0x80000000
 
-#define FSA_MOUNTFLAGS_BINDMOUNT (1 << 0)
-#define FSA_MOUNTFLAGS_GLOBAL (1 << 1)
+#define	FSA_MOUNTFLAGS_BINDMOUNT	(1 << 0)
+#define	FSA_MOUNTFLAGS_GLOBAL		(1 << 1)
 
 int FSA_Open();
 

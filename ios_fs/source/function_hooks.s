@@ -3,59 +3,59 @@
 # FS main thread hook
 #############################################################################################
 .extern createDevThread_entry
-    .globl createDevThread_hook
+	.globl createDevThread_hook
 createDevThread_hook:
-    push {r0,r1,lr}
-    ldr r0, [r4, #0x8]
-    mov r1, r7
-    bl createDevThread_entry
-    pop {r0,r1,lr}
-#   restore original instruction
-    pop {r4-r8,pc}
+	push {r0,r1,lr}
+	ldr r0, [r4, #0x8]
+	mov r1, r7
+	bl createDevThread_entry
+	pop {r0,r1,lr}
+#	restore original instruction
+	pop {r4-r8,pc}
 
 #############################################################################################
 # devices handle hooks
 #############################################################################################
 .extern getMdDeviceById
-    .globl getMdDeviceById_hook
+	.globl getMdDeviceById_hook
 getMdDeviceById_hook:
-    mov r4, r0
-    push {lr}
-    bl getMdDeviceById
-    pop {lr}
-    cmp r0, #0
-    moveq r0, r4
-    bxeq lr
-    pop {r4,r5,pc}
+	mov r4, r0
+	push {lr}
+	bl getMdDeviceById
+	pop {lr}
+	cmp r0, #0
+	moveq r0, r4
+	bxeq lr
+	pop {r4,r5,pc}
 
 
 #############################################################################################
 # syslog hook
 #############################################################################################
-    .globl syslogOutput_hook
+	.globl syslogOutput_hook
 syslogOutput_hook:
-#   push {r0,lr}
-#   bl dump_syslog
-#   pop {r0,lr}
-#   restore original instruction
-    pop {r4-r8,r10,pc}
+#	push {r0,lr}
+#	bl dump_syslog
+#	pop {r0,lr}
+#	restore original instruction
+	pop {r4-r8,r10,pc}
 
 #############################################################################################
 # Original NAND read functions
 #############################################################################################
-    .globl slcRead1_original
+	.globl slcRead1_original
 slcRead1_original:
-    push {r4-r8,lr}
-    ldr r4, [pc]
-    bx r4
-    .word 0x107B9990
+	push {r4-r8,lr}
+	ldr r4, [pc]
+	bx r4
+	.word 0x107B9990
 
-    .globl sdcardRead_original
+	.globl sdcardRead_original
 sdcardRead_original:
-    push {r4,lr}
-    ldr r4, [pc]
-    bx r4
-    .word 0x107BDDD4
+	push {r4,lr}
+	ldr r4, [pc]
+	bx r4
+	.word 0x107BDDD4
 
 #############################################################################################
 # DEBUG STUFF
