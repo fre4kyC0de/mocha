@@ -20,10 +20,10 @@ int log_init(unsigned int ipAddress)
 	connect_addr.sin_port = 4405;
 	connect_addr.sin_addr.s_addr = ipAddress;
 
-	if(connect(log_socket, (struct sockaddr*)&connect_addr, sizeof(connect_addr)) < 0)
+	if (connect(log_socket, (struct sockaddr*)&connect_addr, sizeof(connect_addr)) < 0)
 	{
-	    closesocket(log_socket);
-	    log_socket = -1;
+		closesocket(log_socket);
+		log_socket = -1;
 	}
 
 	return log_socket;
@@ -31,41 +31,41 @@ int log_init(unsigned int ipAddress)
 
 void log_deinit()
 {
-    if(log_socket >= 0)
-    {
-        closesocket(log_socket);
-        log_socket = -1;
-    }
+	if (log_socket >= 0)
+	{
+		closesocket(log_socket);
+		log_socket = -1;
+	}
 }
 
 static void log_print(const char *str, int len)
 {
-    int ret;
-    while (len > 0) {
-        int block = len < 1400 ? len : 1400; // take max 1400 bytes per UDP packet
-        ret = send(log_socket, str, block, 0);
-        if(ret < 0)
-            break;
+	int ret;
+	while (len > 0)
+	{
+		int block = len < 1400 ? len : 1400; // take max 1400 bytes per UDP packet
+		ret = send(log_socket, str, block, 0);
+		if (ret < 0)
+			break;
 
-        len -= ret;
-        str += ret;
-    }
+		len -= ret;
+		str += ret;
+	}
 }
 
 void log_printf(const char *format, ...)
 {
-    if(log_socket < 0) {
-        return;
-    }
+	if (log_socket < 0)
+		return;
 
-    va_list args;
-    va_start(args, format);
+	va_list args;
+	va_start(args, format);
 
-    char buffer[0x100];
+	char buffer[0x100];
 
-    int len = vsnprintf(buffer, sizeof(buffer), format, args);
-    log_print(buffer, len);
+	int len = vsnprintf(buffer, sizeof(buffer), format, args);
+	log_print(buffer, len);
 
-    va_end(args);
+	va_end(args);
 }
 #endif // DEBUG_LOGGER

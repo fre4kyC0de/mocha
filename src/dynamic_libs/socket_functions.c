@@ -60,65 +60,64 @@ EXPORT_DECL(s32, NSSLCreateConnection, s32 context, const char* host, s32 hotlen
 
 void InitAcquireSocket(void)
 {
-    if(coreinit_handle == 0) {
-        InitAcquireOS();
-    };
+	if (coreinit_handle == 0)
+		InitAcquireOS();
 
-    OSDynLoad_Acquire("nsysnet.rpl", &nsysnet_handle);
+	OSDynLoad_Acquire("nsysnet.rpl", &nsysnet_handle);
 }
 
 void InitSocketFunctionPointers(void)
 {
-    u32 *funcPointer = 0;
+	u32 *funcPointer = 0;
 
-    InitAcquireSocket();
+	InitAcquireSocket();
 
-    u32 nn_ac_handle;
-    s32(*ACInitialize)();
-    s32(*ACGetStartupId) (u32 *id);
-    s32(*ACConnectWithConfigId) (u32 id);
-    s32(*ACGetAssignedAddress) (u32 * ip);
-    OSDynLoad_Acquire("nn_ac.rpl", &nn_ac_handle);
-    OSDynLoad_FindExport(nn_ac_handle, 0, "ACInitialize", &ACInitialize);
-    OSDynLoad_FindExport(nn_ac_handle, 0, "ACGetStartupId", &ACGetStartupId);
-    OSDynLoad_FindExport(nn_ac_handle, 0, "ACConnectWithConfigId",&ACConnectWithConfigId);
-    OSDynLoad_FindExport(nn_ac_handle, 0, "ACGetAssignedAddress",&ACGetAssignedAddress);
+	u32 nn_ac_handle;
+	s32(*ACInitialize)();
+	s32(*ACGetStartupId) (u32 *id);
+	s32(*ACConnectWithConfigId) (u32 id);
+	s32(*ACGetAssignedAddress) (u32 * ip);
+	OSDynLoad_Acquire("nn_ac.rpl", &nn_ac_handle);
+	OSDynLoad_FindExport(nn_ac_handle, 0, "ACInitialize", &ACInitialize);
+	OSDynLoad_FindExport(nn_ac_handle, 0, "ACGetStartupId", &ACGetStartupId);
+	OSDynLoad_FindExport(nn_ac_handle, 0, "ACConnectWithConfigId",&ACConnectWithConfigId);
+	OSDynLoad_FindExport(nn_ac_handle, 0, "ACGetAssignedAddress",&ACGetAssignedAddress);
 
-    OS_FIND_EXPORT(nsysnet_handle, socket_lib_init);
-    OS_FIND_EXPORT(nsysnet_handle, socket_lib_finish);
-    OS_FIND_EXPORT(nsysnet_handle, socketlasterr);
-    OS_FIND_EXPORT(nsysnet_handle, socket);
-    OS_FIND_EXPORT(nsysnet_handle, socketclose);
-    OS_FIND_EXPORT(nsysnet_handle, shutdown);
-    OS_FIND_EXPORT(nsysnet_handle, connect);
-    OS_FIND_EXPORT(nsysnet_handle, bind);
-    OS_FIND_EXPORT(nsysnet_handle, listen);
-    OS_FIND_EXPORT(nsysnet_handle, accept);
-    OS_FIND_EXPORT(nsysnet_handle, send);
-    OS_FIND_EXPORT(nsysnet_handle, recv);
-    OS_FIND_EXPORT(nsysnet_handle, recvfrom);
-    OS_FIND_EXPORT(nsysnet_handle, sendto);
-    OS_FIND_EXPORT(nsysnet_handle, setsockopt);
-    OS_FIND_EXPORT(nsysnet_handle, inet_ntoa);
-    OS_FIND_EXPORT(nsysnet_handle, inet_aton);
-    OS_FIND_EXPORT(nsysnet_handle, inet_ntop);
-    OS_FIND_EXPORT(nsysnet_handle, inet_pton);
+	OS_FIND_EXPORT(nsysnet_handle, socket_lib_init);
+	OS_FIND_EXPORT(nsysnet_handle, socket_lib_finish);
+	OS_FIND_EXPORT(nsysnet_handle, socketlasterr);
+	OS_FIND_EXPORT(nsysnet_handle, socket);
+	OS_FIND_EXPORT(nsysnet_handle, socketclose);
+	OS_FIND_EXPORT(nsysnet_handle, shutdown);
+	OS_FIND_EXPORT(nsysnet_handle, connect);
+	OS_FIND_EXPORT(nsysnet_handle, bind);
+	OS_FIND_EXPORT(nsysnet_handle, listen);
+	OS_FIND_EXPORT(nsysnet_handle, accept);
+	OS_FIND_EXPORT(nsysnet_handle, send);
+	OS_FIND_EXPORT(nsysnet_handle, recv);
+	OS_FIND_EXPORT(nsysnet_handle, recvfrom);
+	OS_FIND_EXPORT(nsysnet_handle, sendto);
+	OS_FIND_EXPORT(nsysnet_handle, setsockopt);
+	OS_FIND_EXPORT(nsysnet_handle, inet_ntoa);
+	OS_FIND_EXPORT(nsysnet_handle, inet_aton);
+	OS_FIND_EXPORT(nsysnet_handle, inet_ntop);
+	OS_FIND_EXPORT(nsysnet_handle, inet_pton);
 
-    OS_FIND_EXPORT(nsysnet_handle, NSSLInit);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLFinish);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLCreateContext);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLDestroyContext);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLAddServerPKI);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLAddServerPKIExternal);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLWrite);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLRead);
-    OS_FIND_EXPORT(nsysnet_handle, NSSLCreateConnection);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLInit);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLFinish);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLCreateContext);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLDestroyContext);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLAddServerPKI);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLAddServerPKIExternal);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLWrite);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLRead);
+	OS_FIND_EXPORT(nsysnet_handle, NSSLCreateConnection);
 
-    u32 nn_startupid;
-    ACInitialize();
-    ACGetStartupId(&nn_startupid);
-    ACConnectWithConfigId(nn_startupid);
-    ACGetAssignedAddress(&hostIpAddress);
+	u32 nn_startupid;
+	ACInitialize();
+	ACGetStartupId(&nn_startupid);
+	ACConnectWithConfigId(nn_startupid);
+	ACGetAssignedAddress(&hostIpAddress);
 
-    socket_lib_init();
+	socket_lib_init();
 }

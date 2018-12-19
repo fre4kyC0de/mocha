@@ -8,11 +8,12 @@ static int ifmgrncl_handle = 0;
 
 int ifmgrnclInit()
 {
-	if(ifmgrncl_handle) return ifmgrncl_handle;
+	if (ifmgrncl_handle)
+		return ifmgrncl_handle;
 
 	int ret = svcOpen("/dev/net/ifmgr/ncl", 0);
 
-	if(ret > 0)
+	if (ret > 0)
 	{
 		ifmgrncl_handle = ret;
 		return ifmgrncl_handle;
@@ -34,7 +35,8 @@ static void* allocIobuf(u32 size)
 {
 	void* ptr = svcAlloc(0xCAFF, size);
 
-	if(ptr) memset(ptr, 0x00, size);
+	if (ptr)
+		memset(ptr, 0x00, size);
 
 	return ptr;
 }
@@ -55,7 +57,8 @@ int	IFMGRNCL_GetInterfaceStatus(u16 interface_id, u16* out_status)
 
 	int ret = svcIoctl(ifmgrncl_handle, 0x14, inbuf, 0x2, outbuf, 0x8);
 
-	if(!ret && out_status) *out_status = outbuf[2];
+	if (!ret && out_status)
+		*out_status = outbuf[2];
 
 	freeIobuf(iobuf1);
 	freeIobuf(iobuf2);

@@ -162,13 +162,13 @@ EXPORT_DECL(s32, MCP_TitleList, s32 handle, s32 *res, void *data, s32 count);
 EXPORT_DECL(s32, MCP_GetOwnTitleInfo, s32 handle, void * data);
 EXPORT_DECL(void*, MCP_GetDeviceId, s32 handle, u32 * id);
 
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/*//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Loader functions (not real rpl)
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/*//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Kernel function addresses
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Other function addresses
@@ -202,211 +202,213 @@ EXPORT_DECL(s32, IOS_IoctlAsync,s32 fd, u32 request, void *input_buffer,u32 inpu
 EXPORT_DECL(s32, IOS_Open,char *path, u32 mode);
 EXPORT_DECL(s32, IOS_Close,s32 fd);
 
-void _os_find_export(u32 handle, const char *funcName, void *funcPointer) {
-    OSDynLoad_FindExport(handle, 0, funcName, funcPointer);
+void _os_find_export(u32 handle, const char *funcName, void *funcPointer)
+{
+	OSDynLoad_FindExport(handle, 0, funcName, funcPointer);
 
-    if(!*(u32 *)funcPointer) {
-        /*
-         * This is effectively OSFatal("Function %s is NULL", funcName),
-         * but we can't rely on any library functions like snprintf or
-         * strcpy at this point.
-         *
-         * Buffer bounds are not checked. Beware!
-         */
-        char buf[256], *bufp = buf;
-        const char a[] = "Function ", b[] = " is NULL", *p;
-        unsigned int i;
+	if (!*(u32 *)funcPointer)
+	{
+		/*
+		 * This is effectively OSFatal("Function %s is NULL", funcName),
+		 * but we can't rely on any library functions like snprintf or
+		 * strcpy at this point.
+		 *
+		 * Buffer bounds are not checked. Beware!
+		 */
+		char buf[256], *bufp = buf;
+		const char a[] = "Function ", b[] = " is NULL", *p;
 
-        for (i = 0; i < sizeof(a) - 1; i++)
-            *bufp++ = a[i];
+		for (unsigned int i = 0; i < sizeof(a) - 1; i++)
+			*bufp++ = a[i];
 
-        for (p = funcName; *p; p++)
-            *bufp++ = *p;
+		for (p = funcName; *p; p++)
+			*bufp++ = *p;
 
-        for (i = 0; i < sizeof(b) - 1; i++)
-            *bufp++ = b[i];
+		for (unsigned int i = 0; i < sizeof(b) - 1; i++)
+			*bufp++ = b[i];
 
-        *bufp++ = '\0';
+		*bufp++ = '\0';
 
-        OSFatal(buf);
-    }
+		OSFatal(buf);
+	}
 }
 
 void InitAcquireOS(void)
 {
-    EXPORT_FUNC_WRITE(OSDynLoad_Acquire, (s32 (*)(const char*, unsigned *))OS_SPECIFICS->addr_OSDynLoad_Acquire);
-    EXPORT_FUNC_WRITE(OSDynLoad_FindExport, (s32 (*)(u32, s32, const char *, void *))OS_SPECIFICS->addr_OSDynLoad_FindExport);
+	EXPORT_FUNC_WRITE(OSDynLoad_Acquire, (s32 (*)(const char*, unsigned *))OS_SPECIFICS->addr_OSDynLoad_Acquire);
+	EXPORT_FUNC_WRITE(OSDynLoad_FindExport, (s32 (*)(u32, s32, const char *, void *))OS_SPECIFICS->addr_OSDynLoad_FindExport);
 
-    OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
+	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
 }
 
 void InitOSFunctionPointers(void)
 {
-    u32 *funcPointer = 0;
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Lib handle functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    InitAcquireOS();
-    OS_FIND_EXPORT(coreinit_handle, OSDynLoad_Release);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Security functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OS_FIND_EXPORT(coreinit_handle, OSGetSecurityLevel);
-    OS_FIND_EXPORT(coreinit_handle, OSForceFullRelaunch);
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! System functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OS_FIND_EXPORT(coreinit_handle, OSFatal);
-    OS_FIND_EXPORT(coreinit_handle, OSGetTitleID);
-    OS_FIND_EXPORT(coreinit_handle, OSGetArgcArgv);
-    OS_FIND_EXPORT(coreinit_handle, OSSetExceptionCallback);
-    OS_FIND_EXPORT(coreinit_handle, OSSetExceptionCallbackEx);
-    OS_FIND_EXPORT(coreinit_handle, OSLoadContext);
-    OS_FIND_EXPORT(coreinit_handle, DCFlushRange);
-    OS_FIND_EXPORT(coreinit_handle, DCStoreRange);
-    OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
-    OS_FIND_EXPORT(coreinit_handle, ICInvalidateRange);
-    OS_FIND_EXPORT(coreinit_handle, OSEffectiveToPhysical);
-    OS_FIND_EXPORT(coreinit_handle, __OSPhysicalToEffectiveUncached);
-    OS_FIND_EXPORT(coreinit_handle, __OSValidateAddressSpaceRange);
-    OS_FIND_EXPORT(coreinit_handle, __os_snprintf);
-    OS_FIND_EXPORT(coreinit_handle, __gh_errno_ptr);
-
-    OSDynLoad_FindExport(coreinit_handle, 0, "_Exit", &__Exit);
-
-    OS_FIND_EXPORT(coreinit_handle, OSScreenInit);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenShutdown);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenGetBufferSizeEx);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenSetBufferEx);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenClearBufferEx);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenFlipBuffersEx);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenPutFontEx);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenEnableEx);
-    OS_FIND_EXPORT(coreinit_handle, OSScreenPutPixelEx);
-
-    OS_FIND_EXPORT(coreinit_handle, DisassemblePPCRange);
-    OS_FIND_EXPORT(coreinit_handle, DisassemblePPCOpcode);
-    OS_FIND_EXPORT(coreinit_handle, OSGetSymbolName);
-    OS_FIND_EXPORT(coreinit_handle, OSGetSymbolNameEx);
-    OS_FIND_EXPORT(coreinit_handle, OSIsDebuggerInitialized);
-
-    OS_FIND_EXPORT(coreinit_handle, OSGetSharedData);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Thread functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OS_FIND_EXPORT(coreinit_handle, OSEnableInterrupts);
-    OS_FIND_EXPORT(coreinit_handle, __OSClearAndEnableInterrupt);
-    OS_FIND_EXPORT(coreinit_handle, OSIsInterruptEnabled);
-    OS_FIND_EXPORT(coreinit_handle, OSIsDebuggerPresent);
-    OS_FIND_EXPORT(coreinit_handle, OSRestoreInterrupts);
-    OS_FIND_EXPORT(coreinit_handle, OSSetDABR);
-    OS_FIND_EXPORT(coreinit_handle, OSSetIABR);
-
-    OS_FIND_EXPORT(coreinit_handle, OSCreateThread);
-    OS_FIND_EXPORT(coreinit_handle, OSResumeThread);
-    OS_FIND_EXPORT(coreinit_handle, OSSuspendThread);
-    OS_FIND_EXPORT(coreinit_handle, OSIsThreadTerminated);
-    OS_FIND_EXPORT(coreinit_handle, OSIsThreadSuspended);
-    OS_FIND_EXPORT(coreinit_handle, OSJoinThread);
-    OS_FIND_EXPORT(coreinit_handle, OSSetThreadPriority);
-    OS_FIND_EXPORT(coreinit_handle, OSDetachThread);
-    OS_FIND_EXPORT(coreinit_handle, OSGetCurrentThread);
-    OS_FIND_EXPORT(coreinit_handle, OSGetThreadName);
-    OS_FIND_EXPORT(coreinit_handle, OSGetActiveThreadLink);
-    OS_FIND_EXPORT(coreinit_handle, OSGetThreadAffinity);
-    OS_FIND_EXPORT(coreinit_handle, OSGetThreadPriority);
-    OS_FIND_EXPORT(coreinit_handle, OSSetThreadName);
-    OS_FIND_EXPORT(coreinit_handle, OSGetCoreId);
-
-    OS_FIND_EXPORT(coreinit_handle, OSSleepTicks);
-    OS_FIND_EXPORT(coreinit_handle, OSGetTick);
-    OS_FIND_EXPORT(coreinit_handle, OSGetTime);
-    OS_FIND_EXPORT(coreinit_handle, OSGetSystemTime);
-    OS_FIND_EXPORT(coreinit_handle, OSTicksToCalendarTime);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Message functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OS_FIND_EXPORT(coreinit_handle, OSInitMessageQueue);
-    OS_FIND_EXPORT(coreinit_handle, OSSendMessage);
-    OS_FIND_EXPORT(coreinit_handle, OSReceiveMessage);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Mutex functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OS_FIND_EXPORT(coreinit_handle, OSInitMutex);
-    OS_FIND_EXPORT(coreinit_handle, OSLockMutex);
-    OS_FIND_EXPORT(coreinit_handle, OSUnlockMutex);
-    OS_FIND_EXPORT(coreinit_handle, OSTryLockMutex);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! MCP functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OS_FIND_EXPORT(coreinit_handle, MCP_Open);
-    OS_FIND_EXPORT(coreinit_handle, MCP_Close);
-    OS_FIND_EXPORT(coreinit_handle, MCP_TitleCount);
-    OS_FIND_EXPORT(coreinit_handle, MCP_TitleList);
-    OS_FIND_EXPORT(coreinit_handle, MCP_GetOwnTitleInfo);
-    OS_FIND_EXPORT(coreinit_handle, MCP_GetDeviceId);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Memory functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OSDynLoad_FindExport(coreinit_handle, 1, "MEMAllocFromDefaultHeapEx", &pMEMAllocFromDefaultHeapEx);
-    OSDynLoad_FindExport(coreinit_handle, 1, "MEMAllocFromDefaultHeap", &pMEMAllocFromDefaultHeap);
-    OSDynLoad_FindExport(coreinit_handle, 1, "MEMFreeToDefaultHeap", &pMEMFreeToDefaultHeap);
-
-    OS_FIND_EXPORT(coreinit_handle, MEMAllocFromAllocator);
-    OS_FIND_EXPORT(coreinit_handle, MEMFreeToAllocator);
-    OS_FIND_EXPORT(coreinit_handle, MEMGetBaseHeapHandle);
-    OS_FIND_EXPORT(coreinit_handle, MEMGetTotalFreeSizeForExpHeap);
-    OS_FIND_EXPORT(coreinit_handle, MEMGetAllocatableSizeForExpHeapEx);
-    OS_FIND_EXPORT(coreinit_handle, MEMGetAllocatableSizeForFrmHeapEx);
-    OS_FIND_EXPORT(coreinit_handle, MEMAllocFromFrmHeapEx);
-    OS_FIND_EXPORT(coreinit_handle, MEMFreeToFrmHeap);
-    OS_FIND_EXPORT(coreinit_handle, MEMAllocFromExpHeapEx);
-    OS_FIND_EXPORT(coreinit_handle, MEMCreateExpHeapEx);
-    OS_FIND_EXPORT(coreinit_handle, MEMCreateFrmHeapEx);
-    OS_FIND_EXPORT(coreinit_handle, MEMDestroyExpHeap);
-    OS_FIND_EXPORT(coreinit_handle, MEMFreeToExpHeap);
-    OS_FIND_EXPORT(coreinit_handle, OSAllocFromSystem);
-    OS_FIND_EXPORT(coreinit_handle, OSFreeToSystem);
-    OS_FIND_EXPORT(coreinit_handle, OSIsAddressValid);
-    OS_FIND_EXPORT(coreinit_handle, MEMFindParentHeap);
-    OS_FIND_EXPORT(coreinit_handle, OSGetMemBound);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Other function addresses
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
-    OS_FIND_EXPORT(coreinit_handle, OSDynLoad_GetModuleName);
-    OS_FIND_EXPORT(coreinit_handle, OSIsHomeButtonMenuEnabled);
-    OS_FIND_EXPORT(coreinit_handle, OSEnableHomeButtonMenu);
-    OS_FIND_EXPORT(coreinit_handle, OSSetScreenCapturePermissionEx);
-
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! Energy Saver functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //Burn-in Reduction
-    OS_FIND_EXPORT(coreinit_handle, IMEnableDim);
-    OS_FIND_EXPORT(coreinit_handle, IMDisableDim);
-    OS_FIND_EXPORT(coreinit_handle, IMIsDimEnabled);
-    //Auto power down
-    OS_FIND_EXPORT(coreinit_handle, IMEnableAPD);
-    OS_FIND_EXPORT(coreinit_handle, IMDisableAPD);
-    OS_FIND_EXPORT(coreinit_handle, IMIsAPDEnabled);
-    OS_FIND_EXPORT(coreinit_handle, IMIsAPDEnabledBySysSettings);
-
-    OS_FIND_EXPORT(coreinit_handle, OSSendAppSwitchRequest);
+	u32 *funcPointer = 0;
 
 	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //! IOS functions
-    //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    OS_FIND_EXPORT(coreinit_handle, IOS_Ioctl);
-    OS_FIND_EXPORT(coreinit_handle, IOS_IoctlAsync);
-    OS_FIND_EXPORT(coreinit_handle, IOS_Open);
-    OS_FIND_EXPORT(coreinit_handle, IOS_Close);
+	//! Lib handle functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	InitAcquireOS();
+	OS_FIND_EXPORT(coreinit_handle, OSDynLoad_Release);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! Security functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OS_FIND_EXPORT(coreinit_handle, OSGetSecurityLevel);
+	OS_FIND_EXPORT(coreinit_handle, OSForceFullRelaunch);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! System functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OS_FIND_EXPORT(coreinit_handle, OSFatal);
+	OS_FIND_EXPORT(coreinit_handle, OSGetTitleID);
+	OS_FIND_EXPORT(coreinit_handle, OSGetArgcArgv);
+	OS_FIND_EXPORT(coreinit_handle, OSSetExceptionCallback);
+	OS_FIND_EXPORT(coreinit_handle, OSSetExceptionCallbackEx);
+	OS_FIND_EXPORT(coreinit_handle, OSLoadContext);
+	OS_FIND_EXPORT(coreinit_handle, DCFlushRange);
+	OS_FIND_EXPORT(coreinit_handle, DCStoreRange);
+	OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
+	OS_FIND_EXPORT(coreinit_handle, ICInvalidateRange);
+	OS_FIND_EXPORT(coreinit_handle, OSEffectiveToPhysical);
+	OS_FIND_EXPORT(coreinit_handle, __OSPhysicalToEffectiveUncached);
+	OS_FIND_EXPORT(coreinit_handle, __OSValidateAddressSpaceRange);
+	OS_FIND_EXPORT(coreinit_handle, __os_snprintf);
+	OS_FIND_EXPORT(coreinit_handle, __gh_errno_ptr);
+
+	OSDynLoad_FindExport(coreinit_handle, 0, "_Exit", &__Exit);
+
+	OS_FIND_EXPORT(coreinit_handle, OSScreenInit);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenShutdown);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenGetBufferSizeEx);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenSetBufferEx);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenClearBufferEx);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenFlipBuffersEx);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenPutFontEx);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenEnableEx);
+	OS_FIND_EXPORT(coreinit_handle, OSScreenPutPixelEx);
+
+	OS_FIND_EXPORT(coreinit_handle, DisassemblePPCRange);
+	OS_FIND_EXPORT(coreinit_handle, DisassemblePPCOpcode);
+	OS_FIND_EXPORT(coreinit_handle, OSGetSymbolName);
+	OS_FIND_EXPORT(coreinit_handle, OSGetSymbolNameEx);
+	OS_FIND_EXPORT(coreinit_handle, OSIsDebuggerInitialized);
+
+	OS_FIND_EXPORT(coreinit_handle, OSGetSharedData);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! Thread functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OS_FIND_EXPORT(coreinit_handle, OSEnableInterrupts);
+	OS_FIND_EXPORT(coreinit_handle, __OSClearAndEnableInterrupt);
+	OS_FIND_EXPORT(coreinit_handle, OSIsInterruptEnabled);
+	OS_FIND_EXPORT(coreinit_handle, OSIsDebuggerPresent);
+	OS_FIND_EXPORT(coreinit_handle, OSRestoreInterrupts);
+	OS_FIND_EXPORT(coreinit_handle, OSSetDABR);
+	OS_FIND_EXPORT(coreinit_handle, OSSetIABR);
+
+	OS_FIND_EXPORT(coreinit_handle, OSCreateThread);
+	OS_FIND_EXPORT(coreinit_handle, OSResumeThread);
+	OS_FIND_EXPORT(coreinit_handle, OSSuspendThread);
+	OS_FIND_EXPORT(coreinit_handle, OSIsThreadTerminated);
+	OS_FIND_EXPORT(coreinit_handle, OSIsThreadSuspended);
+	OS_FIND_EXPORT(coreinit_handle, OSJoinThread);
+	OS_FIND_EXPORT(coreinit_handle, OSSetThreadPriority);
+	OS_FIND_EXPORT(coreinit_handle, OSDetachThread);
+	OS_FIND_EXPORT(coreinit_handle, OSGetCurrentThread);
+	OS_FIND_EXPORT(coreinit_handle, OSGetThreadName);
+	OS_FIND_EXPORT(coreinit_handle, OSGetActiveThreadLink);
+	OS_FIND_EXPORT(coreinit_handle, OSGetThreadAffinity);
+	OS_FIND_EXPORT(coreinit_handle, OSGetThreadPriority);
+	OS_FIND_EXPORT(coreinit_handle, OSSetThreadName);
+	OS_FIND_EXPORT(coreinit_handle, OSGetCoreId);
+
+	OS_FIND_EXPORT(coreinit_handle, OSSleepTicks);
+	OS_FIND_EXPORT(coreinit_handle, OSGetTick);
+	OS_FIND_EXPORT(coreinit_handle, OSGetTime);
+	OS_FIND_EXPORT(coreinit_handle, OSGetSystemTime);
+	OS_FIND_EXPORT(coreinit_handle, OSTicksToCalendarTime);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! Message functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OS_FIND_EXPORT(coreinit_handle, OSInitMessageQueue);
+	OS_FIND_EXPORT(coreinit_handle, OSSendMessage);
+	OS_FIND_EXPORT(coreinit_handle, OSReceiveMessage);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! Mutex functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OS_FIND_EXPORT(coreinit_handle, OSInitMutex);
+	OS_FIND_EXPORT(coreinit_handle, OSLockMutex);
+	OS_FIND_EXPORT(coreinit_handle, OSUnlockMutex);
+	OS_FIND_EXPORT(coreinit_handle, OSTryLockMutex);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! MCP functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OS_FIND_EXPORT(coreinit_handle, MCP_Open);
+	OS_FIND_EXPORT(coreinit_handle, MCP_Close);
+	OS_FIND_EXPORT(coreinit_handle, MCP_TitleCount);
+	OS_FIND_EXPORT(coreinit_handle, MCP_TitleList);
+	OS_FIND_EXPORT(coreinit_handle, MCP_GetOwnTitleInfo);
+	OS_FIND_EXPORT(coreinit_handle, MCP_GetDeviceId);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! Memory functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OSDynLoad_FindExport(coreinit_handle, 1, "MEMAllocFromDefaultHeapEx", &pMEMAllocFromDefaultHeapEx);
+	OSDynLoad_FindExport(coreinit_handle, 1, "MEMAllocFromDefaultHeap", &pMEMAllocFromDefaultHeap);
+	OSDynLoad_FindExport(coreinit_handle, 1, "MEMFreeToDefaultHeap", &pMEMFreeToDefaultHeap);
+
+	OS_FIND_EXPORT(coreinit_handle, MEMAllocFromAllocator);
+	OS_FIND_EXPORT(coreinit_handle, MEMFreeToAllocator);
+	OS_FIND_EXPORT(coreinit_handle, MEMGetBaseHeapHandle);
+	OS_FIND_EXPORT(coreinit_handle, MEMGetTotalFreeSizeForExpHeap);
+	OS_FIND_EXPORT(coreinit_handle, MEMGetAllocatableSizeForExpHeapEx);
+	OS_FIND_EXPORT(coreinit_handle, MEMGetAllocatableSizeForFrmHeapEx);
+	OS_FIND_EXPORT(coreinit_handle, MEMAllocFromFrmHeapEx);
+	OS_FIND_EXPORT(coreinit_handle, MEMFreeToFrmHeap);
+	OS_FIND_EXPORT(coreinit_handle, MEMAllocFromExpHeapEx);
+	OS_FIND_EXPORT(coreinit_handle, MEMCreateExpHeapEx);
+	OS_FIND_EXPORT(coreinit_handle, MEMCreateFrmHeapEx);
+	OS_FIND_EXPORT(coreinit_handle, MEMDestroyExpHeap);
+	OS_FIND_EXPORT(coreinit_handle, MEMFreeToExpHeap);
+	OS_FIND_EXPORT(coreinit_handle, OSAllocFromSystem);
+	OS_FIND_EXPORT(coreinit_handle, OSFreeToSystem);
+	OS_FIND_EXPORT(coreinit_handle, OSIsAddressValid);
+	OS_FIND_EXPORT(coreinit_handle, MEMFindParentHeap);
+	OS_FIND_EXPORT(coreinit_handle, OSGetMemBound);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! Other function addresses
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//OS_FIND_EXPORT(coreinit_handle, DCInvalidateRange);
+	OS_FIND_EXPORT(coreinit_handle, OSDynLoad_GetModuleName);
+	OS_FIND_EXPORT(coreinit_handle, OSIsHomeButtonMenuEnabled);
+	OS_FIND_EXPORT(coreinit_handle, OSEnableHomeButtonMenu);
+	OS_FIND_EXPORT(coreinit_handle, OSSetScreenCapturePermissionEx);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! Energy Saver functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Burn-in Reduction
+	OS_FIND_EXPORT(coreinit_handle, IMEnableDim);
+	OS_FIND_EXPORT(coreinit_handle, IMDisableDim);
+	OS_FIND_EXPORT(coreinit_handle, IMIsDimEnabled);
+	// Auto power down
+	OS_FIND_EXPORT(coreinit_handle, IMEnableAPD);
+	OS_FIND_EXPORT(coreinit_handle, IMDisableAPD);
+	OS_FIND_EXPORT(coreinit_handle, IMIsAPDEnabled);
+	OS_FIND_EXPORT(coreinit_handle, IMIsAPDEnabledBySysSettings);
+
+	OS_FIND_EXPORT(coreinit_handle, OSSendAppSwitchRequest);
+
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//! IOS functions
+	//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	OS_FIND_EXPORT(coreinit_handle, IOS_Ioctl);
+	OS_FIND_EXPORT(coreinit_handle, IOS_IoctlAsync);
+	OS_FIND_EXPORT(coreinit_handle, IOS_Open);
+	OS_FIND_EXPORT(coreinit_handle, IOS_Close);
 }

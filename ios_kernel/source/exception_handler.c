@@ -26,37 +26,27 @@
 
 void crash_handler(unsigned int *context, int type)
 {
-    clearScreen(0xFFFFFFFF);
+	clearScreen(0xFFFFFFFF);
 
-    if(type == 0)
-    {
-        _printf(0, 0, "GURU MEDITATION ERROR (prefetch abort)");
-    }
-    else if(type == 1)
-    {
-        _printf(0, 0, "GURU MEDITATION ERROR (data abort)");
-    }
-    else
-    {
-        _printf(0, 0, "GURU MEDITATION ERROR (undefined instruction)");
-    }
+	if (type == 0)
+		_printf(0, 0, "GURU MEDITATION ERROR (prefetch abort)");
+	else if (type == 1)
+		_printf(0, 0, "GURU MEDITATION ERROR (data abort)");
+	else
+		_printf(0, 0, "GURU MEDITATION ERROR (undefined instruction)");
 
-    int reg = 0;
-    while(reg < 16)
-    {
-        if(reg < 10)
-        {
-            _printf(20, 40 + reg * 20, "r%d  = %08X", reg, context[1 + reg]);
-        }
-        else
-        {
-            _printf(20, 40 + reg * 20, "r%d = %08X", reg, context[1 + reg]);
-        }
+	int reg = 0;
+	while (reg < 16)
+	{
+		if (reg < 10)
+			_printf(20, 40 + reg * 20, "r%d  = %08X", reg, context[1 + reg]);
+		else
+			_printf(20, 40 + reg * 20, "r%d = %08X", reg, context[1 + reg]);
 
-        reg++;
-    }
+		reg++;
+	}
 
-    _printf(400, 20, "%08X", *(u32*)context[0x10]);
+	_printf(400, 20, "%08X", *(u32*)context[0x10]);
 
-    for(;;);
+	for (;;);
 }

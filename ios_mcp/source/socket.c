@@ -10,11 +10,12 @@ static int socket_handle = 0;
 
 int socketInit()
 {
-	if(socket_handle) return socket_handle;
+	if (socket_handle)
+		return socket_handle;
 
 	int ret = svcOpen("/dev/socket", 0);
 
-	if(ret > 0)
+	if (ret > 0)
 	{
 		socket_handle = ret;
 		return socket_handle;
@@ -36,7 +37,8 @@ static void* allocIobuf(u32 size)
 {
 	void* ptr = svcAlloc(0xCAFF, size);
 
-	if(ptr) memset(ptr, 0x00, size);
+	if (ptr)
+		memset(ptr, 0x00, size);
 
 	return ptr;
 }
@@ -84,18 +86,20 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 
 	int ret = -1;
 
-	if(addr && addrlen && *addrlen == 0x10)
+	if (addr && addrlen && (*addrlen == 0x10))
 	{
 		inbuf[5] = *addrlen;
 
 		ret = svcIoctl(socket_handle, 0x1, inbuf, 0x18, outbuf, 0x18);
 
-		if(ret >= 0)
+		if (ret >= 0)
 		{
 			memcpy(addr, &outbuf[1], outbuf[5]);
 			*addrlen = outbuf[5];
 		}
-	}else{
+	}
+	else
+	{
 		inbuf[5] = 0x10;
 
 		ret = svcIoctl(socket_handle, 0x1, inbuf, 0x18, outbuf, 0x18);
@@ -107,7 +111,8 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 
 int	bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-	if(addrlen != 0x10) return -1;
+	if (addrlen != 0x10)
+		return -1;
 
 	u8* iobuf = allocIobuf(0x18);
 	u32* inbuf = (u32*)iobuf;
@@ -124,7 +129,8 @@ int	bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 
 int	connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-	if(addrlen != 0x10) return -1;
+	if (addrlen != 0x10)
+		return -1;
 
 	u8* iobuf = allocIobuf(0x18);
 	u32* inbuf = (u32*)iobuf;
@@ -169,11 +175,13 @@ int shutdown(int sockfd, int how)
 
 int recv(int sockfd, void *buf, size_t len, int flags)
 {
-	if(!len) return -101;
+	if (!len)
+		return -101;
 
 	// TODO : size checks, split up data into multiple vectors if necessary
 	void* data_buf = svcAllocAlign(0xCAFF, len, 0x40);
-	if(!data_buf) return -100;
+	if (!data_buf)
+		return -100;
 
 	u8* iobuf = allocIobuf(0x38);
 	iovec_s* iovec = (iovec_s*)iobuf;
@@ -189,10 +197,8 @@ int recv(int sockfd, void *buf, size_t len, int flags)
 
 	int ret = svcIoctlv(socket_handle, 0xC, 1, 3, iovec);
 
-	if(ret > 0 && buf)
-	{
+	if ((ret > 0) && buf)
 		memcpy(buf, data_buf, ret);
-	}
 
 	freeIobuf(data_buf);
 	freeIobuf(iobuf);
@@ -201,11 +207,13 @@ int recv(int sockfd, void *buf, size_t len, int flags)
 
 int send(int sockfd, const void *buf, size_t len, int flags)
 {
-	if(!buf || !len) return -101;
+	if (!buf || !len)
+		return -101;
 
 	// TODO : size checks, split up data into multiple vectors if necessary
 	void* data_buf = svcAllocAlign(0xCAFF, len, 0x40);
-	if(!data_buf) return -100;
+	if (!data_buf)
+		return -100;
 
 	u8* iobuf = allocIobuf(0x38);
 	iovec_s* iovec = (iovec_s*)iobuf;

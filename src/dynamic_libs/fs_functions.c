@@ -80,64 +80,62 @@ EXPORT_DECL(s32, FSGetCwd,void * client,void * block,char * buffer,u32 bufferSiz
 
 void InitFSFunctionPointers(void)
 {
-    if(coreinit_handle == 0) {
-        InitAcquireOS();
-    };
+	if (coreinit_handle == 0)
+		InitAcquireOS();
 
-    u32 *funcPointer = 0;
+	u32 *funcPointer = 0;
 
-    OS_FIND_EXPORT(coreinit_handle, FSInit);
-    OS_FIND_EXPORT(coreinit_handle, FSShutdown);
-    OS_FIND_EXPORT(coreinit_handle, FSAddClient);
-    OS_FIND_EXPORT(coreinit_handle, FSAddClientEx);
-    OS_FIND_EXPORT(coreinit_handle, FSDelClient);
-    OS_FIND_EXPORT(coreinit_handle, FSInitCmdBlock);
-    OS_FIND_EXPORT(coreinit_handle, FSGetCurrentCmdBlock);
-    OS_FIND_EXPORT(coreinit_handle, FSGetMountSource);
+	OS_FIND_EXPORT(coreinit_handle, FSInit);
+	OS_FIND_EXPORT(coreinit_handle, FSShutdown);
+	OS_FIND_EXPORT(coreinit_handle, FSAddClient);
+	OS_FIND_EXPORT(coreinit_handle, FSAddClientEx);
+	OS_FIND_EXPORT(coreinit_handle, FSDelClient);
+	OS_FIND_EXPORT(coreinit_handle, FSInitCmdBlock);
+	OS_FIND_EXPORT(coreinit_handle, FSGetCurrentCmdBlock);
+	OS_FIND_EXPORT(coreinit_handle, FSGetMountSource);
 
-    OS_FIND_EXPORT(coreinit_handle, FSMount);
-    OS_FIND_EXPORT(coreinit_handle, FSUnmount);
+	OS_FIND_EXPORT(coreinit_handle, FSMount);
+	OS_FIND_EXPORT(coreinit_handle, FSUnmount);
 
-    OS_FIND_EXPORT(coreinit_handle, FSGetStat);
-    OS_FIND_EXPORT(coreinit_handle, FSGetStatAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSRename);
-    OS_FIND_EXPORT(coreinit_handle, FSRenameAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSRemove);
-    OS_FIND_EXPORT(coreinit_handle, FSRemoveAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSFlushQuota);
-    OS_FIND_EXPORT(coreinit_handle, FSFlushQuotaAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSGetFreeSpaceSize);
-    OS_FIND_EXPORT(coreinit_handle, FSGetFreeSpaceSizeAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSRollbackQuota);
-    OS_FIND_EXPORT(coreinit_handle, FSRollbackQuotaAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSGetStat);
+	OS_FIND_EXPORT(coreinit_handle, FSGetStatAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSRename);
+	OS_FIND_EXPORT(coreinit_handle, FSRenameAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSRemove);
+	OS_FIND_EXPORT(coreinit_handle, FSRemoveAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSFlushQuota);
+	OS_FIND_EXPORT(coreinit_handle, FSFlushQuotaAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSGetFreeSpaceSize);
+	OS_FIND_EXPORT(coreinit_handle, FSGetFreeSpaceSizeAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSRollbackQuota);
+	OS_FIND_EXPORT(coreinit_handle, FSRollbackQuotaAsync);
 
-    OS_FIND_EXPORT(coreinit_handle, FSOpenDir);
-    OS_FIND_EXPORT(coreinit_handle, FSOpenDirAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSReadDir);
-    OS_FIND_EXPORT(coreinit_handle, FSRewindDir);
-    OS_FIND_EXPORT(coreinit_handle, FSCloseDir);
-    OS_FIND_EXPORT(coreinit_handle, FSChangeDir);
-    OS_FIND_EXPORT(coreinit_handle, FSChangeDirAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSMakeDir);
-    OS_FIND_EXPORT(coreinit_handle, FSMakeDirAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSOpenDir);
+	OS_FIND_EXPORT(coreinit_handle, FSOpenDirAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSReadDir);
+	OS_FIND_EXPORT(coreinit_handle, FSRewindDir);
+	OS_FIND_EXPORT(coreinit_handle, FSCloseDir);
+	OS_FIND_EXPORT(coreinit_handle, FSChangeDir);
+	OS_FIND_EXPORT(coreinit_handle, FSChangeDirAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSMakeDir);
+	OS_FIND_EXPORT(coreinit_handle, FSMakeDirAsync);
 
+	OS_FIND_EXPORT(coreinit_handle, FSOpenFile);
+	OS_FIND_EXPORT(coreinit_handle, FSOpenFileAsync);
+	OS_FIND_EXPORT(coreinit_handle, FSReadFile);
+	OS_FIND_EXPORT(coreinit_handle, FSCloseFile);
 
-    OS_FIND_EXPORT(coreinit_handle, FSOpenFile);
-    OS_FIND_EXPORT(coreinit_handle, FSOpenFileAsync);
-    OS_FIND_EXPORT(coreinit_handle, FSReadFile);
-    OS_FIND_EXPORT(coreinit_handle, FSCloseFile);
+	OS_FIND_EXPORT(coreinit_handle, FSFlushFile);
+	OS_FIND_EXPORT(coreinit_handle, FSTruncateFile);
+	OS_FIND_EXPORT(coreinit_handle, FSGetStatFile);
+	OS_FIND_EXPORT(coreinit_handle, FSSetPosFile);
+	OS_FIND_EXPORT(coreinit_handle, FSWriteFile);
 
-    OS_FIND_EXPORT(coreinit_handle, FSFlushFile);
-    OS_FIND_EXPORT(coreinit_handle, FSTruncateFile);
-    OS_FIND_EXPORT(coreinit_handle, FSGetStatFile);
-    OS_FIND_EXPORT(coreinit_handle, FSSetPosFile);
-    OS_FIND_EXPORT(coreinit_handle, FSWriteFile);
+	OS_FIND_EXPORT(coreinit_handle, FSBindMount);
+	OS_FIND_EXPORT(coreinit_handle, FSBindUnmount);
 
-    OS_FIND_EXPORT(coreinit_handle, FSBindMount);
-    OS_FIND_EXPORT(coreinit_handle, FSBindUnmount);
+	OS_FIND_EXPORT(coreinit_handle, FSMakeQuota);
+	OS_FIND_EXPORT(coreinit_handle, FSMakeQuotaAsync);
 
-    OS_FIND_EXPORT(coreinit_handle, FSMakeQuota);
-    OS_FIND_EXPORT(coreinit_handle, FSMakeQuotaAsync);
-
-    OS_FIND_EXPORT(coreinit_handle, FSGetCwd);
+	OS_FIND_EXPORT(coreinit_handle, FSGetCwd);
 }

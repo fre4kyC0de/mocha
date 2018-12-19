@@ -9,8 +9,8 @@ void* memset(void* dst, int val, size_t size)
 {
 	char* _dst = dst;
 
-	int i;
-	for(i = 0; i < size; i++) _dst[i] = val;
+	for (int i = 0; i < size; i++)
+		_dst[i] = val;
 
 	return dst;
 }
@@ -24,20 +24,19 @@ void* memcpy(void* dst, const void* src, size_t size)
 
 int strlen(const char* str)
 {
-    unsigned int i = 0;
-    while (str[i]) {
-        i++;
-    }
-    return i;
+	unsigned int i = 0;
+	while (str[i])
+		i++;
+	return i;
 }
 
 char* strncpy(char* dst, const char* src, size_t size)
 {
-	int i;
-	for(i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		dst[i] = src[i];
-		if(src[i] == '\0') return dst;
+		if (src[i] == '\0')
+			return dst;
 	}
 
 	return dst;
@@ -45,5 +44,5 @@ char* strncpy(char* dst, const char* src, size_t size)
 
 int vsnprintf(char * s, size_t n, const char * format, va_list arg)
 {
-    return ((int (*const)(char*, size_t, const char *, va_list))0x05055C40)(s, n, format, arg);
+	return ((int (*const)(char*, size_t, const char *, va_list))0x05055C40)(s, n, format, arg);
 }

@@ -8,88 +8,91 @@
 
 s32 MountFS(void *pClient, void *pCmd, char **mount_path)
 {
-    s32 result = -1;
+	s32 result = -1;
 
-    void *mountSrc = malloc(FS_MOUNT_SOURCE_SIZE);
-    if(!mountSrc)
-        return -3;
+	void *mountSrc = malloc(FS_MOUNT_SOURCE_SIZE);
+	if (!mountSrc)
+		return -3;
 
-    char* mountPath = (char*) malloc(FS_MAX_MOUNTPATH_SIZE);
-    if(!mountPath) {
-        free(mountSrc);
-        mountSrc = NULL;
-        return -4;
-    }
+	char* mountPath = (char*) malloc(FS_MAX_MOUNTPATH_SIZE);
+	if (!mountPath)
+	{
+		free(mountSrc);
+		mountSrc = NULL;
+		return -4;
+	}
 
-    memset(mountSrc, 0, FS_MOUNT_SOURCE_SIZE);
-    memset(mountPath, 0, FS_MAX_MOUNTPATH_SIZE);
+	memset(mountSrc, 0, FS_MOUNT_SOURCE_SIZE);
+	memset(mountPath, 0, FS_MAX_MOUNTPATH_SIZE);
 
-    // Mount sdcard
-    if (FSGetMountSource(pClient, pCmd, FS_SOURCETYPE_EXTERNAL, mountSrc, -1) == 0)
-    {
-        result = FSMount(pClient, pCmd, mountSrc, mountPath, FS_MAX_MOUNTPATH_SIZE, -1);
-        if((result == 0) && mount_path) {
-            *mount_path = (char*)malloc(strlen(mountPath) + 1);
-            if(*mount_path)
-                strcpy(*mount_path, mountPath);
-        }
-    }
+	// Mount sdcard
+	if (FSGetMountSource(pClient, pCmd, FS_SOURCETYPE_EXTERNAL, mountSrc, -1) == 0)
+	{
+		result = FSMount(pClient, pCmd, mountSrc, mountPath, FS_MAX_MOUNTPATH_SIZE, -1);
+		if ((result == 0) && mount_path)
+		{
+			*mount_path = (char*)malloc(strlen(mountPath) + 1);
+			if (*mount_path)
+				strcpy(*mount_path, mountPath);
+		}
+	}
 
-    free(mountPath);
-    free(mountSrc);
+	free(mountPath);
+	free(mountSrc);
 
-    mountPath = NULL;
-    mountSrc = NULL;
+	mountPath = NULL;
+	mountSrc = NULL;
 
-    return result;
+	return result;
 }
 
 s32 UmountFS(void *pClient, void *pCmd, const char *mountPath)
 {
-    s32 result = -1;
-    result = FSUnmount(pClient, pCmd, mountPath, -1);
+	s32 result = -1;
+	result = FSUnmount(pClient, pCmd, mountPath, -1);
 
-    return result;
+	return result;
 }
 
 s32 LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
 {
-    //! always initialze input
+	//! always initialze input
 	*inbuffer = NULL;
-    if(size)
-        *size = 0;
+	if (size)
+		*size = 0;
 
-    s32 iFd = open(filepath, O_RDONLY);
+	s32 iFd = open(filepath, O_RDONLY);
 	if (iFd < 0)
 		return -1;
 
 	u32 filesize = lseek(iFd, 0, SEEK_END);
-    lseek(iFd, 0, SEEK_SET);
+	lseek(iFd, 0, SEEK_SET);
 
 	u8 *buffer = (u8 *) malloc(filesize);
 	if (buffer == NULL)
 	{
-        close(iFd);
+		close(iFd);
 		return -2;
 	}
 
-    u32 blocksize = 0x4000;
-    u32 done = 0;
-    s32 readBytes = 0;
+	u32 blocksize = 0x4000;
+	u32 done = 0;
+	s32 readBytes = 0;
 
-	while(done < filesize) {
-        if(done + blocksize > filesize) {
-            blocksize = filesize - done;
-        }
-        readBytes = read(iFd, buffer + done, blocksize);
-        if(readBytes <= 0)
-            break;
-        done += readBytes;
-    }
+	while (done < filesize)
+	{
+		if ((done + blocksize) > filesize)
+			blocksize = filesize - done;
+		readBytes = read(iFd, buffer + done, blocksize);
+		if (readBytes <= 0)
+			break;
+		done += readBytes;
+	}
 
-    close(iFd);
+	close(iFd);
 
-	if (done != filesize) {
+	if (done != filesize)
+	{
 		free(buffer);
 		buffer = NULL;
 		return -3;
@@ -97,17 +100,16 @@ s32 LoadFileToMem(const char *filepath, u8 **inbuffer, u32 *size)
 
 	*inbuffer = buffer;
 
-    //! sign is optional input
-    if(size){
-        *size = filesize;
-    }
+	//! sign is optional input
+	if (size)
+		*size = filesize;
 
 	return filesize;
 }
 
 s32 CheckFile(const char * filepath)
 {
-	if(!filepath)
+	if (!filepath)
 		return 0;
 
 	struct stat filestat;
@@ -115,14 +117,12 @@ s32 CheckFile(const char * filepath)
 	char dirnoslash[strlen(filepath)+2];
 	snprintf(dirnoslash, sizeof(dirnoslash), "%s", filepath);
 
-	while(dirnoslash[strlen(dirnoslash)-1] == '/')
+	while (dirnoslash[strlen(dirnoslash)-1] == '/')
 		dirnoslash[strlen(dirnoslash)-1] = '\0';
 
 	char * notRoot = strrchr(dirnoslash, '/');
-	if(!notRoot)
-	{
+	if (!notRoot)
 		strcat(dirnoslash, "/");
-	}
 
 	if (stat(dirnoslash, &filestat) == 0)
 		return 1;
@@ -132,7 +132,7 @@ s32 CheckFile(const char * filepath)
 
 s32 CreateSubfolder(const char * fullpath)
 {
-	if(!fullpath)
+	if (!fullpath)
 		return 0;
 
 	s32 result = 0;
@@ -141,19 +141,22 @@ s32 CreateSubfolder(const char * fullpath)
 	strcpy(dirnoslash, fullpath);
 
 	s32 pos = strlen(dirnoslash)-1;
-	while(dirnoslash[pos] == '/') {
+	while (dirnoslash[pos] == '/')
+	{
 		dirnoslash[pos] = '\0';
 		pos--;
 	}
 
-	if(CheckFile(dirnoslash)) {
+	if (CheckFile(dirnoslash))
 		return 1;
-	} else {
+	else
+	{
 		char parentpath[strlen(dirnoslash)+2];
 		strcpy(parentpath, dirnoslash);
 		char * ptr = strrchr(parentpath, '/');
 
-		if(!ptr) {
+		if (!ptr)
+		{
 			//!Device root directory (must be with '/')
 			strcat(parentpath, "/");
 			struct stat filestat;
@@ -169,12 +172,11 @@ s32 CreateSubfolder(const char * fullpath)
 		result = CreateSubfolder(parentpath);
 	}
 
-	if(!result)
+	if (!result)
 		return 0;
 
-	if (mkdir(dirnoslash, 0777) == -1) {
+	if (mkdir(dirnoslash, 0777) == -1)
 		return 0;
-	}
 
 	return 1;
 }

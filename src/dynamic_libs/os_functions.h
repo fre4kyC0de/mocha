@@ -32,70 +32,71 @@ extern "C" {
 #endif
 
 #ifndef MEM_BASE
-#define MEM_BASE                    (0x00800000)
+#define	MEM_BASE					(0x00800000)
 #endif
 
 
-#define OS_FIRMWARE                 (*(volatile u32*)(MEM_BASE + 0x1400 + 0x04))
+#define	OS_FIRMWARE					(*(volatile u32*)(MEM_BASE + 0x1400 + 0x04))
 
-#define OS_SPECIFICS                ((OsSpecifics*)(MEM_BASE + 0x1500))
+#define	OS_SPECIFICS				((OsSpecifics*)(MEM_BASE + 0x1500))
 
 /* Disassembler */
 typedef void (*DisasmReport)(char *outputBuffer, ...);
 
 typedef void *(*DisasmGetSym)(u32 addr, u8 *symbolName, u32 nameBufSize);
 
-#define PPC_DISASM_MAX_BUFFER 64
+#define	PPC_DISASM_MAX_BUFFER	64
 
-#define PPC_DISASM_DEFAULT     0x00000000  // use defaults
-#define PPC_DISASM_SIMPLIFY    0x00000001  // use simplified mnemonics
-#define PPC_DISASM_REG_SPACES  0x00000020  // emit spaces between registers
-#define PPC_DISASM_EMIT_DISASM 0x00000040  // emit only disassembly
-#define PPC_DISASM_EMIT_ADDR   0x00000080  // emit only addresses + disassembly
-#define PPC_DISASM_EMIT_FUNCS  0x00000100  // emit function names before and during disassembly
+#define	PPC_DISASM_DEFAULT		0x00000000	// use defaults
+#define	PPC_DISASM_SIMPLIFY		0x00000001	// use simplified mnemonics
+#define	PPC_DISASM_REG_SPACES	0x00000020	// emit spaces between registers
+#define	PPC_DISASM_EMIT_DISASM	0x00000040	// emit only disassembly
+#define	PPC_DISASM_EMIT_ADDR	0x00000080	// emit only addresses + disassembly
+#define	PPC_DISASM_EMIT_FUNCS	0x00000100	// emit function names before and during disassembly
 
 /* zlib */
 
-/*#define Z_NO_COMPRESSION         0
-#define Z_BEST_SPEED             1
-#define Z_BEST_COMPRESSION       9
-#define Z_DEFAULT_COMPRESSION  (-1)
-#define Z_OK            0
-#define Z_STREAM_END    1
-#define Z_NEED_DICT     2
-#define Z_ERRNO        (-1)
-#define Z_STREAM_ERROR (-2)
-#define Z_DATA_ERROR   (-3)
-#define Z_MEM_ERROR    (-4)
-#define Z_BUF_ERROR    (-5)
-#define Z_VERSION_ERROR (-6)*/
+/*#define	Z_NO_COMPRESSION		0
+#define	Z_BEST_SPEED			1
+#define	Z_BEST_COMPRESSION		9
+#define	Z_DEFAULT_COMPRESSION	(-1)
 
-#define BUS_SPEED                       248625000
-#define SECS_TO_TICKS(sec)              (((unsigned long long)(sec)) * (BUS_SPEED/4))
-#define MILLISECS_TO_TICKS(msec)        (SECS_TO_TICKS(msec) / 1000)
-#define MICROSECS_TO_TICKS(usec)        (SECS_TO_TICKS(usec) / 1000000)
+#define	Z_OK				0
+#define	Z_STREAM_END		1
+#define	Z_NEED_DICT			2
+#define	Z_ERRNO				(-1)
+#define	Z_STREAM_ERROR		(-2)
+#define	Z_DATA_ERROR		(-3)
+#define	Z_MEM_ERROR			(-4)
+#define	Z_BUF_ERROR			(-5)
+#define	Z_VERSION_ERROR		(-6)*/
+
+#define	BUS_SPEED						248625000
+#define	SECS_TO_TICKS(sec)				(((unsigned long long)(sec)) * (BUS_SPEED/4))
+#define	MILLISECS_TO_TICKS(msec)		(SECS_TO_TICKS(msec) / 1000)
+#define	MICROSECS_TO_TICKS(usec)		(SECS_TO_TICKS(usec) / 1000000)
 
 //To avoid conflicts with the unistd.h
-#define os_usleep(usecs)                   OSSleepTicks(MICROSECS_TO_TICKS(usecs))
-#define os_sleep(secs)                     OSSleepTicks(SECS_TO_TICKS(secs))
+#define	os_usleep(usecs)				OSSleepTicks(MICROSECS_TO_TICKS(usecs))
+#define	os_sleep(secs)					OSSleepTicks(SECS_TO_TICKS(secs))
 
-#define FLUSH_DATA_BLOCK(addr)          asm volatile("dcbf 0, %0; sync" : : "r"(((addr) & ~31)))
-#define INVAL_DATA_BLOCK(addr)          asm volatile("dcbi 0, %0; sync" : : "r"(((addr) & ~31)))
+#define	FLUSH_DATA_BLOCK(addr)			asm volatile("dcbf 0, %0; sync" : : "r"(((addr) & ~31)))
+#define	INVAL_DATA_BLOCK(addr)			asm volatile("dcbi 0, %0; sync" : : "r"(((addr) & ~31)))
 
-#define EXPORT_DECL(res, func, ...)     res (* func)(__VA_ARGS__) __attribute__((section(".data"))) = 0;
-#define EXPORT_VAR(type, var)           type var __attribute__((section(".data")));
+#define	EXPORT_DECL(res, func, ...)		res (* func)(__VA_ARGS__) __attribute__((section(".data"))) = 0;
+#define	EXPORT_VAR(type, var)			type var __attribute__((section(".data")));
 
 
-#define EXPORT_FUNC_WRITE(func, val)    *(u32*)(((u32)&func) + 0) = (u32)val
+#define	EXPORT_FUNC_WRITE(func, val)	*(u32*)(((u32)&func) + 0) = (u32)val
 
-#define OS_FIND_EXPORT(handle, func)    _os_find_export(handle, # func, &funcPointer);                                   \
-                                        EXPORT_FUNC_WRITE(func, funcPointer);
+#define	OS_FIND_EXPORT(handle, func)	_os_find_export(handle, # func, &funcPointer);									\
+										EXPORT_FUNC_WRITE(func, funcPointer);
 
-#define OS_FIND_EXPORT_EX(handle, func, func_p)                                                                         \
-                                        _os_find_export(handle, # func, &funcPointer);                                     \
-                                        EXPORT_FUNC_WRITE(func_p, funcPointer);
+#define	OS_FIND_EXPORT_EX(handle, func, func_p)																			\
+										_os_find_export(handle, # func, &funcPointer);									\
+										EXPORT_FUNC_WRITE(func_p, funcPointer);
 
-#define OS_MUTEX_SIZE                   44
+#define	OS_MUTEX_SIZE					44
 
 /* Handle for coreinit */
 extern u32 coreinit_handle;
@@ -241,13 +242,13 @@ extern s32 (* MCP_Close)(s32 handle);
 extern s32 (* MCP_GetOwnTitleInfo)(s32 handle, void * data);
 extern void* (* MCP_GetDeviceId)(s32 handle, u32 * id);
 
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/*//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! LOADER functions
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/*//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Kernel function addresses
-//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Other function addresses
@@ -261,7 +262,7 @@ extern s32 (*OSSetScreenCapturePermissionEx) (s32 tvEnabled, s32 drcEnabled);
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //! Energy Saver functions
 //!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-////Burn-in Reduction
+//Burn-in Reduction
 extern s32 (*IMEnableDim)(void);
 extern s32 (*IMDisableDim)(void);
 extern s32 (*IMIsDimEnabled)(s32 * result);

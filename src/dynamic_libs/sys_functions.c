@@ -36,24 +36,24 @@ EXPORT_DECL(u64, _SYSGetSystemApplicationTitleId, s32);
 
 void InitAcquireSys(void)
 {
-    if(coreinit_handle == 0) {
-        InitAcquireOS();
-    };
+	if (coreinit_handle == 0)
+		InitAcquireOS();
 
-    OSDynLoad_Acquire("sysapp.rpl", &sysapp_handle);
+	OSDynLoad_Acquire("sysapp.rpl", &sysapp_handle);
 }
 
 void InitSysFunctionPointers(void)
 {
-    u32 *funcPointer = 0;
-    InitAcquireSys();
+	u32 *funcPointer = 0;
 
-    OS_FIND_EXPORT(sysapp_handle, _SYSLaunchTitleByPathFromLauncher);
-    OS_FIND_EXPORT(sysapp_handle, SYSRelaunchTitle);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchMenu);
-    OS_FIND_EXPORT(sysapp_handle, _SYSLaunchMenuWithCheckingAccount);
-    OS_FIND_EXPORT(sysapp_handle, SYSCheckTitleExists);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchTitle);
-    OS_FIND_EXPORT(sysapp_handle, SYSLaunchSettings);
+	InitAcquireSys();
+
+	OS_FIND_EXPORT(sysapp_handle, _SYSLaunchTitleByPathFromLauncher);
+	OS_FIND_EXPORT(sysapp_handle, SYSRelaunchTitle);
+	OS_FIND_EXPORT(sysapp_handle, SYSLaunchMenu);
+	OS_FIND_EXPORT(sysapp_handle, _SYSLaunchMenuWithCheckingAccount);
+	OS_FIND_EXPORT(sysapp_handle, SYSCheckTitleExists);
+	OS_FIND_EXPORT(sysapp_handle, SYSLaunchTitle);
+	OS_FIND_EXPORT(sysapp_handle, SYSLaunchSettings);
 	OS_FIND_EXPORT(sysapp_handle, _SYSGetSystemApplicationTitleId);
 }

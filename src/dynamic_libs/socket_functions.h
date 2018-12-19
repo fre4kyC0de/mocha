@@ -34,52 +34,55 @@ extern u32 nsysnet_handle;
 
 extern u32 hostIpAddress;
 
-#define INADDR_ANY      0
-#define INADDR_BROADCAST 0xFFFFFFFF
+#define INADDR_ANY			0
+#define INADDR_BROADCAST	0xFFFFFFFF
 
-#define AF_INET         2
+#define AF_INET				2
 
-#define SHUT_RD         0
-#define SHUT_WR         1
-#define SHUT_RDWR       2
+#define SHUT_RD				0
+#define SHUT_WR				1
+#define SHUT_RDWR			2
 
-#define SOCK_STREAM     1
-#define SOCK_DGRAM      2
+#define SOCK_STREAM			1
+#define SOCK_DGRAM			2
 
-#define IPPROTO_IP      0
-#define IPPROTO_TCP     6
-#define IPPROTO_UDP     17
+#define IPPROTO_IP			0
+#define IPPROTO_TCP			6
+#define IPPROTO_UDP			17
 
-#define TCP_NODELAY     0x2004
+#define TCP_NODELAY			0x2004
 
-#define SOL_SOCKET      -1
-#define SO_REUSEADDR    0x0004
-#define SO_BROADCAST    0x0020      // broadcast
-#define SO_NONBLOCK     0x1016
-#define SO_MYADDR       0x1013
-#define SO_RCVTIMEO     0x1006
+#define SOL_SOCKET			-1
+#define SO_REUSEADDR		0x0004
+#define SO_BROADCAST		0x0020
+#define SO_NONBLOCK			0x1016
+#define SO_MYADDR			0x1013
+#define SO_RCVTIMEO			0x1006
 
-#define SOL_SOCKET      -1
-#define MSG_DONTWAIT    32
+#define SOL_SOCKET			-1
+#define MSG_DONTWAIT		32
 
 #define htonl(x) x
 #define htons(x) x
 #define ntohl(x) x
 #define ntohs(x) x
 
-struct in_addr {
-    u32 s_addr;
+struct in_addr
+{
+	u32 s_addr;
 };
-struct sockaddr_in {
-    short sin_family;
-    unsigned short sin_port;
-    struct in_addr sin_addr;
-    char sin_zero[8];
+struct sockaddr_in
+{
+	short sin_family;
+	unsigned short sin_port;
+	struct in_addr sin_addr;
+	char sin_zero[8];
 };
 
-struct sockaddr {
-   unsigned short sa_family;
-   char sa_data[14];
+struct sockaddr
+{
+	unsigned short sa_family;
+	char sa_data[14];
 };
 
 

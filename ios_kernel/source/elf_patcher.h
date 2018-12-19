@@ -26,16 +26,16 @@
 
 #include "../../src/dynamic_libs/os_types.h"
 
-#define ARM_B(addr, func)       (0xEA000000 | ((((u32)(func) - (u32)(addr) - 8) >> 2) & 0x00FFFFFF))                                                        // +-32MB
-#define ARM_BL(addr, func)      (0xEB000000 | ((((u32)(func) - (u32)(addr) - 8) >> 2) & 0x00FFFFFF))                                                        // +-32MB
-#define THUMB_B(addr, func)     ((0xE000 | ((((u32)(func) - (u32)(addr) - 4) >> 1) & 0x7FF)))                                                               // +-2KB
-#define THUMB_BL(addr, func)    ((0xF000F800 | ((((u32)(func) - (u32)(addr) - 4) >> 1) & 0x0FFF)) | ((((u32)(func) - (u32)(addr) - 4) << 4) & 0x7FFF000))   // +-4MB
+#define	ARM_B(addr, func)		(0xEA000000 | ((((u32)(func) - (u32)(addr) - 8) >> 2) & 0x00FFFFFF))															// +-32MB
+#define	ARM_BL(addr, func)		(0xEB000000 | ((((u32)(func) - (u32)(addr) - 8) >> 2) & 0x00FFFFFF))															// +-32MB
+#define	THUMB_B(addr, func)		((0xE000 | ((((u32)(func) - (u32)(addr) - 4) >> 1) & 0x7FF)))																	// +-2KB
+#define	THUMB_BL(addr, func)		((0xF000F800 | ((((u32)(func) - (u32)(addr) - 4) >> 1) & 0x0FFF)) | ((((u32)(func) - (u32)(addr) - 4) << 4) & 0x7FFF000))	// +-4MB
 
 typedef struct
 {
-    u32 address;
-    void* data;
-    u32 size;
+	u32 address;
+	void* data;
+	u32 size;
 } patch_table_t;
 
 void section_write(u32 ios_elf_start, u32 address, const void *data, u32 size);
@@ -43,18 +43,13 @@ void section_write_bss(u32 ios_elf_start, u32 address, u32 size);
 
 static inline void section_write_word(u32 ios_elf_start, u32 address, u32 word)
 {
-    section_write(ios_elf_start, address, &word, sizeof(word));
+	section_write(ios_elf_start, address, &word, sizeof(word));
 }
-
 
 static inline void patch_table_entries(u32 ios_elf_start, const patch_table_t * patch_table, u32 patch_count)
 {
-    u32 i;
-    for(i = 0; i < patch_count; i++)
-    {
-        section_write(ios_elf_start, patch_table[i].address, patch_table[i].data, patch_table[i].size);
-    }
+	for (u32 i = 0; i < patch_count; i++)
+		section_write(ios_elf_start, patch_table[i].address, patch_table[i].data, patch_table[i].size);
 }
-
 
 #endif

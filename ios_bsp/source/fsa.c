@@ -3,9 +3,9 @@
 #include "svc.h"
 #include "fsa.h"
 
-#define BSP_memcpy      ((void *(*)(void*, void*, unsigned int))0xE600EA18)
-#define BSP_memset      ((void *(*)(void*, int, unsigned int))0xE600EAB4)
-#define BSP_strncpy     ((char *(*)(char*, const char*, unsigned int))0xE600F4AC)
+#define	BSP_memcpy		((void *(*)(void*, void*, unsigned int))0xE600EA18)
+#define	BSP_memset		((void *(*)(void*, int, unsigned int))0xE600EAB4)
+#define	BSP_strncpy		((char *(*)(char*, const char*, unsigned int))0xE600F4AC)
 
 static void* allocIobuf()
 {
@@ -30,7 +30,8 @@ int FSA_RawOpen(int fd, const char* device_path, int* outHandle)
 
 	int ret = svcIoctl(fd, 0x6A, inbuf, 0x520, outbuf, 0x293);
 
-	if(outHandle) *outHandle = outbuf[1];
+	if (outHandle)
+		*outHandle = outbuf[1];
 
 	freeIobuf(iobuf);
 	return ret;

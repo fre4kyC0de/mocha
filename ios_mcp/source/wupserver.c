@@ -18,11 +18,12 @@ static u8 threadStack[0x1000] __attribute__((aligned(0x20)));
 // returns length of response (or 0 for no response, negative for error)
 static int serverCommandHandler(u32* command_buffer, u32 length)
 {
-	if(!command_buffer || !length) return -1;
+	if (!command_buffer || !length)
+		return -1;
 
 	int out_length = 4;
 
-	switch(command_buffer[0])
+	switch (command_buffer[0])
 	{
 		case 0:
 			// write
@@ -32,6 +33,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 
 				memcpy(dst, &command_buffer[2], length - 8);
 			}
+
 			break;
 		case 1:
 			// read
@@ -43,6 +45,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				memcpy(&command_buffer[1], src, length);
 				out_length = length + 4;
 			}
+
 			break;
 		case 2:
 			// svc
@@ -59,6 +62,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				out_length = 8;
 				command_buffer[1] = ((int (*const)(u32, u32, u32, u32, u32, u32, u32, u32))(MCP_SVC_BASE + svc_id * 8))(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
 			}
+
 			break;
 		case 3:
 			// kill
@@ -67,6 +71,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				serverKilled = 1;
 				ipc_deinit();
 			}
+
 			break;
 		case 4:
 			// memcpy
@@ -78,6 +83,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 
 				memcpy(dst, src, size);
 			}
+
 			break;
 		case 5:
 			// repeated-write
@@ -89,30 +95,31 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				u32 n = command_buffer[3];
 
 				u32 old = *dst;
-				int i;
-				for(i = 0; i < n; i++)
+				for (int i = 0; i < n; i++)
 				{
-					if(*dst != old)
+					if (*dst != old)
 					{
-						if(*dst == 0x0) old = *dst;
+						if (*dst == 0x0)
+							old = *dst;
 						else
 						{
 							*dst = value;
 							svcFlushDCache(cache_range, 0x100);
 							break;
 						}
-					}else
+					}
+					else
 					{
 						svcInvalidateDCache(cache_range, 0x100);
 						usleep(50);
 					}
 				}
 			}
+
 			break;
 		default:
 			// unknown command
 			return -2;
-			break;
 	}
 
 	// no error !
@@ -124,21 +131,19 @@ static void serverClientHandler(int sock)
 {
 	u32 command_buffer[0x180];
 
-	while(!serverKilled)
+	while (!serverKilled)
 	{
 		int ret = recv(sock, command_buffer, sizeof(command_buffer), 0);
 
-		if(ret <= 0) break;
+		if (ret <= 0)
+			break;
 
 		ret = serverCommandHandler(command_buffer, ret);
 
-		if(ret > 0)
-		{
+		if (ret > 0)
 			send(sock, command_buffer, ret, 0);
-		}else if(ret < 0)
-		{
+		else if (ret < 0)
 			send(sock, &ret, sizeof(int), 0);
-		}
 	}
 
 	closesocket(sock);
@@ -156,25 +161,25 @@ static void serverListenClients()
 	server.sin_port = 1337;
 	server.sin_addr.s_addr = 0;
 
-	if(bind(serverSocket, (struct sockaddr *)&server, sizeof(server)) < 0)
-    {
-        closesocket(serverSocket);
-        return;
-    }
-
-    if(listen(serverSocket, 1) < 0)
-    {
-        closesocket(serverSocket);
-        return;
-    }
-
-	while(!serverKilled)
+	if (bind(serverSocket, (struct sockaddr *)&server, sizeof(server)) < 0)
 	{
-        int csock = accept(serverSocket, NULL, NULL);
-        if(csock < 0)
-            break;
+		closesocket(serverSocket);
+		return;
+	}
 
-        serverClientHandler(csock);
+	if (listen(serverSocket, 1) < 0)
+	{
+		closesocket(serverSocket);
+		return;
+	}
+
+	while (!serverKilled)
+	{
+		int csock = accept(serverSocket, NULL, NULL);
+		if (csock < 0)
+			break;
+
+		serverClientHandler(csock);
 	}
 
 	closesocket(serverSocket);
@@ -183,49 +188,47 @@ static void serverListenClients()
 
 static int wupserver_thread(void *arg)
 {
-	while(ifmgrnclInit() <= 0)
+	while (ifmgrnclInit() <= 0)
 	{
 		//print(0, 0, "opening /dev/net/ifmgr/ncl...");
 		usleep(1000);
 	}
 
-	while(true)
+	while (true)
 	{
 		u16 out0, out1;
 
 		int ret0 = IFMGRNCL_GetInterfaceStatus(0, &out0);
-		if(!ret0 && out0 == 1) break;
+		if (!ret0 && out0 == 1)
+			break;
 
 		int ret1 = IFMGRNCL_GetInterfaceStatus(1, &out1);
-		if(!ret1 && out1 == 1) break;
+		if (!ret1 && out1 == 1)
+			break;
 
 		//print(0, 0, "initializing /dev/net/ifmgr/ncl... %08X %08X %08X %08X ", ret0, ret1, out0, out1);
 
 		usleep(1000);
 	}
 
-	while(socketInit() <= 0)
+	while (socketInit() <= 0)
 	{
 		//print(0, 0, "opening /dev/socket...");
 		usleep(1000);
 	}
 
-    log_init(0xC0A8B203);
+	log_init(0xC0A8B203);
 
 	//print(0, 0, "opened /dev/socket !");
 	usleep(5*1000*1000);
 	//print(0, 10, "attempting sockets !");
 
-	while(1)
+	while (1)
 	{
-	    if(!serverKilled)
-        {
-	         serverListenClients();
-        }
-        else
-        {
-            break;
-        }
+		if (!serverKilled)
+			serverListenClients();
+		else
+			break;
 		usleep(1000*1000);
 	}
 
@@ -235,16 +238,16 @@ static int wupserver_thread(void *arg)
 
 void wupserver_init(void)
 {
-    serverSocket = -1;
-    serverKilled = 0;
+	serverSocket = -1;
+	serverKilled = 0;
 
-    int threadId = svcCreateThread(wupserver_thread, 0, (u32*)(threadStack + sizeof(threadStack)), sizeof(threadStack), 0x78, 1);
-    if(threadId >= 0)
-        svcStartThread(threadId);
+	int threadId = svcCreateThread(wupserver_thread, 0, (u32*)(threadStack + sizeof(threadStack)), sizeof(threadStack), 0x78, 1);
+	if (threadId >= 0)
+		svcStartThread(threadId);
 }
 
 void wupserver_deinit(void)
 {
-    serverKilled = 1;
-    shutdown(serverSocket, SHUT_RDWR);
+	serverKilled = 1;
+	shutdown(serverSocket, SHUT_RDWR);
 }

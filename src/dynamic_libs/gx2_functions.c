@@ -82,8 +82,8 @@ EXPORT_DECL(void, GX2SetDRCEnable, s32 enable);
 EXPORT_DECL(void, GX2SetPolygonControl, s32 front_face_mode, s32 cull_front, s32 cull_back, s32 enable_mode, s32 mode_font, s32 mode_back, s32 poly_offset_front, s32 poly_offset_back, s32 point_line_offset);
 EXPORT_DECL(void, GX2SetCullOnlyControl, s32 front_face_mode, s32 cull_front, s32 cull_back);
 EXPORT_DECL(void, GX2SetDepthStencilControl, s32 enable_depth_test, s32 enable_depth_write, s32 depth_comp_function,  s32 stencil_test_enable, s32 back_stencil_enable,
-                                   s32 font_stencil_func, s32 front_stencil_z_pass, s32 front_stencil_z_fail, s32 front_stencil_fail,
-                                   s32 back_stencil_func, s32 back_stencil_z_pass, s32 back_stencil_z_fail, s32 back_stencil_fail);
+											 s32 font_stencil_func, s32 front_stencil_z_pass, s32 front_stencil_z_fail, s32 front_stencil_fail,
+											 s32 back_stencil_func, s32 back_stencil_z_pass, s32 back_stencil_z_fail, s32 back_stencil_fail);
 EXPORT_DECL(void, GX2SetStencilMask, u8 mask_front, u8 write_mask_front, u8 ref_front, u8 mask_back, u8 write_mask_back, u8 ref_back);
 EXPORT_DECL(void, GX2SetLineWidth, f32 width);
 EXPORT_DECL(void, GX2SetTVGamma, f32 val);
@@ -104,88 +104,87 @@ EXPORT_DECL(void, GX2ClearBuffersEx, GX2ColorBuffer * colorBuffer,GX2DepthBuffer
 
 void InitAcquireGX2(void)
 {
-    if(coreinit_handle == 0) {
-        InitAcquireOS();
-    };
+	if (coreinit_handle == 0)
+		InitAcquireOS();
 
-    OSDynLoad_Acquire("gx2.rpl", &gx2_handle);
+	OSDynLoad_Acquire("gx2.rpl", &gx2_handle);
 }
 
 void InitGX2FunctionPointers(void)
 {
-    u32 *funcPointer = 0;
+	u32 *funcPointer = 0;
 
-    InitAcquireGX2();
+	InitAcquireGX2();
 
-    OS_FIND_EXPORT(gx2_handle, GX2Init);
-    OS_FIND_EXPORT(gx2_handle, GX2Shutdown);
-    OS_FIND_EXPORT(gx2_handle, GX2Flush);
-    OS_FIND_EXPORT(gx2_handle, GX2GetMainCoreId);
-    OS_FIND_EXPORT(gx2_handle, GX2DrawDone);
-    OS_FIND_EXPORT(gx2_handle, GX2ClearColor);
-    OS_FIND_EXPORT(gx2_handle, GX2SetViewport);
-    OS_FIND_EXPORT(gx2_handle, GX2SetScissor);
-    OS_FIND_EXPORT(gx2_handle, GX2SetContextState);
-    OS_FIND_EXPORT(gx2_handle, GX2DrawEx);
-    OS_FIND_EXPORT(gx2_handle, GX2DrawIndexedEx);
-    OS_FIND_EXPORT(gx2_handle, GX2ClearDepthStencilEx);
-    OS_FIND_EXPORT(gx2_handle, GX2CopyColorBufferToScanBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2SwapScanBuffers);
-    OS_FIND_EXPORT(gx2_handle, GX2SetTVEnable);
-    OS_FIND_EXPORT(gx2_handle, GX2SetSwapInterval);
-    OS_FIND_EXPORT(gx2_handle, GX2GetSwapInterval);
-    OS_FIND_EXPORT(gx2_handle, GX2WaitForVsync);
-    OS_FIND_EXPORT(gx2_handle, GX2CalcTVSize);
-    OS_FIND_EXPORT(gx2_handle, GX2Invalidate);
-    OS_FIND_EXPORT(gx2_handle, GX2SetTVBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2CalcSurfaceSizeAndAlignment);
-    OS_FIND_EXPORT(gx2_handle, GX2InitDepthBufferRegs);
-    OS_FIND_EXPORT(gx2_handle, GX2InitColorBufferRegs);
-    OS_FIND_EXPORT(gx2_handle, GX2CalcColorBufferAuxInfo);
-    OS_FIND_EXPORT(gx2_handle, GX2CalcDepthBufferHiZInfo);
-    OS_FIND_EXPORT(gx2_handle, GX2InitDepthBufferHiZEnable);
-    OS_FIND_EXPORT(gx2_handle, GX2SetupContextStateEx);
-    OS_FIND_EXPORT(gx2_handle, GX2SetColorBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2SetDepthBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2SetAttribBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2InitTextureRegs);
-    OS_FIND_EXPORT(gx2_handle, GX2InitSampler);
-    OS_FIND_EXPORT(gx2_handle, GX2CalcFetchShaderSizeEx);
-    OS_FIND_EXPORT(gx2_handle, GX2InitFetchShaderEx);
-    OS_FIND_EXPORT(gx2_handle, GX2SetFetchShader);
-    OS_FIND_EXPORT(gx2_handle, GX2SetVertexUniformReg);
-    OS_FIND_EXPORT(gx2_handle, GX2SetPixelUniformReg);
-    OS_FIND_EXPORT(gx2_handle, GX2SetPixelTexture);
-    OS_FIND_EXPORT(gx2_handle, GX2SetVertexTexture);
-    OS_FIND_EXPORT(gx2_handle, GX2SetPixelSampler);
-    OS_FIND_EXPORT(gx2_handle, GX2SetVertexSampler);
-    OS_FIND_EXPORT(gx2_handle, GX2SetPixelShader);
-    OS_FIND_EXPORT(gx2_handle, GX2SetVertexShader);
-    OS_FIND_EXPORT(gx2_handle, GX2InitSamplerZMFilter);
-    OS_FIND_EXPORT(gx2_handle, GX2SetColorControl);
-    OS_FIND_EXPORT(gx2_handle, GX2SetDepthOnlyControl);
-    OS_FIND_EXPORT(gx2_handle, GX2SetBlendControl);
-    OS_FIND_EXPORT(gx2_handle, GX2CalcDRCSize);
-    OS_FIND_EXPORT(gx2_handle, GX2SetDRCBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2SetDRCScale);
-    OS_FIND_EXPORT(gx2_handle, GX2SetDRCEnable);
-    OS_FIND_EXPORT(gx2_handle, GX2SetPolygonControl);
-    OS_FIND_EXPORT(gx2_handle, GX2SetCullOnlyControl);
-    OS_FIND_EXPORT(gx2_handle, GX2SetDepthStencilControl);
-    OS_FIND_EXPORT(gx2_handle, GX2SetStencilMask);
-    OS_FIND_EXPORT(gx2_handle, GX2SetLineWidth);
-    OS_FIND_EXPORT(gx2_handle, GX2SetDRCGamma);
-    OS_FIND_EXPORT(gx2_handle, GX2SetTVGamma);
-    OS_FIND_EXPORT(gx2_handle, GX2GetSystemTVScanMode);
-    OS_FIND_EXPORT(gx2_handle, GX2GetSystemDRCScanMode);
-    OS_FIND_EXPORT(gx2_handle, GX2RSetAllocator);
-    OS_FIND_EXPORT(gx2_handle, GX2CopySurface);
-    OS_FIND_EXPORT(gx2_handle, GX2GetLastFrame);
-    OS_FIND_EXPORT(gx2_handle, GX2ClearBuffersEx);
-    OS_FIND_EXPORT(gx2_handle, GX2BeginDisplayListEx);
-    OS_FIND_EXPORT(gx2_handle, GX2EndDisplayList);
-    OS_FIND_EXPORT(gx2_handle, GX2CallDisplayList);
-    OS_FIND_EXPORT(gx2_handle, GX2ExpandAAColorBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2ResolveAAColorBuffer);
-    OS_FIND_EXPORT(gx2_handle, GX2SetClearDepthStencil);
+	OS_FIND_EXPORT(gx2_handle, GX2Init);
+	OS_FIND_EXPORT(gx2_handle, GX2Shutdown);
+	OS_FIND_EXPORT(gx2_handle, GX2Flush);
+	OS_FIND_EXPORT(gx2_handle, GX2GetMainCoreId);
+	OS_FIND_EXPORT(gx2_handle, GX2DrawDone);
+	OS_FIND_EXPORT(gx2_handle, GX2ClearColor);
+	OS_FIND_EXPORT(gx2_handle, GX2SetViewport);
+	OS_FIND_EXPORT(gx2_handle, GX2SetScissor);
+	OS_FIND_EXPORT(gx2_handle, GX2SetContextState);
+	OS_FIND_EXPORT(gx2_handle, GX2DrawEx);
+	OS_FIND_EXPORT(gx2_handle, GX2DrawIndexedEx);
+	OS_FIND_EXPORT(gx2_handle, GX2ClearDepthStencilEx);
+	OS_FIND_EXPORT(gx2_handle, GX2CopyColorBufferToScanBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2SwapScanBuffers);
+	OS_FIND_EXPORT(gx2_handle, GX2SetTVEnable);
+	OS_FIND_EXPORT(gx2_handle, GX2SetSwapInterval);
+	OS_FIND_EXPORT(gx2_handle, GX2GetSwapInterval);
+	OS_FIND_EXPORT(gx2_handle, GX2WaitForVsync);
+	OS_FIND_EXPORT(gx2_handle, GX2CalcTVSize);
+	OS_FIND_EXPORT(gx2_handle, GX2Invalidate);
+	OS_FIND_EXPORT(gx2_handle, GX2SetTVBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2CalcSurfaceSizeAndAlignment);
+	OS_FIND_EXPORT(gx2_handle, GX2InitDepthBufferRegs);
+	OS_FIND_EXPORT(gx2_handle, GX2InitColorBufferRegs);
+	OS_FIND_EXPORT(gx2_handle, GX2CalcColorBufferAuxInfo);
+	OS_FIND_EXPORT(gx2_handle, GX2CalcDepthBufferHiZInfo);
+	OS_FIND_EXPORT(gx2_handle, GX2InitDepthBufferHiZEnable);
+	OS_FIND_EXPORT(gx2_handle, GX2SetupContextStateEx);
+	OS_FIND_EXPORT(gx2_handle, GX2SetColorBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2SetDepthBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2SetAttribBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2InitTextureRegs);
+	OS_FIND_EXPORT(gx2_handle, GX2InitSampler);
+	OS_FIND_EXPORT(gx2_handle, GX2CalcFetchShaderSizeEx);
+	OS_FIND_EXPORT(gx2_handle, GX2InitFetchShaderEx);
+	OS_FIND_EXPORT(gx2_handle, GX2SetFetchShader);
+	OS_FIND_EXPORT(gx2_handle, GX2SetVertexUniformReg);
+	OS_FIND_EXPORT(gx2_handle, GX2SetPixelUniformReg);
+	OS_FIND_EXPORT(gx2_handle, GX2SetPixelTexture);
+	OS_FIND_EXPORT(gx2_handle, GX2SetVertexTexture);
+	OS_FIND_EXPORT(gx2_handle, GX2SetPixelSampler);
+	OS_FIND_EXPORT(gx2_handle, GX2SetVertexSampler);
+	OS_FIND_EXPORT(gx2_handle, GX2SetPixelShader);
+	OS_FIND_EXPORT(gx2_handle, GX2SetVertexShader);
+	OS_FIND_EXPORT(gx2_handle, GX2InitSamplerZMFilter);
+	OS_FIND_EXPORT(gx2_handle, GX2SetColorControl);
+	OS_FIND_EXPORT(gx2_handle, GX2SetDepthOnlyControl);
+	OS_FIND_EXPORT(gx2_handle, GX2SetBlendControl);
+	OS_FIND_EXPORT(gx2_handle, GX2CalcDRCSize);
+	OS_FIND_EXPORT(gx2_handle, GX2SetDRCBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2SetDRCScale);
+	OS_FIND_EXPORT(gx2_handle, GX2SetDRCEnable);
+	OS_FIND_EXPORT(gx2_handle, GX2SetPolygonControl);
+	OS_FIND_EXPORT(gx2_handle, GX2SetCullOnlyControl);
+	OS_FIND_EXPORT(gx2_handle, GX2SetDepthStencilControl);
+	OS_FIND_EXPORT(gx2_handle, GX2SetStencilMask);
+	OS_FIND_EXPORT(gx2_handle, GX2SetLineWidth);
+	OS_FIND_EXPORT(gx2_handle, GX2SetDRCGamma);
+	OS_FIND_EXPORT(gx2_handle, GX2SetTVGamma);
+	OS_FIND_EXPORT(gx2_handle, GX2GetSystemTVScanMode);
+	OS_FIND_EXPORT(gx2_handle, GX2GetSystemDRCScanMode);
+	OS_FIND_EXPORT(gx2_handle, GX2RSetAllocator);
+	OS_FIND_EXPORT(gx2_handle, GX2CopySurface);
+	OS_FIND_EXPORT(gx2_handle, GX2GetLastFrame);
+	OS_FIND_EXPORT(gx2_handle, GX2ClearBuffersEx);
+	OS_FIND_EXPORT(gx2_handle, GX2BeginDisplayListEx);
+	OS_FIND_EXPORT(gx2_handle, GX2EndDisplayList);
+	OS_FIND_EXPORT(gx2_handle, GX2CallDisplayList);
+	OS_FIND_EXPORT(gx2_handle, GX2ExpandAAColorBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2ResolveAAColorBuffer);
+	OS_FIND_EXPORT(gx2_handle, GX2SetClearDepthStencil);
 }

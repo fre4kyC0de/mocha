@@ -24,20 +24,20 @@
 #include "../../src/dynamic_libs/os_types.h"
 #include "utils.h"
 
-#define svcAlloc            ((void *(*)(u32 heapid, u32 size))0x081234E4)
-#define svcAllocAlign       ((void *(*)(u32 heapid, u32 size, u32 align))0x08123464)
-#define svcFree             ((void *(*)(u32 heapid, void *ptr))0x08123830)
-#define svcOpen             ((int (*)(const char* name, int mode))0x0812940C)
-#define svcClose            ((int (*)(int fd))0x08129368)
-#define svcIoctl            ((int (*)(int fd, u32 request, void* input_buffer, u32 input_buffer_len, void* output_buffer, u32 output_buffer_len))0x081290E0)
-#define svcIoctlv           ((int (*)(int fd, u32 request, u32 vector_count_in, u32 vector_count_out, iovec_s* vector))0x0812903C)
+#define	svcAlloc			((void *(*)(u32 heapid, u32 size))0x081234E4)
+#define	svcAllocAlign		((void *(*)(u32 heapid, u32 size, u32 align))0x08123464)
+#define	svcFree				((void *(*)(u32 heapid, void *ptr))0x08123830)
+#define	svcOpen				((int (*)(const char* name, int mode))0x0812940C)
+#define	svcClose			((int (*)(int fd))0x08129368)
+#define	svcIoctl			((int (*)(int fd, u32 request, void* input_buffer, u32 input_buffer_len, void* output_buffer, u32 output_buffer_len))0x081290E0)
+#define	svcIoctlv			((int (*)(int fd, u32 request, u32 vector_count_in, u32 vector_count_out, iovec_s* vector))0x0812903C)
 
 typedef struct
 {
 	void* ptr;
 	u32 len;
 	u32 unk;
-}iovec_s;
+} iovec_s;
 
 static void* allocIobuf()
 {
@@ -54,28 +54,28 @@ static void freeIobuf(void* ptr)
 
 static int IOS_Open(const char * dev, int mode)
 {
-    // put string into a good location
+	// put string into a good location
 	char* devStr = (char*)svcAlloc(0xCAFF, 0x20);
-	if(!devStr)
-	    return -3;
+	if (!devStr)
+		return -3;
 
-    kernel_strncpy(devStr, dev, 0x20);
+	kernel_strncpy(devStr, dev, 0x20);
 
-    int res = svcOpen(devStr, 0);
+	int res = svcOpen(devStr, 0);
 
-    svcFree(0xCAFF, devStr);
+	svcFree(0xCAFF, devStr);
 
-    return res;
+	return res;
 }
 
 static int FSA_Open(void)
 {
-    return IOS_Open("/dev/fsa", 0);
+	return IOS_Open("/dev/fsa", 0);
 }
 
 static int FSA_Close(int fd)
 {
-    return svcClose(fd);
+	return svcClose(fd);
 }
 
 static int FSA_RawOpen(int fd, const char* device_path, int* outHandle)
@@ -88,7 +88,8 @@ static int FSA_RawOpen(int fd, const char* device_path, int* outHandle)
 
 	int ret = svcIoctl(fd, 0x6A, inbuf, 0x520, outbuf, 0x293);
 
-	if(outHandle) *outHandle = outbuf[1];
+	if (outHandle)
+		*outHandle = outbuf[1];
 
 	freeIobuf(iobuf);
 	return ret;
@@ -171,67 +172,67 @@ static int FSA_RawWrite(int fd, void* data, u32 size_bytes, u32 cnt, u64 blocks_
 
 int FSA_SDReadRawSectors(void *buffer, u32 sector, u32 num_sectors)
 {
-    int fsa = FSA_Open();
-    if(fsa < 0)
-        return fsa;
+	int fsa = FSA_Open();
+	if (fsa < 0)
+		return fsa;
 
-    int fd;
-    int res = FSA_RawOpen(fsa, "/dev/sdcard01", &fd);
-    if(res < 0)
-    {
-        FSA_Close(fsa);
-        return res;
-    }
+	int fd;
+	int res = FSA_RawOpen(fsa, "/dev/sdcard01", &fd);
+	if (res < 0)
+	{
+		FSA_Close(fsa);
+		return res;
+	}
 
-    void *buf = svcAllocAlign(0xCAFF, num_sectors << 9, 0x40);
-    if(!buf)
-    {
-        FSA_RawClose(fsa, fd);
-        FSA_Close(fsa);
-        return -2;
-    }
+	void *buf = svcAllocAlign(0xCAFF, num_sectors << 9, 0x40);
+	if (!buf)
+	{
+		FSA_RawClose(fsa, fd);
+		FSA_Close(fsa);
+		return -2;
+	}
 
-    res = FSA_RawRead(fsa, buf, 0x200, num_sectors, sector, fd);
+	res = FSA_RawRead(fsa, buf, 0x200, num_sectors, sector, fd);
 
-    kernel_memcpy(buffer, buf, num_sectors << 9);
+	kernel_memcpy(buffer, buf, num_sectors << 9);
 
-    svcFree(0xCAFF, buf);
-    FSA_RawClose(fsa, fd);
-    FSA_Close(fsa);
+	svcFree(0xCAFF, buf);
+	FSA_RawClose(fsa, fd);
+	FSA_Close(fsa);
 
-    return res;
+	return res;
 }
 
 int FSA_SDWriteRawSectors(const void *buffer, u32 sector, u32 num_sectors)
 {
-    int fsa = FSA_Open();
-    if(fsa < 0)
-        return fsa;
+	int fsa = FSA_Open();
+	if (fsa < 0)
+		return fsa;
 
-    int fd;
-    int res = FSA_RawOpen(fsa, "/dev/sdcard01", &fd);
-    if(res < 0)
-    {
-        FSA_Close(fsa);
-        return res;
-    }
+	int fd;
+	int res = FSA_RawOpen(fsa, "/dev/sdcard01", &fd);
+	if (res < 0)
+	{
+		FSA_Close(fsa);
+		return res;
+	}
 
-    void *buf = svcAllocAlign(0xCAFF, num_sectors << 9, 0x40);
-    if(!buf)
-    {
-        FSA_RawClose(fsa, fd);
-        FSA_Close(fsa);
-        return -2;
-    }
+	void *buf = svcAllocAlign(0xCAFF, num_sectors << 9, 0x40);
+	if (!buf)
+	{
+		FSA_RawClose(fsa, fd);
+		FSA_Close(fsa);
+		return -2;
+	}
 
-    kernel_memcpy(buf, buffer, num_sectors << 9);
+	kernel_memcpy(buf, buffer, num_sectors << 9);
 
-    res = FSA_RawWrite(fsa, buf, 0x200, num_sectors, sector, fd);
+	res = FSA_RawWrite(fsa, buf, 0x200, num_sectors, sector, fd);
 
-    svcFree(0xCAFF, buf);
-    FSA_RawClose(fsa, fd);
-    FSA_Close(fsa);
+	svcFree(0xCAFF, buf);
+	FSA_RawClose(fsa, fd);
+	FSA_Close(fsa);
 
-    return res;
+	return res;
 }
 

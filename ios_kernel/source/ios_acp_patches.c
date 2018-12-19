@@ -28,29 +28,29 @@
 #include "../../ios_acp/ios_acp.bin.h"
 #include "../../ios_acp/ios_acp_syms.h"
 
-#define ACP_CODE_BASE_PHYS_ADDR     (-0xE0000000 + 0x12900000)
+#define	ACP_CODE_BASE_PHYS_ADDR		(-0xE0000000 + 0x12900000)
 
 extern const patch_table_t acp_patches_table[];
 extern const patch_table_t acp_patches_table_end[];
 
 u32 acp_get_phys_code_base(void)
 {
-    return _text_start + ACP_CODE_BASE_PHYS_ADDR;
+	return (_text_start + ACP_CODE_BASE_PHYS_ADDR);
 }
 
 void acp_run_patches(u32 ios_elf_start)
 {
-    section_write(ios_elf_start, _text_start, (void*)acp_get_phys_code_base(), _text_end - _text_start);
+	section_write(ios_elf_start, _text_start, (void*)acp_get_phys_code_base(), _text_end - _text_start);
 
-    // hook acp fsa raw read function
-    section_write_word(ios_elf_start, 0xE00601F0, ARM_BL(0xE00601F0, ACP_FSARawRead_hook));
+	// hook acp fsa raw read function
+	section_write_word(ios_elf_start, 0xE00601F0, ARM_BL(0xE00601F0, ACP_FSARawRead_hook));
 
-    // patch logs to output more info
-    section_write_word(ios_elf_start, 0xE009801C, ARM_B(0xE009801C, 0xE00C4D54));
-    section_write_word(ios_elf_start, 0xE00D87B0, ARM_B(0xE00D87B0, 0xE00C4D54));
-    section_write_word(ios_elf_start, 0xE00D6DE8, ARM_B(0xE00D6DE8, 0xE00C4D54));
-    section_write_word(ios_elf_start, 0xE009A0C4, 0xE3A00000);
+	// patch logs to output more info
+	section_write_word(ios_elf_start, 0xE009801C, ARM_B(0xE009801C, 0xE00C4D54));
+	section_write_word(ios_elf_start, 0xE00D87B0, ARM_B(0xE00D87B0, 0xE00C4D54));
+	section_write_word(ios_elf_start, 0xE00D6DE8, ARM_B(0xE00D6DE8, 0xE00C4D54));
+	section_write_word(ios_elf_start, 0xE009A0C4, 0xE3A00000);
 
-    u32 patch_count = (u32)(((u8*)acp_patches_table_end) - ((u8*)acp_patches_table)) / sizeof(patch_table_t);
-    patch_table_entries(ios_elf_start, acp_patches_table, patch_count);
+	u32 patch_count = (u32)(((u8*)acp_patches_table_end) - ((u8*)acp_patches_table)) / sizeof(patch_table_t);
+	patch_table_entries(ios_elf_start, acp_patches_table, patch_count);
 }

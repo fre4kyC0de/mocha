@@ -86,7 +86,8 @@ int FSA_OpenDir(int fd, char* path, int* outHandle)
 
 	int ret = svcIoctl(fd, 0x0A, inbuf, 0x520, outbuf, 0x293);
 
-	if(outHandle) *outHandle = outbuf[1];
+	if (outHandle)
+		*outHandle = outbuf[1];
 
 	freeIobuf(iobuf);
 	return ret;
@@ -102,7 +103,8 @@ int FSA_ReadDir(int fd, int handle, directoryEntry_s* out_data)
 
 	int ret = svcIoctl(fd, 0x0B, inbuf, 0x520, outbuf, 0x293);
 
-	if(out_data) memcpy(out_data, &outbuf[1], sizeof(directoryEntry_s));
+	if (out_data)
+		memcpy(out_data, &outbuf[1], sizeof(directoryEntry_s));
 
 	freeIobuf(iobuf);
 	return ret;
@@ -161,7 +163,8 @@ int FSA_OpenFile(int fd, char* path, char* mode, int* outHandle)
 
 	int ret = svcIoctl(fd, 0x0E, inbuf, 0x520, outbuf, 0x293);
 
-	if(outHandle) *outHandle = outbuf[1];
+	if (outHandle)
+		*outHandle = outbuf[1];
 
 	freeIobuf(iobuf);
 	return ret;
@@ -191,8 +194,10 @@ int _FSA_ReadWriteFile(int fd, void* data, u32 size, u32 cnt, int fileHandle, u3
 	iovec[2].len = 0x293;
 
 	int ret;
-	if(read) ret = svcIoctlv(fd, 0x0F, 1, 2, iovec);
-	else ret = svcIoctlv(fd, 0x10, 2, 1, iovec);
+	if (read)
+		ret = svcIoctlv(fd, 0x0F, 1, 2, iovec);
+	else
+		ret = svcIoctlv(fd, 0x10, 2, 1, iovec);
 
 	freeIobuf(iobuf);
 	return ret;
@@ -218,7 +223,8 @@ int FSA_StatFile(int fd, int handle, fileStat_s* out_data)
 
 	int ret = svcIoctl(fd, 0x14, inbuf, 0x520, outbuf, 0x293);
 
-	if(out_data) memcpy(out_data, &outbuf[1], sizeof(fileStat_s));
+	if (out_data)
+		memcpy(out_data, &outbuf[1], sizeof(fileStat_s));
 
 	freeIobuf(iobuf);
 	return ret;
@@ -264,7 +270,8 @@ int FSA_GetStat(int fd, char *path, fileStat_s* out_data)
 
 	int ret = svcIoctl(fd, 0x18, inbuf, 0x520, outbuf, 0x293);
 
-	if(out_data) memcpy(out_data, &outbuf[1], sizeof(fileStat_s));
+	if (out_data)
+		memcpy(out_data, &outbuf[1], sizeof(fileStat_s));
 
 	freeIobuf(iobuf);
 	return ret;
@@ -316,25 +323,31 @@ int FSA_GetDeviceInfo(int fd, char* device_path, int type, u32* out_data)
 
 	int size = 0;
 
-	switch(type)
+	switch (type)
 	{
 		case 0: case 1: case 7:
 			size = 0x8;
+
 			break;
 		case 2:
 			size = 0x4;
+
 			break;
 		case 3:
 			size = 0x1E;
+
 			break;
 		case 4:
 			size = 0x28;
+
 			break;
 		case 5:
 			size = 0x64;
+
 			break;
 		case 6: case 8:
 			size = 0x14;
+
 			break;
 	}
 
@@ -354,7 +367,8 @@ int FSA_RawOpen(int fd, char* device_path, int* outHandle)
 
 	int ret = svcIoctl(fd, 0x6A, inbuf, 0x520, outbuf, 0x293);
 
-	if(outHandle) *outHandle = outbuf[1];
+	if (outHandle)
+		*outHandle = outbuf[1];
 
 	freeIobuf(iobuf);
 	return ret;

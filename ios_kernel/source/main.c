@@ -31,14 +31,14 @@
 #include "ios_bsp_patches.h"
 #include "instant_patches.h"
 
-#define USB_PHYS_CODE_BASE      0x101312D0
+#define	USB_PHYS_CODE_BASE		0x101312D0
 
 cfw_config_t cfw_config;
 
 typedef struct
 {
-    u32 size;
-    u8 data[0];
+	u32 size;
+	u8 data[0];
 } payload_info_t;
 
 static const char repairData_set_fault_behavior[] = {
@@ -92,57 +92,56 @@ int _main()
 	void * pusb_root_thread = (void*)0x10100174;
 	kernel_memcpy(pusb_root_thread, (void*)repairData_usb_root_thread, sizeof(repairData_usb_root_thread));
 
-    payload_info_t *payloads = (payload_info_t*)0x00148000;
+	payload_info_t *payloads = (payload_info_t*)0x00148000;
 
 	kernel_memcpy((void*)&cfw_config, payloads->data, payloads->size);
-    payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
+	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
 	kernel_memcpy((void*)USB_PHYS_CODE_BASE, payloads->data, payloads->size);
-    payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
+	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-    kernel_memcpy((void*)fs_get_phys_code_base(), payloads->data, payloads->size);
-    payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
+	kernel_memcpy((void*)fs_get_phys_code_base(), payloads->data, payloads->size);
+	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-    if(cfw_config.redNAND && cfw_config.seeprom_red)
-        kernel_memcpy((void*)bsp_get_phys_code_base(), payloads->data, payloads->size);
-    payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
+	if (cfw_config.redNAND && cfw_config.seeprom_red)
+		kernel_memcpy((void*)bsp_get_phys_code_base(), payloads->data, payloads->size);
+	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
 	kernel_memcpy((void*)acp_get_phys_code_base(), payloads->data, payloads->size);
-    payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
+	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
 	kernel_memcpy((void*)mcp_get_phys_code_base(), payloads->data, payloads->size);
-    payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
+	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-    if(cfw_config.launchImage)
-    {
-	    kernel_memcpy((void*)MCP_LAUNCH_IMG_PHYS_ADDR, payloads->data, payloads->size);
-        payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
-    }
+	if (cfw_config.launchImage)
+	{
+		kernel_memcpy((void*)MCP_LAUNCH_IMG_PHYS_ADDR, payloads->data, payloads->size);
+		payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
+	}
 
-    // run all instant patches as necessary
-    instant_patches_setup();
+	// run all instant patches as necessary
+	instant_patches_setup();
 
-    *(volatile u32*)(0x1555500) = 0;
+	*(volatile u32*)(0x1555500) = 0;
 
-    /*// check for boot1hax
-    u32 boot1_ancast_magic = *(u32 *)0x1000A000;
-    if (boot1_ancast_magic == 0xEFA282D9) {
-        // device is running on boot1hax, will fix the corruption now
-        *(u32 *)(0x1000A200 + 0xAA75) = 0x0800000D;
-    }*/
-	
-    /* REENABLE MMU */
-    restore_mmu(control_register);
+	/*// check for boot1hax
+	u32 boot1_ancast_magic = *(u32 *)0x1000A000;
+	if (boot1_ancast_magic == 0xEFA282D9)
+	{
+		// device is running on boot1hax, will fix the corruption now
+		*(u32 *)(0x1000A200 + 0xAA75) = 0x0800000D;
+	}*/
 
-    invalidate_dcache(0x081298BC, 0x4001); // giving a size >= 0x4000 invalidates all cache
-    invalidate_icache();
+	/* REENABLE MMU */
+	restore_mmu(control_register);
 
-    enable_interrupts(level);
+	invalidate_dcache(0x081298BC, 0x4001); // giving a size >= 0x4000 invalidates all cache
+	invalidate_icache();
 
-    if(cfw_config.redNAND)
-    {
-        redirection_setup();
-    }
+	enable_interrupts(level);
 
-    return 0;
+	if (cfw_config.redNAND)
+		redirection_setup();
+
+	return 0;
 }

@@ -34,21 +34,21 @@ EXPORT_DECL(u32, nn_act_GetPersistentIdEx, u8 slot);
 
 void InitAcquireACT(void)
 {
-    if(coreinit_handle == 0) {
-        InitAcquireOS();
-    };
+	if (coreinit_handle == 0)
+		InitAcquireOS();
 
-    OSDynLoad_Acquire("nn_act.rpl", &nn_act_handle);
+	OSDynLoad_Acquire("nn_act.rpl", &nn_act_handle);
 }
 
 void InitACTFunctionPointers(void)
 {
-    u32 *funcPointer = 0;
-    InitAcquireACT();
+	u32 *funcPointer = 0;
 
-    OS_FIND_EXPORT_EX(nn_act_handle, Initialize__Q2_2nn3actFv, nn_act_Initialize)
-    OS_FIND_EXPORT_EX(nn_act_handle, Finalize__Q2_2nn3actFv, nn_act_Finalize)
-    OS_FIND_EXPORT_EX(nn_act_handle, GetSlotNo__Q2_2nn3actFv, nn_act_GetSlotNo)
-    OS_FIND_EXPORT_EX(nn_act_handle, GetDefaultAccount__Q2_2nn3actFv, nn_act_GetDefaultAccount)
-    OS_FIND_EXPORT_EX(nn_act_handle, GetPersistentIdEx__Q2_2nn3actFUc, nn_act_GetPersistentIdEx)
+	InitAcquireACT();
+
+	OS_FIND_EXPORT_EX(nn_act_handle, Initialize__Q2_2nn3actFv, nn_act_Initialize)
+	OS_FIND_EXPORT_EX(nn_act_handle, Finalize__Q2_2nn3actFv, nn_act_Finalize)
+	OS_FIND_EXPORT_EX(nn_act_handle, GetSlotNo__Q2_2nn3actFv, nn_act_GetSlotNo)
+	OS_FIND_EXPORT_EX(nn_act_handle, GetDefaultAccount__Q2_2nn3actFv, nn_act_GetDefaultAccount)
+	OS_FIND_EXPORT_EX(nn_act_handle, GetPersistentIdEx__Q2_2nn3actFUc, nn_act_GetPersistentIdEx)
 }
