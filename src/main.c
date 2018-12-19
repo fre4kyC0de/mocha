@@ -58,7 +58,7 @@ int Menu_Main(void)
     {
         return EXIT_RELAUNCH_ON_LOAD;
     }
-    else if(exitToHBLOnLaunch)
+    else if (exitToHBLOnLaunch)
     {
         return 0;
     }
@@ -74,15 +74,15 @@ int Menu_Main(void)
     OSScreenEnableEx(0, 1);
     OSScreenEnableEx(1, 1);
     // Clear screens
-	console_clear();
+    console_clear();
 
     console_print_header();
 
     console_print_pos(x_offset, y_offset, "Initializing VPAD...");
     y_offset += 1;
-	if (usleep_TimeOut > 0) {
-		os_usleep(usleep_TimeOut);
-	}
+    if (usleep_TimeOut > 0) {
+        os_usleep(usleep_TimeOut);
+    }
 
     VPADInit();
     int forceMenu = 0;
@@ -100,17 +100,17 @@ int Menu_Main(void)
 
     console_print_pos(x_offset, y_offset, "Mounting SD...");
     y_offset += 1;
-	if (usleep_TimeOut > 0) {
-		os_usleep(usleep_TimeOut);
-	}
+    if (usleep_TimeOut > 0) {
+        os_usleep(usleep_TimeOut);
+    }
 
     mount_sd_fat("sd");
 
     console_print_pos(x_offset, y_offset, "Reading config...");
     y_offset += 1;
-	if (usleep_TimeOut > 0) {
-		os_usleep(usleep_TimeOut);
-	}
+    if (usleep_TimeOut > 0) {
+        os_usleep(usleep_TimeOut);
+    }
 
     cfw_config_t config;
     default_config(&config);
@@ -128,9 +128,9 @@ int Menu_Main(void)
 		console_clear();
 		console_print_header();
 		y_offset = 3;
-		if (usleep_TimeOut > 0) {
-			os_usleep(usleep_TimeOut);
-		}
+        if (usleep_TimeOut > 0) {
+            os_usleep(usleep_TimeOut);
+        }
     }
 
     int returnCode = 0;
@@ -139,18 +139,18 @@ int Menu_Main(void)
     {
         console_print_pos(x_offset, y_offset, "Handing over control to IOSUHAX...");
         y_offset += 1;
-		if (usleep_TimeOut > 0) {
-			os_usleep(usleep_TimeOut);
-		}
+        if (usleep_TimeOut > 0) {
+            os_usleep(usleep_TimeOut);
+        }
 
         int res = ExecuteIOSExploit(&config);
         if(res == 0)
         {
             console_print_pos(x_offset, y_offset, "OSForceFullRelaunch()");
             y_offset += 1;
-			if (usleep_TimeOut > 0) {
-				os_usleep(usleep_TimeOut);
-			}
+            if (usleep_TimeOut > 0) {
+                os_usleep(usleep_TimeOut);
+            }
 
             OSScreenShutdown();
             free(screenBuffer);

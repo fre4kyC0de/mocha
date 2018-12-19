@@ -50,13 +50,13 @@ void console_print_pos(int x, int y, const char *format, ...)
         if(strlen(tmp) > 79)
             tmp[79] = 0;
 
-		for (int i = 0; i <= 1; i++) {
-			// double-buffered
-			OSScreenPutFontEx(0, x, y, tmp);
-			OSScreenPutFontEx(1, x, y, tmp);
-			OSScreenFlipBuffersEx(0);
-			OSScreenFlipBuffersEx(1);
-		}
+        for (int i = 0; i <= 1; i++) {
+            // double-buffered
+            OSScreenPutFontEx(0, x, y, tmp);
+            OSScreenPutFontEx(1, x, y, tmp);
+            OSScreenFlipBuffersEx(0);
+            OSScreenFlipBuffersEx(1);
+        }
 	}
 	va_end(va);
 
