@@ -95,7 +95,7 @@ static int ipc_ioctl(ipcmessage *message)
 		case IOCTL_MEM_READ:
 		{
 			if (message->ioctl.length_in < 4)
-				res = IOS_ERROR_INVALID_SIZE
+				res = IOS_ERROR_INVALID_SIZE;
 			else
 				memcpy(message->ioctl.buffer_io, (void*)message->ioctl.buffer_in[0], message->ioctl.length_io);
 
