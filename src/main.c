@@ -26,7 +26,8 @@
 #include "id.h"
 #include "nnu.h"
 
-#define	usleep_TimeOut	-1
+#define	usleep_TimeOut	0
+//#define	usleep_TimeOut	1000000
 
 static int exitToHBLOnLaunch = 0;
 
@@ -42,8 +43,11 @@ int Menu_Main(void)
 	InitNimFunctionPointers();
 
 	currentTitleId = OSGetTitleID();
-	shortTilteId_low = (u32)(currentTitleId & 0xFFFFFFFF);
-	shortTilteId_high = (u32)((currentTitleId & 0xFFFFFFFF00000000) >> 32);
+	currentTilteId_low = (u32)(currentTitleId & 0xFFFFFFFF);
+	currentTilteId_high = (u32)((currentTitleId & 0xFFFFFFFF00000000) >> 32);
+	systemTitleId = _SYSGetSystemApplicationTitleId(0);
+	systemTitleId_low = (u32)(systemTitleId & 0xFFFFFFFF);
+	systemTitleId_high = (u32)((systemTitleId & 0xFFFFFFFF00000000) >> 32);
 
 	nn_act_Initialize();
 	unsigned char slot = nn_act_GetSlotNo();
@@ -70,6 +74,11 @@ int Menu_Main(void)
 	console_clear();
 
 	console_print_header();
+
+	/*console_print_pos(x_offset, y_offset, "systemTitleId: %08X%08X", systemTitleId_high, systemTitleId_low);
+	y_offset += 1;
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);*/
 
 	console_print_pos(x_offset, y_offset, "Initializing VPAD...");
 	y_offset += 1;
