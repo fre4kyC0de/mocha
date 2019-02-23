@@ -35,19 +35,19 @@ extern const patch_table_t mcp_patches_table_end[];
 
 u32 mcp_get_phys_code_base(void)
 {
-	return (_text_start + MCP_CODE_BASE_PHYS_ADDR);
+	return (ios_mcp__text_start + MCP_CODE_BASE_PHYS_ADDR);
 }
 
 void mcp_run_patches(u32 ios_elf_start)
 {
 	// write ios_mcp code and bss
-	section_write_bss(ios_elf_start, _bss_start, _bss_end - _bss_start);
-	section_write(ios_elf_start, _text_start, (void*)mcp_get_phys_code_base(), _text_end - _text_start);
+	section_write_bss(ios_elf_start, ios_mcp__bss_start, ios_mcp__bss_end - ios_mcp__bss_start);
+	section_write(ios_elf_start, ios_mcp__text_start, (void*)mcp_get_phys_code_base(), ios_mcp__text_end - ios_mcp__text_start);
 
-	section_write_word(ios_elf_start, 0x05056718, ARM_BL(0x05056718, _text_start));
+	section_write_word(ios_elf_start, 0x05056718, ARM_BL(0x05056718, ios_mcp__text_start));
 
 	if (cfw_config.sd_access)
-		section_write_word(ios_elf_start, 0x05002BBE, THUMB_BL(0x05002BBE, patch_SD_access_check));
+		section_write_word(ios_elf_start, 0x05002BBE, THUMB_BL(0x05002BBE, ios_mcp_patch_SD_access_check));
 
 	/*if (cfw_config.redNAND)
 	{
@@ -62,7 +62,7 @@ void mcp_run_patches(u32 ios_elf_start)
 		section_write(ios_elf_start, 0x050600FC, "/vol/system_slc/config/syshax.xml", 0x24);
 	}
 
-	section_write_word(ios_elf_start, (_text_start - 4), cfw_config.launchImage);
+	section_write_word(ios_elf_start, (ios_mcp__text_start - 4), cfw_config.launchImage);
 
 	u32 patch_count = (u32)(((u8*)mcp_patches_table_end) - ((u8*)mcp_patches_table)) / sizeof(patch_table_t);
 	patch_table_entries(ios_elf_start, mcp_patches_table, patch_count);

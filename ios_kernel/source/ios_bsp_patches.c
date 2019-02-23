@@ -40,7 +40,7 @@ extern const patch_table_t fs_patches_table_end[];
 
 u32 bsp_get_phys_code_base(void)
 {
-	return (_text_start + BSP_PHYS_DIFF);
+	return (ios_bsp__text_start + BSP_PHYS_DIFF);
 }
 
 int bsp_init_seeprom_buffer(u32 baseSector, int dumpFound)
@@ -63,7 +63,7 @@ int bsp_init_seeprom_buffer(u32 baseSector, int dumpFound)
 	int level = disable_interrupts();
 	unsigned int control_register = disable_mmu();
 
-	IOSKERNEL_memcpy((void*)(_seeprom_buffer_start - 0xE6047000 + 0x13D07000), tmpBuffer, 0x200);
+	IOSKERNEL_memcpy((void*)(ios_bsp__seeprom_buffer_start - 0xE6047000 + 0x13D07000), tmpBuffer, 0x200);
 
 	restore_mmu(control_register);
 	enable_interrupts(level);
@@ -73,12 +73,12 @@ int bsp_init_seeprom_buffer(u32 baseSector, int dumpFound)
 
 void bsp_run_patches(u32 ios_elf_start)
 {
-	section_write(ios_elf_start, _text_start, (void*)bsp_get_phys_code_base(), _text_end - _text_start);
-	section_write_bss(ios_elf_start, _bss_start, _bss_end - _bss_start);
+	section_write(ios_elf_start, ios_bsp__text_start, (void*)bsp_get_phys_code_base(), ios_bsp__text_end - ios_bsp__text_start);
+	section_write_bss(ios_elf_start, ios_bsp__bss_start, ios_bsp__bss_end - ios_bsp__bss_start);
 
-	section_write(ios_elf_start, _seeprom_buffer_start, (void*)(_seeprom_buffer_start - 0xE6047000 + 0x13D07000), 0x200);
+	section_write(ios_elf_start, ios_bsp__seeprom_buffer_start, (void*)(ios_bsp__seeprom_buffer_start - 0xE6047000 + 0x13D07000), 0x200);
 
-	section_write_word(ios_elf_start, 0xE600D08C, ARM_B(0xE600D08C, EEPROM_SPI_ReadWord));
-	section_write_word(ios_elf_start, 0xE600D010, ARM_B(0xE600D010, EEPROM_SPI_WriteWord));
-	section_write_word(ios_elf_start, 0xE600CF5C, ARM_B(0xE600CF5C, EEPROM_WriteControl));
+	section_write_word(ios_elf_start, 0xE600D08C, ARM_B(0xE600D08C, ios_bsp_EEPROM_SPI_ReadWord));
+	section_write_word(ios_elf_start, 0xE600D010, ARM_B(0xE600D010, ios_bsp_EEPROM_SPI_WriteWord));
+	section_write_word(ios_elf_start, 0xE600CF5C, ARM_B(0xE600CF5C, ios_bsp_EEPROM_WriteControl));
 }

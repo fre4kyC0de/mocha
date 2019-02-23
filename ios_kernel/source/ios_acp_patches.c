@@ -35,15 +35,15 @@ extern const patch_table_t acp_patches_table_end[];
 
 u32 acp_get_phys_code_base(void)
 {
-	return (_text_start + ACP_CODE_BASE_PHYS_ADDR);
+	return (ios_acp__text_start + ACP_CODE_BASE_PHYS_ADDR);
 }
 
 void acp_run_patches(u32 ios_elf_start)
 {
-	section_write(ios_elf_start, _text_start, (void*)acp_get_phys_code_base(), _text_end - _text_start);
+	section_write(ios_elf_start, ios_acp__text_start, (void*)acp_get_phys_code_base(), ios_acp__text_end - ios_acp__text_start);
 
 	// hook acp fsa raw read function
-	section_write_word(ios_elf_start, 0xE00601F0, ARM_BL(0xE00601F0, FSA_RawRead_hook));
+	section_write_word(ios_elf_start, 0xE00601F0, ARM_BL(0xE00601F0, ios_acp_FSA_RawRead_hook));
 
 	// patch logs to output more info
 	section_write_word(ios_elf_start, 0xE009801C, ARM_B(0xE009801C, 0xE00C4D54));

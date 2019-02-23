@@ -73,7 +73,7 @@ void console_print_header()
 	int indent_counter, indent_counter_bak;
 	
 	indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand einhalten)
-	indent_counter -= 25; // == strlen(TITLE)
+	indent_counter -= 35; // == strlen(TITLE)
 	indent_counter -= strlen(APP_VERSION);
 	if ((indent_counter < 0) || (indent_counter > 68))
 		indent_counter = 0;
@@ -89,7 +89,7 @@ void console_print_header()
 		for (int i = 0; i <= (indent_counter - 1); i++)
 			indent[i] = ' ';
 
-	console_print_pos(x_offset, 1, "%s-- MOCHA CFW %s by Dimok --", indent, APP_VERSION);
+	console_print_pos(x_offset, 1, "%s-- MOCHA CFW %s for 5.5.x by Dimok --", indent, APP_VERSION);
 }
 
 void console_clear()
