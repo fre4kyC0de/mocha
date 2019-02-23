@@ -121,7 +121,7 @@ void _printf(int x, int y, const char *format, ...)
 
 	static char buffer[0x100];
 
-	MCP_vsnprintf(buffer, 0xFF, format, args);
+	IOSMCP_vsnprintf(buffer, 0xFF, format, args);
 	drawString(buffer, x, y);
 
 	va_end(args);

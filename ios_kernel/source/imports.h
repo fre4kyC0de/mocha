@@ -25,16 +25,12 @@
 #ifndef IMPORTS_H_
 #define IMPORTS_H_
 
-#define	KERNEL_vsnprintf							((int (*)(char * s, u32 n, const char * format, va_list arg))0x0813293C)
-
-#define	KERNEL_memcpy								((void * (*)(void*, const void*, int))0x08131D04)
-#define	KERNEL_memset								((void *(*)(void*, int, unsigned int))0x08131DA0)
-#define	KERNEL_strncpy								((char *(*)(char*, const char*, unsigned int))0x081329B8)
-#define	KERNEL_disable_interrupts					((int(*)())0x0812E778)
-#define	KERNEL_enable_interrupts					((int(*)(int))0x0812E78C)
-#define	KERNEL_bsp_command_5						((int (*)(const char*, int offset, const char*, int size, void *buffer))0x0812EC40)
-
-#define disable_interrupts							KERNEL_disable_interrupts
-#define enable_interrupts							KERNEL_enable_interrupts
+#define	IOSKERNEL_vsnprintf							((int (*)(char * s, u32 n, const char * format, va_list arg))0x0813293C)
+#define	IOSKERNEL_memcpy							((void * (*)(void*, const void*, int))0x08131D04)
+#define	IOSKERNEL_memset							((void *(*)(void*, int, unsigned int))0x08131DA0)
+#define	IOSKERNEL_strncpy							((char *(*)(char*, const char*, unsigned int))0x081329B8)
+#define	IOSKERNEL_disable_interrupts				((int(*)())0x0812E778)
+#define	IOSKERNEL_enable_interrupts					((int(*)(int))0x0812E78C)
+#define	IOSKERNEL_bsp_command_5						((int (*)(const char*, int offset, const char*, int size, void *buffer))0x0812EC40)
 
 #endif // IMPORTS_H_

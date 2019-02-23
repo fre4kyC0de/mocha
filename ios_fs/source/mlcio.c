@@ -27,8 +27,8 @@
 
 void mlc_init(void)
 {
-	FS_MMC_MLC_struct[0x24/4] = FS_MMC_MLC_struct[0x24/4] | 0x20;
-	FS_MMC_MLC_struct[0x28/4] = FS_MMC_MLC_struct[0x28/4] & (~0x04);
+	IOSFS_mmc_mlc_struct[0x24/4] = IOSFS_mmc_mlc_struct[0x24/4] | 0x20;
+	IOSFS_mmc_mlc_struct[0x28/4] = IOSFS_mmc_mlc_struct[0x28/4] & (~0x04);
 }
 
 

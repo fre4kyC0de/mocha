@@ -49,7 +49,7 @@ static int SD_EEPROM_WriteAll(void)
 		if (buffer)
 		{
 			// user global buffer for FSA to be able to access it
-			BSP_memcpy(buffer, seeprom_buffer, 0x200);
+			IOSBSP_memcpy(buffer, seeprom_buffer, 0x200);
 			res = FSA_RawWrite(fsa, buffer, 0x200, 1, SD_SEEPROM_SECTOR, fd);
 			svcFree(0xCAFF, buffer);
 		}

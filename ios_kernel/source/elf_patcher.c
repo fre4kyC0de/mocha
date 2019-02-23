@@ -91,5 +91,5 @@ void section_write(u32 ios_elf_start, u32 address, const void *data, u32 size)
 	if ((size == 4) && (!((unsigned int)addr & 3)) && (!((unsigned int)data & 3)))
 		*(u32*)addr = *(u32*)data;
 	else
-		KERNEL_memcpy(addr, data, size);
+		IOSKERNEL_memcpy(addr, data, size);
 }

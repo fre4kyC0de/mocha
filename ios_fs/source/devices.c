@@ -33,9 +33,9 @@
 void* getMdDeviceById(int deviceId)
 {
 	if (deviceId == DEVICE_ID_SDCARD_PATCHED)
-		return (void*)FS_MMC_SDCard_struct;
+		return (void*)IOSFS_mmc_sdcard_struct;
 	else if (deviceId == DEVICE_ID_MLC)
-		return (void*)FS_MMC_MLC_struct;
+		return (void*)IOSFS_mmc_mlc_struct;
 
 	return NULL;
 }
@@ -44,19 +44,19 @@ int registerMdDevice_hook(void * md, int arg2, int arg3)
 {
 	u32 *mdStruct = (u32*)md;
 
-	if ((md != 0) && (mdStruct[2] == (u32)FS_MMC_SDCard_struct))
+	if ((md != 0) && (mdStruct[2] == (u32)IOSFS_mmc_sdcard_struct))
 	{
 		sdcard_lock_mutex();
-		FS_MMC_SDCard_struct[0x24/4] = FS_MMC_SDCard_struct[0x24/4] & (~0x20);
+		IOSFS_mmc_sdcard_struct[0x24/4] = IOSFS_mmc_sdcard_struct[0x24/4] & (~0x20);
 
-		int result = FS_RegisterMDPhysicalDevice(md, arg2, arg3);
+		int result = IOSFS_RegisterMDPhysicalDevice(md, arg2, arg3);
 
 		sdcard_unlock_mutex();
 
 		return result;
 	}
 
-	return FS_RegisterMDPhysicalDevice(md, arg2, arg3);
+	return IOSFS_RegisterMDPhysicalDevice(md, arg2, arg3);
 }
 
 int getPhysicalDeviceHandle(u32 device)

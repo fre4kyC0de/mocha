@@ -33,7 +33,7 @@ static void* allocIobuf()
 {
 	void* ptr = svcAlloc(0xCAFF, 0x828);
 
-	BSP_memset(ptr, 0x00, 0x828);
+	IOSBSP_memset(ptr, 0x00, 0x828);
 
 	return ptr;
 }
@@ -49,7 +49,7 @@ int FSA_RawOpen(int fd, const char* device_path, int* outHandle)
 	u32* inbuf = (u32*)iobuf;
 	u32* outbuf = (u32*)&iobuf[0x520];
 
-	BSP_strncpy((char*)&inbuf[0x01], device_path, 0x27F);
+	IOSBSP_strncpy((char*)&inbuf[0x01], device_path, 0x27F);
 
 	int ret = svcIoctl(fd, 0x6A, inbuf, 0x520, outbuf, 0x293);
 

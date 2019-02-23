@@ -30,6 +30,9 @@
 #include "utils.h"
 #include "imports.h"
 
+#define disable_interrupts							IOSKERNEL_disable_interrupts
+#define enable_interrupts							IOSKERNEL_enable_interrupts
+
 #define	BSP_PHYS_DIFF		(-0xE6000000 + 0x13CC0000)
 
 extern const patch_table_t fs_patches_table[];
@@ -54,13 +57,13 @@ int bsp_init_seeprom_buffer(u32 baseSector, int dumpFound)
 	{
 		//! just clear out the seeprom and it will be re-initialized on BSP module
 		//! TODO: maybe read in the seeprom here from SPI or BSP module
-		KERNEL_memset(tmpBuffer, 0, 0x200);
+		IOSKERNEL_memset(tmpBuffer, 0, 0x200);
 	}
 
 	int level = disable_interrupts();
 	unsigned int control_register = disable_mmu();
 
-	KERNEL_memcpy((void*)(_seeprom_buffer_start - 0xE6047000 + 0x13D07000), tmpBuffer, 0x200);
+	IOSKERNEL_memcpy((void*)(_seeprom_buffer_start - 0xE6047000 + 0x13D07000), tmpBuffer, 0x200);
 
 	restore_mmu(control_register);
 	enable_interrupts(level);

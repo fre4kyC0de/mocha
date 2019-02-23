@@ -30,10 +30,14 @@
 
 #include "../../src/dynamic_libs/os_types.h"
 
-#define	MCP_SVC_BASE						((void*)0x050567EC)
+#define	IOSMCP_SVC_BASE						((void*)0x050567EC)
 
-#define	MCP_usleep							((void (*)(u32 time))0x050564E4)
-#define	MCP_memcpy							((void* (*)(void*, const void*, u32))0x05054E54)
-#define	MCP_vsnprintf						((int (*)(char * s, u32 n, const char * format, va_list arg))0x05055C40)
+#define	IOSMCP_usleep						((void (*)(u32 time))0x050564E4)
+#define	IOSMCP_memcpy						((void* (*)(void*, const void*, u32))0x05054E54)
+#define	IOSMCP_vsnprintf					((int (*)(char * s, u32 n, const char * format, va_list arg))0x05055C40)
+
+void* IOSMCPPAYLOAD_memset(void* dst, int val, size_t size);
+//int IOSMCPPAYLOAD_strlen(const char* str);
+char* IOSMCPPAYLOAD_strncpy(char* dst, const char* src, size_t size);
 
 #endif

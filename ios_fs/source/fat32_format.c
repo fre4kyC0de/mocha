@@ -156,7 +156,7 @@ int FormatToFAT32(u32 lba, u32 sec_count)
 	u16 ReservedSectCount = 32;
 	u8 NumFATs = 2;
 
-	memset(io_buffer, 0, BytesPerSect*18);
+	IOSFS_memset(io_buffer, 0, BytesPerSect*18);
 
 	FAT_BOOTSECTOR32 * FAT32BootSect = (FAT_BOOTSECTOR32 *) (io_buffer+16*BytesPerSect);
 	FAT_FSINFO * FAT32FsInfo = (FAT_FSINFO*) (io_buffer+17*BytesPerSect);
@@ -165,7 +165,7 @@ int FormatToFAT32(u32 lba, u32 sec_count)
 	FAT32BootSect->sJmpBoot[0] = 0xEB;
 	FAT32BootSect->sJmpBoot[1] = 0x5A;
 	FAT32BootSect->sJmpBoot[2] = 0x90;
-	memcpy(FAT32BootSect->sOEMName, "MSWIN4.1", 8);
+	IOSFS_memcpy(FAT32BootSect->sOEMName, "MSWIN4.1", 8);
 
 	FAT32BootSect->wBytsPerSec = le16(BytesPerSect);
 
@@ -198,8 +198,8 @@ int FormatToFAT32(u32 lba, u32 sec_count)
 	FAT32BootSect->bBootSig = 0x29;
 
 	FAT32BootSect->dBS_VolID = MakeVolumeID();
-	memcpy(FAT32BootSect->sVolLab, "NO NAME	", 11);
-	memcpy(FAT32BootSect->sBS_FilSysType, "FAT32   ", 8);
+	IOSFS_memcpy(FAT32BootSect->sVolLab, "NO NAME	", 11);
+	IOSFS_memcpy(FAT32BootSect->sBS_FilSysType, "FAT32   ", 8);
 	((u8 *)FAT32BootSect)[510] = 0x55; //Boot Record Signature
 	((u8 *)FAT32BootSect)[511] = 0xAA; //Boot Record Signature
 
@@ -280,7 +280,7 @@ int FormatToFAT32(u32 lba, u32 sec_count)
 		}
 	}
 
-	memcpy(io_buffer, FirstSectOfFat, sizeof(FirstSectOfFat));
+	IOSFS_memcpy(io_buffer, FirstSectOfFat, sizeof(FirstSectOfFat));
 
 	// Write the first fat sector in the right places
 	for (int i = 0; i < NumFATs; i++)
@@ -309,7 +309,7 @@ int FormatSDCard(u32 partition_offset, u32 total_sectors)
 	_printf(20, 40, "Formatting SD card....");
 
 	MASTER_BOOT_RECORD *mbr = (MASTER_BOOT_RECORD*)io_buffer;
-	memset(mbr, 0, SDIO_BYTES_PER_SECTOR);
+	IOSFS_memset(mbr, 0, SDIO_BYTES_PER_SECTOR);
 
 	int result = sdcard_readwrite(SDIO_READ, mbr, 1, SDIO_BYTES_PER_SECTOR, 0, NULL, DEVICE_ID_SDCARD_PATCHED);
 	if (result != 0)
@@ -324,7 +324,7 @@ int FormatSDCard(u32 partition_offset, u32 total_sectors)
 	if (result != 0)
 		return result;
 
-	memset(mbr, 0, sizeof(MASTER_BOOT_RECORD));
+	IOSFS_memset(mbr, 0, sizeof(MASTER_BOOT_RECORD));
 	mbr->signature = MBR_SIGNATURE;
 
 	// setup primary FAT32 partition

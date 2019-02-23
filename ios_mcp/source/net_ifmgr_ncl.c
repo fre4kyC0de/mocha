@@ -61,7 +61,7 @@ static void* allocIobuf(u32 size)
 	void* ptr = svcAlloc(0xCAFF, size);
 
 	if (ptr)
-		memset(ptr, 0x00, size);
+		IOSMCPPAYLOAD_memset(ptr, 0x00, size);
 
 	return ptr;
 }

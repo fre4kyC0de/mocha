@@ -98,7 +98,7 @@ void _printf(int x, int y, const char *format, ...)
 	va_start(args, format);
 	static char buffer[0x100];
 
-	KERNEL_vsnprintf(buffer, 0xFF, format, args);
+	IOSKERNEL_vsnprintf(buffer, 0xFF, format, args);
 	drawString(buffer, x, y);
 
 	va_end(args);

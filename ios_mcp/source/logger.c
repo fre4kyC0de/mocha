@@ -40,7 +40,7 @@ int log_init(unsigned int ipAddress)
 		return log_socket;
 
 	struct sockaddr_in connect_addr;
-	memset(&connect_addr, 0, sizeof(connect_addr));
+	IOSMCPPAYLOAD_memset(&connect_addr, 0, sizeof(connect_addr));
 	connect_addr.sin_family = AF_INET;
 	connect_addr.sin_port = 4405;
 	connect_addr.sin_addr.s_addr = ipAddress;
@@ -88,7 +88,7 @@ void log_printf(const char *format, ...)
 
 	char buffer[0x100];
 
-	int len = MCP_vsnprintf(buffer, sizeof(buffer), format, args);
+	int len = IOSMCP_vsnprintf(buffer, sizeof(buffer), format, args);
 	log_print(buffer, len);
 
 	va_end(args);

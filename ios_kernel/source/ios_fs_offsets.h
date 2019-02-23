@@ -22,34 +22,27 @@
  * distribution.
  ***************************************************************************/
 
-#include "imports.h"
+#ifndef _FS_OFFSETS_H_
+#define _FS_OFFSETS_H_
 
-void* IOSMCPPAYLOAD_memset(void* dst, int val, size_t size)
-{
-	char* _dst = dst;
+#define	FS_PHYS_DIFF								0
 
-	for (int i = 0; i < size; i++)
-		_dst[i] = val;
+#define	FS_SYSLOG_OUTPUT							0x107F0C84
+#define	FS_PRINTF_SYSLOG							0x107F5720
+#define	CALL_FS_REGISTERMDPHYSICALDEVICE			0x107BD81C
+#define	FS_GETMDDEVICEBYID							0x107187C4
+#define	FS_CREATEDEVTHREAD_HOOK						0x10700294
+#define	FS_USB_READ									0x1077F1C0
+#define	FS_USB_WRITE								0x1077F35C
+#define	FS_SLC_READ1								0x107B998C
+#define	FS_SLC_READ2								0x107B98FC
+#define	FS_SLC_WRITE1								0x107B9870
+#define	FS_SLC_WRITE2								0x107B97E4
+#define	FS_MLC_READ1								0x107DC760
+#define	FS_MLC_READ2								0x107DCDE4
+#define	FS_MLC_WRITE1								0x107DC0C0
+#define	FS_MLC_WRITE2								0x107DC73C
+#define	FS_SDCARD_READ1								0x107BDDD0
+#define	FS_SDCARD_WRITE1							0x107BDD60
 
-	return dst;
-}
-
-/*int IOSMCPPAYLOAD_strlen(const char* str)
-{
-	unsigned int i = 0;
-	while (str[i])
-		i++;
-	return i;
-}*/
-
-char* IOSMCPPAYLOAD_strncpy(char* dst, const char* src, size_t size)
-{
-	for (int i = 0; i < size; i++)
-	{
-		dst[i] = src[i];
-		if (src[i] == '\0')
-			return dst;
-	}
-
-	return dst;
-}
+#endif

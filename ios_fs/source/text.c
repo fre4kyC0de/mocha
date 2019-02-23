@@ -110,7 +110,7 @@ void _printf(int x, int y, const char *format, ...)
 
 	static char buffer[0x100];
 
-	FS_vsnprintf(buffer, sizeof(buffer), format, args);
+	IOSFS_vsnprintf(buffer, sizeof(buffer), format, args);
 	drawString(buffer, x, y);
 
 	va_end(args);

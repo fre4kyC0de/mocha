@@ -138,9 +138,14 @@ int Menu_Main(void)
 	default_config(&config);
 	read_config(&config);
 
-	int launch = 1;
-
-	if (forceMenu || (config.directLaunch == 0))
+	int launch, launchable;
+	
+	if (OS_FIRMWARE == 550)
+		launchable = 1;
+	else
+		launchable = 0;
+	
+	if (launchable && (forceMenu || (config.directLaunch == 0)))
 	{
 		console_print_pos(x_offset, y_offset, "Displaying menu...");
 		y_offset += 1;
@@ -152,7 +157,11 @@ int Menu_Main(void)
 		y_offset = 3;
 		if (usleep_TimeOut > 0)
 			os_usleep(usleep_TimeOut);
-	}
+	} else
+		launch = 1;
+
+	if (!launchable)
+		launch = 0;
 
 	int returnCode = 0;
 
@@ -182,6 +191,8 @@ int Menu_Main(void)
 				_SYSLaunchMenuWithCheckingAccount(slot);
 
 			returnCode = EXIT_RELAUNCH_ON_LOAD;
+			
+			//nnupatcher();
 		}
 	}
 	else
@@ -189,8 +200,6 @@ int Menu_Main(void)
 		OSScreenShutdown();
 		free(screenBuffer);
 	}
-
-	//nnupatcher();
 
 	unmount_sd_fat("sd");
 

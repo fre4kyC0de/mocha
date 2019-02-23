@@ -26,7 +26,6 @@
 #include "elf_patcher.h"
 #include "config.h"
 #include "ios_acp_patches.h"
-#include "../../ios_acp/ios_acp.bin.h"
 #include "../../ios_acp/ios_acp_syms.h"
 
 #define	ACP_CODE_BASE_PHYS_ADDR		(-0xE0000000 + 0x12900000)
@@ -44,7 +43,7 @@ void acp_run_patches(u32 ios_elf_start)
 	section_write(ios_elf_start, _text_start, (void*)acp_get_phys_code_base(), _text_end - _text_start);
 
 	// hook acp fsa raw read function
-	section_write_word(ios_elf_start, 0xE00601F0, ARM_BL(0xE00601F0, ACP_FSARawRead_hook));
+	section_write_word(ios_elf_start, 0xE00601F0, ARM_BL(0xE00601F0, FSA_RawRead_hook));
 
 	// patch logs to output more info
 	section_write_word(ios_elf_start, 0xE009801C, ARM_B(0xE009801C, 0xE00C4D54));

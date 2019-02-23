@@ -33,6 +33,9 @@
 #include "ios_bsp_patches.h"
 #include "instant_patches.h"
 
+#define disable_interrupts							IOSKERNEL_disable_interrupts
+#define enable_interrupts							IOSKERNEL_enable_interrupts
+
 #define	USB_PHYS_CODE_BASE		0x101312D0
 
 cfw_config_t cfw_config;
@@ -80,38 +83,38 @@ int _main()
 	*(volatile u32*)0x08129A24 = 0xE12FFF1E;
 
 	void * pset_fault_behavior = (void*)0x081298BC;
-	KERNEL_memcpy(pset_fault_behavior, (void*)repairData_set_fault_behavior, sizeof(repairData_set_fault_behavior));
+	IOSKERNEL_memcpy(pset_fault_behavior, (void*)repairData_set_fault_behavior, sizeof(repairData_set_fault_behavior));
 
 	void * pset_panic_behavior = (void*)0x081296E4;
-	KERNEL_memcpy(pset_panic_behavior, (void*)repairData_set_panic_behavior, sizeof(repairData_set_panic_behavior));
+	IOSKERNEL_memcpy(pset_panic_behavior, (void*)repairData_set_panic_behavior, sizeof(repairData_set_panic_behavior));
 
 	void * pusb_root_thread = (void*)0x10100174;
-	KERNEL_memcpy(pusb_root_thread, (void*)repairData_usb_root_thread, sizeof(repairData_usb_root_thread));
+	IOSKERNEL_memcpy(pusb_root_thread, (void*)repairData_usb_root_thread, sizeof(repairData_usb_root_thread));
 
 	payload_info_t *payloads = (payload_info_t*)0x00148000;
 
-	KERNEL_memcpy((void*)&cfw_config, payloads->data, payloads->size);
+	IOSKERNEL_memcpy((void*)&cfw_config, payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	KERNEL_memcpy((void*)USB_PHYS_CODE_BASE, payloads->data, payloads->size);
+	IOSKERNEL_memcpy((void*)USB_PHYS_CODE_BASE, payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	KERNEL_memcpy((void*)fs_get_phys_code_base(), payloads->data, payloads->size);
+	IOSKERNEL_memcpy((void*)fs_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
 	if (cfw_config.redNAND && cfw_config.seeprom_red)
-		KERNEL_memcpy((void*)bsp_get_phys_code_base(), payloads->data, payloads->size);
+		IOSKERNEL_memcpy((void*)bsp_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	KERNEL_memcpy((void*)acp_get_phys_code_base(), payloads->data, payloads->size);
+	IOSKERNEL_memcpy((void*)acp_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	KERNEL_memcpy((void*)mcp_get_phys_code_base(), payloads->data, payloads->size);
+	IOSKERNEL_memcpy((void*)mcp_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
 	if (cfw_config.launchImage)
 	{
-		KERNEL_memcpy((void*)MCP_LAUNCH_IMG_PHYS_ADDR, payloads->data, payloads->size);
+		IOSKERNEL_memcpy((void*)MCP_LAUNCH_IMG_PHYS_ADDR, payloads->data, payloads->size);
 		payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 	}
 

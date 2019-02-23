@@ -36,6 +36,9 @@
 #include "imports.h"
 #include "utils.h"
 
+#define disable_interrupts							IOSKERNEL_disable_interrupts
+#define enable_interrupts							IOSKERNEL_enable_interrupts
+
 extern void __KERNEL_CODE_START(void);
 extern void __KERNEL_CODE_END(void);
 
@@ -76,14 +79,14 @@ static int kernel_syscall_0x81(u32 command, u32 arg1, u32 arg2, u32 arg3)
 		case KERNEL_COMMAND_MEMCPY:
 		{
 			//set_domain_register(0xFFFFFFFF);
-			KERNEL_memcpy((void*)arg1, (void*) arg2, arg3);
+			IOSKERNEL_memcpy((void*)arg1, (void*) arg2, arg3);
 
 			break;
 		}
 		case KERNEL_COMMAND_GET_CFW_CONFIG:
 		{
 			//set_domain_register(0xFFFFFFFF);
-			KERNEL_memcpy((void*)arg1, &cfw_config, sizeof(cfw_config));
+			IOSKERNEL_memcpy((void*)arg1, &cfw_config, sizeof(cfw_config));
 
 			break;
 		}
@@ -96,7 +99,7 @@ static int kernel_syscall_0x81(u32 command, u32 arg1, u32 arg2, u32 arg3)
 
 static int kernel_read_otp_internal(int index, void* out_buf, u32 size)
 {
-	KERNEL_memcpy(out_buf, otp_buffer + (index << 2), size);
+	IOSKERNEL_memcpy(out_buf, otp_buffer + (index << 2), size);
 	return 0;
 }
 

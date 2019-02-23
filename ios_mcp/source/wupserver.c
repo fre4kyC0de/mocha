@@ -56,7 +56,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 			{
 				void* dst = (void*)command_buffer[1];
 
-				MCP_memcpy(dst, &command_buffer[2], length - 8);
+				IOSMCP_memcpy(dst, &command_buffer[2], length - 8);
 			}
 
 			break;
@@ -67,7 +67,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				void* src = (void*)command_buffer[1];
 				length = command_buffer[2];
 
-				MCP_memcpy(&command_buffer[1], src, length);
+				IOSMCP_memcpy(&command_buffer[1], src, length);
 				out_length = length + 4;
 			}
 
@@ -80,12 +80,12 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				int size_arguments = length - 8;
 
 				u32 arguments[8];
-				memset(arguments, 0x00, sizeof(arguments));
-				MCP_memcpy(arguments, &command_buffer[2], (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
+				IOSMCPPAYLOAD_memset(arguments, 0x00, sizeof(arguments));
+				IOSMCP_memcpy(arguments, &command_buffer[2], (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
 
 				// return error code as data
 				out_length = 8;
-				command_buffer[1] = ((int (*const)(u32, u32, u32, u32, u32, u32, u32, u32))(MCP_SVC_BASE + svc_id * 8))(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
+				command_buffer[1] = ((int (*const)(u32, u32, u32, u32, u32, u32, u32, u32))(IOSMCP_SVC_BASE + svc_id * 8))(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
 			}
 
 			break;
@@ -106,7 +106,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				void* src = (void*)command_buffer[2];
 				int size = command_buffer[3];
 
-				MCP_memcpy(dst, src, size);
+				IOSMCP_memcpy(dst, src, size);
 			}
 
 			break;
@@ -136,7 +136,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 					else
 					{
 						svcInvalidateDCache(cache_range, 0x100);
-						MCP_usleep(50);
+						IOSMCP_usleep(50);
 					}
 				}
 			}
@@ -180,7 +180,7 @@ static void serverListenClients()
 
 	struct sockaddr_in server;
 
-	memset(&server, 0x00, sizeof(server));
+	IOSMCPPAYLOAD_memset(&server, 0x00, sizeof(server));
 
 	server.sin_family = AF_INET;
 	server.sin_port = 1337;
@@ -216,7 +216,7 @@ static int wupserver_thread(void *arg)
 	while (ifmgrnclInit() <= 0)
 	{
 		//_printf(0, 0, "opening /dev/net/ifmgr/ncl...");
-		MCP_usleep(1000);
+		IOSMCP_usleep(1000);
 	}
 
 	while (true)
@@ -233,19 +233,19 @@ static int wupserver_thread(void *arg)
 
 		//_printf(0, 0, "initializing /dev/net/ifmgr/ncl... %08X %08X %08X %08X ", ret0, ret1, out0, out1);
 
-		MCP_usleep(1000);
+		IOSMCP_usleep(1000);
 	}
 
 	while (socketInit() <= 0)
 	{
 		//_printf(0, 0, "opening /dev/socket...");
-		MCP_usleep(1000);
+		IOSMCP_usleep(1000);
 	}
 
 	log_init(0xC0A8B203);
 
 	//_printf(0, 0, "opened /dev/socket !");
-	MCP_usleep(5*1000*1000);
+	IOSMCP_usleep(5*1000*1000);
 	//_printf(0, 10, "attempting sockets !");
 
 	while (1)
@@ -254,7 +254,7 @@ static int wupserver_thread(void *arg)
 			serverListenClients();
 		else
 			break;
-		MCP_usleep(1000*1000);
+		IOSMCP_usleep(1000*1000);
 	}
 
 	log_deinit();

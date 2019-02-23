@@ -30,7 +30,7 @@ static void* allocIobuf()
 {
 	void* ptr = svcAlloc(0xCAFF, 0x828);
 
-	KERNEL_memset(ptr, 0x00, 0x828);
+	IOSKERNEL_memset(ptr, 0x00, 0x828);
 
 	return ptr;
 }
@@ -47,7 +47,7 @@ static int IOS_Open(const char * dev, int mode)
 	if (!devStr)
 		return -3;
 
-	KERNEL_strncpy(devStr, dev, 0x20);
+	IOSKERNEL_strncpy(devStr, dev, 0x20);
 
 	int res = svcOpen(devStr, 0);
 
@@ -72,7 +72,7 @@ static int FSA_RawOpen(int fd, const char* device_path, int* outHandle)
 	u32* inbuf = (u32*)iobuf;
 	u32* outbuf = (u32*)&iobuf[0x520];
 
-	KERNEL_strncpy((char*)&inbuf[0x01], device_path, 0x27F);
+	IOSKERNEL_strncpy((char*)&inbuf[0x01], device_path, 0x27F);
 
 	int ret = svcIoctl(fd, 0x6A, inbuf, 0x520, outbuf, 0x293);
 
@@ -183,7 +183,7 @@ int FSA_SDReadRawSectors(void *buffer, u32 sector, u32 num_sectors)
 
 	res = FSA_RawRead(fsa, buf, 0x200, num_sectors, sector, fd);
 
-	KERNEL_memcpy(buffer, buf, num_sectors << 9);
+	IOSKERNEL_memcpy(buffer, buf, num_sectors << 9);
 
 	svcFree(0xCAFF, buf);
 	FSA_RawClose(fsa, fd);
@@ -214,7 +214,7 @@ int FSA_SDWriteRawSectors(const void *buffer, u32 sector, u32 num_sectors)
 		return -2;
 	}
 
-	KERNEL_memcpy(buf, buffer, num_sectors << 9);
+	IOSKERNEL_memcpy(buf, buffer, num_sectors << 9);
 
 	res = FSA_RawWrite(fsa, buf, 0x200, num_sectors, sector, fd);
 

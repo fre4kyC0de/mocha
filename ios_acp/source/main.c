@@ -22,10 +22,9 @@
  * distribution.
  ***************************************************************************/
 
-//#include "../../src/dynamic_libs/os_types.h"
 #include "imports.h"
 
-int ACP_FSARawRead_hook(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle)
+int FSA_RawRead_hook(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle)
 {
-	return ACP_FSA_RawRead(fd, data, offset, cnt, blocksize, device_handle);
+	return IOSACP_FSA_RawRead(fd, data, offset, cnt, blocksize, device_handle);
 }

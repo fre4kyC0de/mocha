@@ -33,12 +33,12 @@
 
 void createDevThread_entry(int node_type, u32 *dev_handles)
 {
-	FS_syslog_output("FSA: %s thread created\n", (char*)dev_handles[0]);
+	IOSFS_syslog_output("FSA: %s thread created\n", (char*)dev_handles[0]);
 
 	if (node_type == NODE_TYPE_DEV_MMC)
 	{
 		cfw_config_t cfw_config;
-		FS_memset(&cfw_config, 0, sizeof(cfw_config));
+		IOSFS_memset(&cfw_config, 0, sizeof(cfw_config));
 		svcCustomKernelCommand(KERNEL_COMMAND_GET_CFW_CONFIG, &cfw_config);
 
 		if (cfw_config.redNAND)
@@ -47,7 +47,7 @@ void createDevThread_entry(int node_type, u32 *dev_handles)
 	else if (node_type == NODE_TYPE_DEV_ATFS) // ATFS is started right before ISFS for slc/slccmpt
 	{
 		cfw_config_t cfw_config;
-		FS_memset(&cfw_config, 0, sizeof(cfw_config));
+		IOSFS_memset(&cfw_config, 0, sizeof(cfw_config));
 		svcCustomKernelCommand(KERNEL_COMMAND_GET_CFW_CONFIG, &cfw_config);
 
 		if (cfw_config.redNAND && (check_nand_dump() == 0))

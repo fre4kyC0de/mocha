@@ -37,7 +37,7 @@ void redirection_setup(void)
 	u32 otpDumpBaseSector = 0x4FD;
 	int writeInfoSector = 0;
 	sdio_nand_signature_sector_t *infoSector = (sdio_nand_signature_sector_t*)0x00141000;
-	KERNEL_memset(infoSector, 0x00, 0x200);
+	IOSKERNEL_memset(infoSector, 0x00, 0x200);
 
 	int result = FSA_SDReadRawSectors(infoSector, NAND_DUMP_SIGNATURE_SECTOR, 1);
 	if (result < 0)

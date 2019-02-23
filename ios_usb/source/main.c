@@ -27,9 +27,9 @@
 void _main()
 {
 	int saved_handle = *(volatile int*)0x0012F000;
-	int myret = USB_reply(saved_handle, 0);
+	int myret = IOSUSB_reply(saved_handle, 0);
 	if (myret != 0)
-		USB_ios_shutdown(1);
+		IOSUSB_ios_shutdown(1);
 
 	// stack pointer will be 0x1016AE30
 	// link register will be 0x1012EACC

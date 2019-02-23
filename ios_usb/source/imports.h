@@ -25,7 +25,7 @@
 #ifndef _IMPORTS_H_
 #define _IMPORTS_H_
 
-#define	USB_ios_shutdown						((void (*)(int))0x1012EE4C)
-#define	USB_reply								((int (*)(int, int))0x1012ED04)
+#define	IOSUSB_ios_shutdown						((void (*)(int))0x1012EE4C)
+#define	IOSUSB_reply								((int (*)(int, int))0x1012ED04)
 
 #endif

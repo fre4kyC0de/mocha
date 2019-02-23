@@ -27,8 +27,8 @@
 
 #include "../../src/dynamic_libs/os_types.h"
 
-#define	ACP_syslog_output					((void (*)(const char *format, ...))0xE00C4D54)
+#define	IOSACP_syslog_output					((void (*)(const char *format, ...))0xE00C4D54)
 
-#define	ACP_FSA_RawRead						((int (*)(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle))0xE00BAF74)
+#define	IOSACP_FSA_RawRead						((int (*)(int fd, void* data, u64 offset, u32 cnt, u32 blocksize, int device_handle))0xE00BAF74)
 
 #endif

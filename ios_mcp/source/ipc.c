@@ -90,7 +90,7 @@ static int ipc_ioctl(ipcmessage *message)
 			if (message->ioctl.length_in < 4)
 				res = IOS_ERROR_INVALID_SIZE;
 			else
-				MCP_memcpy((void*)message->ioctl.buffer_in[0], message->ioctl.buffer_in + 1, message->ioctl.length_in - 4);
+				IOSMCP_memcpy((void*)message->ioctl.buffer_in[0], message->ioctl.buffer_in + 1, message->ioctl.length_in - 4);
 
 			break;
 		}
@@ -99,7 +99,7 @@ static int ipc_ioctl(ipcmessage *message)
 			if (message->ioctl.length_in < 4)
 				res = IOS_ERROR_INVALID_SIZE;
 			else
-				MCP_memcpy(message->ioctl.buffer_io, (void*)message->ioctl.buffer_in[0], message->ioctl.length_io);
+				IOSMCP_memcpy(message->ioctl.buffer_io, (void*)message->ioctl.buffer_in[0], message->ioctl.length_io);
 
 			break;
 		}
@@ -113,11 +113,11 @@ static int ipc_ioctl(ipcmessage *message)
 				int size_arguments = message->ioctl.length_in - 4;
 
 				u32 arguments[8];
-				memset(arguments, 0x00, sizeof(arguments));
-				MCP_memcpy(arguments, message->ioctl.buffer_in + 1, (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
+				IOSMCPPAYLOAD_memset(arguments, 0x00, sizeof(arguments));
+				IOSMCP_memcpy(arguments, message->ioctl.buffer_in + 1, (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
 
 				// return error code as data
-				message->ioctl.buffer_io[0] = ((int (*const)(u32, u32, u32, u32, u32, u32, u32, u32))(MCP_SVC_BASE + svc_id * 8))(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
+				message->ioctl.buffer_io[0] = ((int (*const)(u32, u32, u32, u32, u32, u32, u32, u32))(IOSMCP_SVC_BASE + svc_id * 8))(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
 			}
 
 			break;
@@ -134,7 +134,7 @@ static int ipc_ioctl(ipcmessage *message)
 			if (message->ioctl.length_in < 12)
 				res = IOS_ERROR_INVALID_SIZE;
 			else
-				MCP_memcpy((void*)message->ioctl.buffer_in[0], (void*)message->ioctl.buffer_in[1], message->ioctl.buffer_in[2]);
+				IOSMCP_memcpy((void*)message->ioctl.buffer_in[0], (void*)message->ioctl.buffer_in[1], message->ioctl.buffer_in[2]);
 
 			break;
 		}
@@ -166,7 +166,7 @@ static int ipc_ioctl(ipcmessage *message)
 					else
 					{
 						svcInvalidateDCache(cache_range, 0x100);
-						MCP_usleep(50);
+						IOSMCP_usleep(50);
 					}
 				}
 			}
@@ -450,7 +450,7 @@ static int ipc_thread(void *arg)
 			res = svcReceiveMessage(queueId, &message, 0);
 			if (res < 0)
 			{
-				MCP_usleep(10000);
+				IOSMCP_usleep(10000);
 				continue;
 			}
 

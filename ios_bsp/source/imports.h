@@ -25,8 +25,8 @@
 #ifndef IMPORTS_H_
 #define IMPORTS_H_
 
-#define	BSP_memcpy		((void *(*)(void*, void*, unsigned int))0xE600EA18)
-#define	BSP_memset		((void *(*)(void*, int, unsigned int))0xE600EAB4)
-#define	BSP_strncpy		((char *(*)(char*, const char*, unsigned int))0xE600F4AC)
+#define	IOSBSP_memcpy		((void *(*)(void*, void*, unsigned int))0xE600EA18)
+#define	IOSBSP_memset		((void *(*)(void*, int, unsigned int))0xE600EAB4)
+#define	IOSBSP_strncpy		((char *(*)(char*, const char*, unsigned int))0xE600F4AC)
 
 #endif // IMPORTS_H_

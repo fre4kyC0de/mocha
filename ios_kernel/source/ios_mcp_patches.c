@@ -26,7 +26,6 @@
 #include "elf_patcher.h"
 #include "config.h"
 #include "ios_mcp_patches.h"
-#include "../../ios_mcp/ios_mcp.bin.h"
 #include "../../ios_mcp/ios_mcp_syms.h"
 
 #define	MCP_CODE_BASE_PHYS_ADDR		(-0x05100000 + 0x13D80000)

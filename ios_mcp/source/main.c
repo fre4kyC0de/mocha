@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "imports.h"
 #include "wupserver.h"
 #include "ipc.h"
 #include "svc.h"
@@ -41,7 +42,7 @@ int _startMainThread(void)
 	{
 		threadsStarted = 1;
 		cfw_config_t cfw_config;
-		memset(&cfw_config, 0, sizeof(cfw_config));
+		IOSMCPPAYLOAD_memset(&cfw_config, 0, sizeof(cfw_config));
 		svcCustomKernelCommand(KERNEL_COMMAND_GET_CFW_CONFIG, &cfw_config);
 
 		if (cfw_config.launchImage)
