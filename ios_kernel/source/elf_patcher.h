@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef _ELF_PATCHER_H
 #define _ELF_PATCHER_H
 

@@ -21,8 +21,10 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include "../../src/dynamic_libs/os_types.h"
 #include "config.h"
+#include "imports.h"
 #include "utils.h"
 #include "redirection_setup.h"
 #include "ios_mcp_patches.h"
@@ -34,12 +36,6 @@
 #define	USB_PHYS_CODE_BASE		0x101312D0
 
 cfw_config_t cfw_config;
-
-typedef struct
-{
-	u32 size;
-	u8 data[0];
-} payload_info_t;
 
 static const char repairData_set_fault_behavior[] = {
 	0xE1,0x2F,0xFF,0x1E,0xE9,0x2D,0x40,0x30,0xE5,0x93,0x20,0x00,0xE1,0xA0,0x40,0x00,
@@ -84,38 +80,38 @@ int _main()
 	*(volatile u32*)0x08129A24 = 0xE12FFF1E;
 
 	void * pset_fault_behavior = (void*)0x081298BC;
-	kernel_memcpy(pset_fault_behavior, (void*)repairData_set_fault_behavior, sizeof(repairData_set_fault_behavior));
+	KERNEL_memcpy(pset_fault_behavior, (void*)repairData_set_fault_behavior, sizeof(repairData_set_fault_behavior));
 
 	void * pset_panic_behavior = (void*)0x081296E4;
-	kernel_memcpy(pset_panic_behavior, (void*)repairData_set_panic_behavior, sizeof(repairData_set_panic_behavior));
+	KERNEL_memcpy(pset_panic_behavior, (void*)repairData_set_panic_behavior, sizeof(repairData_set_panic_behavior));
 
 	void * pusb_root_thread = (void*)0x10100174;
-	kernel_memcpy(pusb_root_thread, (void*)repairData_usb_root_thread, sizeof(repairData_usb_root_thread));
+	KERNEL_memcpy(pusb_root_thread, (void*)repairData_usb_root_thread, sizeof(repairData_usb_root_thread));
 
 	payload_info_t *payloads = (payload_info_t*)0x00148000;
 
-	kernel_memcpy((void*)&cfw_config, payloads->data, payloads->size);
+	KERNEL_memcpy((void*)&cfw_config, payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	kernel_memcpy((void*)USB_PHYS_CODE_BASE, payloads->data, payloads->size);
+	KERNEL_memcpy((void*)USB_PHYS_CODE_BASE, payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	kernel_memcpy((void*)fs_get_phys_code_base(), payloads->data, payloads->size);
+	KERNEL_memcpy((void*)fs_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
 	if (cfw_config.redNAND && cfw_config.seeprom_red)
-		kernel_memcpy((void*)bsp_get_phys_code_base(), payloads->data, payloads->size);
+		KERNEL_memcpy((void*)bsp_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	kernel_memcpy((void*)acp_get_phys_code_base(), payloads->data, payloads->size);
+	KERNEL_memcpy((void*)acp_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
-	kernel_memcpy((void*)mcp_get_phys_code_base(), payloads->data, payloads->size);
+	KERNEL_memcpy((void*)mcp_get_phys_code_base(), payloads->data, payloads->size);
 	payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 
 	if (cfw_config.launchImage)
 	{
-		kernel_memcpy((void*)MCP_LAUNCH_IMG_PHYS_ADDR, payloads->data, payloads->size);
+		KERNEL_memcpy((void*)MCP_LAUNCH_IMG_PHYS_ADDR, payloads->data, payloads->size);
 		payloads = (payload_info_t*)( ((char*)payloads) + ALIGN4(sizeof(payload_info_t) + payloads->size) );
 	}
 

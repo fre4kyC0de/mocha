@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef FSA_H
 #define FSA_H
 

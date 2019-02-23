@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -28,6 +29,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
+
 #include "dynamic_libs/os_functions.h"
 #include "dynamic_libs/fs_functions.h"
 #include "dynamic_libs/gx2_functions.h"

@@ -21,22 +21,20 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#ifndef _FSA_H_
-#define _FSA_H_
 
-typedef struct
-{
-	u32 flag;
-	u32 permission;
-	u32 owner_id;
-	u32 group_id;
-	u32 size; // size in bytes
-	u32 physblock_size; // physical size on disk in bytes
-	u64 quota_size;
-	u32 id;
-	u32 ctime;
-	u32 mtime;
-	u32 unk2[0x0D];
-} fileStat_s;
+#ifndef IMPORTS_H_
+#define IMPORTS_H_
 
-#endif
+#define	KERNEL_vsnprintf							((int (*)(char * s, u32 n, const char * format, va_list arg))0x0813293C)
+
+#define	KERNEL_memcpy								((void * (*)(void*, const void*, int))0x08131D04)
+#define	KERNEL_memset								((void *(*)(void*, int, unsigned int))0x08131DA0)
+#define	KERNEL_strncpy								((char *(*)(char*, const char*, unsigned int))0x081329B8)
+#define	KERNEL_disable_interrupts					((int(*)())0x0812E778)
+#define	KERNEL_enable_interrupts					((int(*)(int))0x0812E78C)
+#define	KERNEL_bsp_command_5						((int (*)(const char*, int offset, const char*, int size, void *buffer))0x0812EC40)
+
+#define disable_interrupts							KERNEL_disable_interrupts
+#define enable_interrupts							KERNEL_enable_interrupts
+
+#endif // IMPORTS_H_

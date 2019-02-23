@@ -21,17 +21,11 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef _UTILS_H
 #define _UTILS_H
 
 #define	ALIGN4(x)					(((x) + 3) & ~3)
-
-#define	kernel_memcpy				((void * (*)(void*, const void*, int))0x08131D04)
-#define	kernel_memset				((void *(*)(void*, int, unsigned int))0x08131DA0)
-#define	kernel_strncpy				((char *(*)(char*, const char*, unsigned int))0x081329B8)
-#define	disable_interrupts			((int(*)())0x0812E778)
-#define	enable_interrupts			((int(*)(int))0x0812E78C)
-#define	kernel_bsp_command_5		((int (*)(const char*, int offset, const char*, int size, void *buffer))0x0812EC40)
 
 void reverse_memcpy(void* dest, const void* src, unsigned int size);
 

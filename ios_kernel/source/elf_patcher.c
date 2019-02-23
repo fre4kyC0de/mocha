@@ -21,8 +21,10 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include "../../src/dynamic_libs/os_types.h"
 #include "elf_abi.h"
+#include "imports.h"
 #include "utils.h"
 
 static Elf32_Phdr * get_section(u32 data, u32 vaddr)
@@ -89,5 +91,5 @@ void section_write(u32 ios_elf_start, u32 address, const void *data, u32 size)
 	if ((size == 4) && (!((unsigned int)addr & 3)) && (!((unsigned int)data & 3)))
 		*(u32*)addr = *(u32*)data;
 	else
-		kernel_memcpy(addr, data, size);
+		KERNEL_memcpy(addr, data, size);
 }

@@ -21,9 +21,11 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "imports.h"
 #include "fsa.h"
 #include "svc.h"
@@ -88,7 +90,7 @@ static int ipc_ioctl(ipcmessage *message)
 			if (message->ioctl.length_in < 4)
 				res = IOS_ERROR_INVALID_SIZE;
 			else
-				memcpy((void*)message->ioctl.buffer_in[0], message->ioctl.buffer_in + 1, message->ioctl.length_in - 4);
+				MCP_memcpy((void*)message->ioctl.buffer_in[0], message->ioctl.buffer_in + 1, message->ioctl.length_in - 4);
 
 			break;
 		}
@@ -97,7 +99,7 @@ static int ipc_ioctl(ipcmessage *message)
 			if (message->ioctl.length_in < 4)
 				res = IOS_ERROR_INVALID_SIZE;
 			else
-				memcpy(message->ioctl.buffer_io, (void*)message->ioctl.buffer_in[0], message->ioctl.length_io);
+				MCP_memcpy(message->ioctl.buffer_io, (void*)message->ioctl.buffer_in[0], message->ioctl.length_io);
 
 			break;
 		}
@@ -112,7 +114,7 @@ static int ipc_ioctl(ipcmessage *message)
 
 				u32 arguments[8];
 				memset(arguments, 0x00, sizeof(arguments));
-				memcpy(arguments, message->ioctl.buffer_in + 1, (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
+				MCP_memcpy(arguments, message->ioctl.buffer_in + 1, (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
 
 				// return error code as data
 				message->ioctl.buffer_io[0] = ((int (*const)(u32, u32, u32, u32, u32, u32, u32, u32))(MCP_SVC_BASE + svc_id * 8))(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
@@ -132,7 +134,7 @@ static int ipc_ioctl(ipcmessage *message)
 			if (message->ioctl.length_in < 12)
 				res = IOS_ERROR_INVALID_SIZE;
 			else
-				memcpy((void*)message->ioctl.buffer_in[0], (void*)message->ioctl.buffer_in[1], message->ioctl.buffer_in[2]);
+				MCP_memcpy((void*)message->ioctl.buffer_in[0], (void*)message->ioctl.buffer_in[1], message->ioctl.buffer_in[2]);
 
 			break;
 		}
@@ -164,7 +166,7 @@ static int ipc_ioctl(ipcmessage *message)
 					else
 					{
 						svcInvalidateDCache(cache_range, 0x100);
-						usleep(50);
+						MCP_usleep(50);
 					}
 				}
 			}
@@ -177,7 +179,7 @@ static int ipc_ioctl(ipcmessage *message)
 				res = IOS_ERROR_INVALID_SIZE;
 			else
 				for (u32 i = 0; i < (message->ioctl.length_io/4); i++)
-					message->ioctl.buffer_io[i] = svcCustomKernelCommand(KERNEL_READ32, message->ioctl.buffer_in[0] + i * 4);
+					message->ioctl.buffer_io[i] = svcCustomKernelCommand(KERNEL_COMMAND_READ32, message->ioctl.buffer_in[0] + i * 4);
 
 			break;
 		}
@@ -448,7 +450,7 @@ static int ipc_thread(void *arg)
 			res = svcReceiveMessage(queueId, &message, 0);
 			if (res < 0)
 			{
-				usleep(10000);
+				MCP_usleep(10000);
 				continue;
 			}
 

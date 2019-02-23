@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include "../../src/dynamic_libs/os_types.h"
 #include "../../common/kernel_commands.h"
 #include "elf_patcher.h"
@@ -32,6 +33,7 @@
 #include "exception_handler.h"
 #include "fsa.h"
 #include "config.h"
+#include "imports.h"
 #include "utils.h"
 
 extern void __KERNEL_CODE_START(void);
@@ -61,27 +63,27 @@ static int kernel_syscall_0x81(u32 command, u32 arg1, u32 arg2, u32 arg3)
 {
 	switch (command)
 	{
-		case KERNEL_READ32:
+		case KERNEL_COMMAND_READ32:
 		{
 			return *(volatile u32*)arg1;
 		}
-		case KERNEL_WRITE32:
+		case KERNEL_COMMAND_WRITE32:
 		{
 			*(volatile u32*)arg1 = arg2;
 
 			break;
 		}
-		case KERNEL_MEMCPY:
+		case KERNEL_COMMAND_MEMCPY:
 		{
 			//set_domain_register(0xFFFFFFFF);
-			kernel_memcpy((void*)arg1, (void*) arg2, arg3);
+			KERNEL_memcpy((void*)arg1, (void*) arg2, arg3);
 
 			break;
 		}
-		case KERNEL_GET_CFW_CONFIG:
+		case KERNEL_COMMAND_GET_CFW_CONFIG:
 		{
 			//set_domain_register(0xFFFFFFFF);
-			kernel_memcpy((void*)arg1, &cfw_config, sizeof(cfw_config));
+			KERNEL_memcpy((void*)arg1, &cfw_config, sizeof(cfw_config));
 
 			break;
 		}
@@ -94,7 +96,7 @@ static int kernel_syscall_0x81(u32 command, u32 arg1, u32 arg2, u32 arg3)
 
 static int kernel_read_otp_internal(int index, void* out_buf, u32 size)
 {
-	kernel_memcpy(out_buf, otp_buffer + (index << 2), size);
+	KERNEL_memcpy(out_buf, otp_buffer + (index << 2), size);
 	return 0;
 }
 

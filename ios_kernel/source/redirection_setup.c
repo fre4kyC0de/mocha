@@ -21,8 +21,10 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
+#include "../../src/dynamic_libs/os_types.h"
 #include "config.h"
-#include "utils.h"
+#include "imports.h"
 #include "fsa.h"
 #include "kernel_patches.h"
 #include "ios_bsp_patches.h"
@@ -35,7 +37,7 @@ void redirection_setup(void)
 	u32 otpDumpBaseSector = 0x4FD;
 	int writeInfoSector = 0;
 	sdio_nand_signature_sector_t *infoSector = (sdio_nand_signature_sector_t*)0x00141000;
-	kernel_memset(infoSector, 0x00, 0x200);
+	KERNEL_memset(infoSector, 0x00, 0x200);
 
 	int result = FSA_SDReadRawSectors(infoSector, NAND_DUMP_SIGNATURE_SECTOR, 1);
 	if (result < 0)

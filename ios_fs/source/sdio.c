@@ -1,3 +1,27 @@
+/***************************************************************************
+ * Copyright (C) 2016
+ * by Dimok
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any
+ * damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any
+ * purpose, including commercial applications, and to alter it and
+ * redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you
+ * must not claim that you wrote the original software. If you use
+ * this software in a product, an acknowledgment in the product
+ * documentation would be appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and
+ * must not be misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source
+ * distribution.
+ ***************************************************************************/
+
 #include "../../src/dynamic_libs/os_types.h"
 #include "imports.h"
 
@@ -20,16 +44,16 @@ void sdcard_init(void)
 {
 	// this should run *after* /dev/mmc thread is created
 	// first we create our synchronization stuff
-	sdcard_access_mutex = FS_SVC_CREATEMUTEX(1, 1);
+	sdcard_access_mutex = FS_svc_createmutex(1, 1);
 
 	dumpdata_offset = 0;
 
 	// then we sleep until /dev/mmc is done initializing sdcard (TODO : better synchronization here)
-	FS_SLEEP(1000);
+	FS_sleep(1000);
 
 	// finally we set some flags to indicate sdcard is ready for use
-	FS_MMC_SDCARD_STRUCT[0x24/4] = FS_MMC_SDCARD_STRUCT[0x24/4] | 0x20;
-	FS_MMC_SDCARD_STRUCT[0x28/4] = FS_MMC_SDCARD_STRUCT[0x28/4] & (~0x04);
+	FS_MMC_SDCard_struct[0x24/4] = FS_MMC_SDCard_struct[0x24/4] | 0x20;
+	FS_MMC_SDCard_struct[0x28/4] = FS_MMC_SDCard_struct[0x28/4] & (~0x04);
 }
 
 static void sdcard_readwrite_callback(void *priv_data, int result)
@@ -38,17 +62,17 @@ static void sdcard_readwrite_callback(void *priv_data, int result)
 
 	private_data[1] = result;
 
-	FS_SVC_RELEASEMUTEX(private_data[0]);
+	FS_svc_releasemutex(private_data[0]);
 }
 
 void sdcard_lock_mutex(void)
 {
-	FS_SVC_ACQUIREMUTEX(sdcard_access_mutex, 0);
+	FS_svc_acquiremutex(sdcard_access_mutex, 0);
 }
 
 void sdcard_unlock_mutex(void)
 {
-	FS_SVC_RELEASEMUTEX(sdcard_access_mutex);
+	FS_svc_releasemutex(sdcard_access_mutex);
 }
 
 int sdcard_readwrite(int is_read, void *data, u32 cnt, u32 block_size, u32 offset_blocks, int * out_callback_arg, int device_id)
@@ -57,10 +81,10 @@ int sdcard_readwrite(int is_read, void *data, u32 cnt, u32 block_size, u32 offse
 	sdcard_lock_mutex();
 
 	//also create a mutex for synchronization with end of operation...
-	int sync_mutex = FS_SVC_CREATEMUTEX(1, 1);
+	int sync_mutex = FS_svc_createmutex(1, 1);
 
 	// ...and acquire it
-	FS_SVC_ACQUIREMUTEX(sync_mutex, 0);
+	FS_svc_acquiremutex(sync_mutex, 0);
 
 	// block_size needs to be equal to sector_size (0x200)
 	while (block_size > 0x200)
@@ -87,18 +111,18 @@ int sdcard_readwrite(int is_read, void *data, u32 cnt, u32 block_size, u32 offse
 	private_data[1] = 0;
 
 	// call readwrite function
-	int result = FS_SDIO_DOREADWRITECOMMAND(device_id, &command, offset_blocks, sdcard_readwrite_callback, (void*)private_data);
+	int result = FS_SDIO_DoReadWriteCommand(device_id, &command, offset_blocks, sdcard_readwrite_callback, (void*)private_data);
 	if (result == 0)
 	{
 		// wait for callback to give the go-ahead
-		FS_SVC_ACQUIREMUTEX(sync_mutex, 0);
+		FS_svc_acquiremutex(sync_mutex, 0);
 
 		if (out_callback_arg)
 			*out_callback_arg = private_data[1];
 	}
 
 	// finally, release sdcard mutexes
-	FS_SVC_DESTROYMUTEX(sync_mutex);
+	FS_svc_destroymutex(sync_mutex);
 	sdcard_unlock_mutex();
 
 	return result;

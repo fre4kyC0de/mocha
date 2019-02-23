@@ -1,4 +1,29 @@
+/***************************************************************************
+ * Copyright (C) 2016
+ * by Dimok
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any
+ * damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any
+ * purpose, including commercial applications, and to alter it and
+ * redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you
+ * must not claim that you wrote the original software. If you use
+ * this software in a product, an acknowledgment in the product
+ * documentation would be appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and
+ * must not be misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source
+ * distribution.
+ ***************************************************************************/
+
 #include <stdio.h>
+
 #include "../../src/dynamic_libs/os_types.h"
 #include "devices.h"
 #include "imports.h"
@@ -8,9 +33,9 @@
 void* getMdDeviceById(int deviceId)
 {
 	if (deviceId == DEVICE_ID_SDCARD_PATCHED)
-		return (void*)FS_MMC_SDCARD_STRUCT;
+		return (void*)FS_MMC_SDCard_struct;
 	else if (deviceId == DEVICE_ID_MLC)
-		return (void*)FS_MMC_MLC_STRUCT;
+		return (void*)FS_MMC_MLC_struct;
 
 	return NULL;
 }
@@ -19,19 +44,19 @@ int registerMdDevice_hook(void * md, int arg2, int arg3)
 {
 	u32 *mdStruct = (u32*)md;
 
-	if ((md != 0) && (mdStruct[2] == (u32)FS_MMC_SDCARD_STRUCT))
+	if ((md != 0) && (mdStruct[2] == (u32)FS_MMC_SDCard_struct))
 	{
 		sdcard_lock_mutex();
-		FS_MMC_SDCARD_STRUCT[0x24/4] = FS_MMC_SDCARD_STRUCT[0x24/4] & (~0x20);
+		FS_MMC_SDCard_struct[0x24/4] = FS_MMC_SDCard_struct[0x24/4] & (~0x20);
 
-		int result = FS_REGISTERMDPHYSICALDEVICE(md, arg2, arg3);
+		int result = FS_RegisterMDPhysicalDevice(md, arg2, arg3);
 
 		sdcard_unlock_mutex();
 
 		return result;
 	}
 
-	return FS_REGISTERMDPHYSICALDEVICE(md, arg2, arg3);
+	return FS_RegisterMDPhysicalDevice(md, arg2, arg3);
 }
 
 int getPhysicalDeviceHandle(u32 device)

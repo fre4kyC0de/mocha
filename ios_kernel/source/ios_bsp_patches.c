@@ -21,12 +21,14 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include "../../src/dynamic_libs/os_types.h"
 #include "elf_patcher.h"
 #include "ios_bsp_patches.h"
 #include "../../ios_bsp/ios_bsp_syms.h"
 #include "fsa.h"
 #include "utils.h"
+#include "imports.h"
 
 #define	BSP_PHYS_DIFF		(-0xE6000000 + 0x13CC0000)
 
@@ -52,13 +54,13 @@ int bsp_init_seeprom_buffer(u32 baseSector, int dumpFound)
 	{
 		//! just clear out the seeprom and it will be re-initialized on BSP module
 		//! TODO: maybe read in the seeprom here from SPI or BSP module
-		kernel_memset(tmpBuffer, 0, 0x200);
+		KERNEL_memset(tmpBuffer, 0, 0x200);
 	}
 
 	int level = disable_interrupts();
 	unsigned int control_register = disable_mmu();
 
-	kernel_memcpy((void*)(_seeprom_buffer_start - 0xE6047000 + 0x13D07000), tmpBuffer, 0x200);
+	KERNEL_memcpy((void*)(_seeprom_buffer_start - 0xE6047000 + 0x13D07000), tmpBuffer, 0x200);
 
 	restore_mmu(control_register);
 	enable_interrupts(level);

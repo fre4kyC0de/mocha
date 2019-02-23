@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef _EXCEPTION_HANDLER_H
 #define _EXCEPTION_HANDLER_H
 

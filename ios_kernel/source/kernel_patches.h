@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef _KERNEL_PATCHES_H
 #define _KERNEL_PATCHES_H
 

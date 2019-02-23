@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include <errno.h>
 #include <ogc/disc_io.h>
 #include <sys/statvfs.h>
@@ -29,9 +30,10 @@
 #include <malloc.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <sys/iosupport.h> // Fix for devkitPPC r32 and newer
+
 #include "dynamic_libs/fs_functions.h"
 #include "dynamic_libs/os_functions.h"
-#include <sys/iosupport.h> // Fix for devkitPPC r32 and newer
 
 #include "fs_utils.h"
 #include "sd_fat_devoptab.h"

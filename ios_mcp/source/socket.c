@@ -1,6 +1,31 @@
+/***************************************************************************
+ * Copyright (C) 2016
+ * by Dimok
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any
+ * damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any
+ * purpose, including commercial applications, and to alter it and
+ * redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you
+ * must not claim that you wrote the original software. If you use
+ * this software in a product, an acknowledgment in the product
+ * documentation would be appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and
+ * must not be misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source
+ * distribution.
+ ***************************************************************************/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "socket.h"
 #include "svc.h"
 #include "text.h"
@@ -94,7 +119,7 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 
 		if (ret >= 0)
 		{
-			memcpy(addr, &outbuf[1], outbuf[5]);
+			MCP_memcpy(addr, &outbuf[1], outbuf[5]);
 			*addrlen = outbuf[5];
 		}
 	}
@@ -118,7 +143,7 @@ int	bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 	u32* inbuf = (u32*)iobuf;
 
 	inbuf[0] = sockfd;
-	memcpy(&inbuf[1], addr, addrlen);
+	MCP_memcpy(&inbuf[1], addr, addrlen);
 	inbuf[5] = addrlen;
 
 	int ret = svcIoctl(socket_handle, 0x2, inbuf, 0x18, NULL, 0);
@@ -136,7 +161,7 @@ int	connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 	u32* inbuf = (u32*)iobuf;
 
 	inbuf[0] = sockfd;
-	memcpy(&inbuf[1], addr, addrlen);
+	MCP_memcpy(&inbuf[1], addr, addrlen);
 	inbuf[5] = addrlen;
 
 	int ret = svcIoctl(socket_handle, 0x4, inbuf, 0x18, NULL, 0);
@@ -198,7 +223,7 @@ int recv(int sockfd, void *buf, size_t len, int flags)
 	int ret = svcIoctlv(socket_handle, 0xC, 1, 3, iovec);
 
 	if ((ret > 0) && buf)
-		memcpy(buf, data_buf, ret);
+		MCP_memcpy(buf, data_buf, ret);
 
 	freeIobuf(data_buf);
 	freeIobuf(iobuf);
@@ -219,7 +244,7 @@ int send(int sockfd, const void *buf, size_t len, int flags)
 	iovec_s* iovec = (iovec_s*)iobuf;
 	u32* inbuf = (u32*)&iobuf[0x30];
 
-	memcpy(data_buf, buf, len);
+	MCP_memcpy(data_buf, buf, len);
 
 	inbuf[0] = sockfd;
 	inbuf[1] = flags;

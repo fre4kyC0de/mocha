@@ -22,9 +22,24 @@
  * distribution.
  ***************************************************************************/
 
-#ifndef _MLCIO_H_
-#define _MLCIO_H_
+#ifndef SVC_H
+#define SVC_H
 
-void mlc_init(void);
+#include "../../src/dynamic_libs/os_types.h"
 
-#endif // _MLCIO_H_
+typedef struct
+{
+	void* ptr;
+	u32 len;
+	u32 unk;
+} iovec_s;
+
+#define	svcAlloc			((void *(*)(u32 heapid, u32 size))0x081234E4)
+#define	svcAllocAlign		((void *(*)(u32 heapid, u32 size, u32 align))0x08123464)
+#define	svcFree				((void *(*)(u32 heapid, void *ptr))0x08123830)
+#define	svcOpen				((int (*)(const char* name, int mode))0x0812940C)
+#define	svcClose			((int (*)(int fd))0x08129368)
+#define	svcIoctl			((int (*)(int fd, u32 request, void* input_buffer, u32 input_buffer_len, void* output_buffer, u32 output_buffer_len))0x081290E0)
+#define	svcIoctlv			((int (*)(int fd, u32 request, u32 vector_count_in, u32 vector_count_out, iovec_s* vector))0x0812903C)
+
+#endif

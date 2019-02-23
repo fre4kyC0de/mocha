@@ -21,11 +21,13 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef _CFW_CONFIG_H_
 #define _CFW_CONFIG_H_
 
 #define	APP_PATH			"sd:/wiiu/apps/mocha"
-#define	CONFIG_PATH			("sd:/mocha.ini")
+#define	CONFIG_PATH			(APP_PATH "/config.ini")
+#define	SPLASH_PATH			(APP_PATH "/launch_image.tga")
 
 #include "../common/config_types.h"
 

@@ -22,9 +22,10 @@
  * distribution.
  ***************************************************************************/
 
-#ifndef _MLCIO_H_
-#define _MLCIO_H_
+#ifndef _IMPORTS_H_
+#define _IMPORTS_H_
 
-void mlc_init(void);
+#define	USB_ios_shutdown						((void (*)(int))0x1012EE4C)
+#define	USB_reply								((int (*)(int, int))0x1012ED04)
 
-#endif // _MLCIO_H_
+#endif

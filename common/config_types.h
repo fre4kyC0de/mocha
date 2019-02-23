@@ -37,4 +37,10 @@ typedef struct
 	int syshaxXml;
 } cfw_config_t;
 
+typedef struct
+{
+	u32 size;
+	u8 data[0];
+} payload_info_t;
+
 #endif

@@ -22,9 +22,11 @@
  * distribution.
  ***************************************************************************/
 
-#ifndef _MLCIO_H_
-#define _MLCIO_H_
+#ifndef IMPORTS_H_
+#define IMPORTS_H_
 
-void mlc_init(void);
+#define	BSP_memcpy		((void *(*)(void*, void*, unsigned int))0xE600EA18)
+#define	BSP_memset		((void *(*)(void*, int, unsigned int))0xE600EAB4)
+#define	BSP_strncpy		((char *(*)(char*, const char*, unsigned int))0xE600F4AC)
 
-#endif // _MLCIO_H_
+#endif // IMPORTS_H_

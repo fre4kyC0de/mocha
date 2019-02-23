@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef _INSTANT_PATCHES_SETUP_H_
 #define _INSTANT_PATCHES_SETUP_H_
 

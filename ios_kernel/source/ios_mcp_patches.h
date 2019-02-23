@@ -21,6 +21,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #ifndef _MCP_PATCHES_H_
 #define _MCP_PATCHES_H_
 

@@ -21,12 +21,12 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
+#include "imports.h"
 #include "svc.h"
 #include "fsa.h"
 
 #define	SD_SEEPROM_SECTOR		0x4FF
-
-#define	BSP_MEMCPY				((void * (*)(void *, void *, unsigned int size))0xE600EA18)
 
 static int writeEnabled = 0;
 static int dirty = 0;
@@ -49,7 +49,7 @@ static int SD_EEPROM_WriteAll(void)
 		if (buffer)
 		{
 			// user global buffer for FSA to be able to access it
-			BSP_MEMCPY(buffer, seeprom_buffer, 0x200);
+			BSP_memcpy(buffer, seeprom_buffer, 0x200);
 			res = FSA_RawWrite(fsa, buffer, 0x200, 1, SD_SEEPROM_SECTOR, fd);
 			svcFree(0xCAFF, buffer);
 		}

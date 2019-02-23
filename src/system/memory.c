@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+
 #include <malloc.h>
 #include <string.h>
+
 #include "dynamic_libs/os_functions.h"
 #include "memory.h"
 

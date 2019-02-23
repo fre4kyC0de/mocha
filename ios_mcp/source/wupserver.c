@@ -1,6 +1,31 @@
+/***************************************************************************
+ * Copyright (C) 2016
+ * by Dimok
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any
+ * damages arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any
+ * purpose, including commercial applications, and to alter it and
+ * redistribute it freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you
+ * must not claim that you wrote the original software. If you use
+ * this software in a product, an acknowledgment in the product
+ * documentation would be appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and
+ * must not be misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source
+ * distribution.
+ ***************************************************************************/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "imports.h"
 #include "net_ifmgr_ncl.h"
 #include "socket.h"
@@ -31,7 +56,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 			{
 				void* dst = (void*)command_buffer[1];
 
-				memcpy(dst, &command_buffer[2], length - 8);
+				MCP_memcpy(dst, &command_buffer[2], length - 8);
 			}
 
 			break;
@@ -42,7 +67,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				void* src = (void*)command_buffer[1];
 				length = command_buffer[2];
 
-				memcpy(&command_buffer[1], src, length);
+				MCP_memcpy(&command_buffer[1], src, length);
 				out_length = length + 4;
 			}
 
@@ -56,7 +81,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 
 				u32 arguments[8];
 				memset(arguments, 0x00, sizeof(arguments));
-				memcpy(arguments, &command_buffer[2], (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
+				MCP_memcpy(arguments, &command_buffer[2], (size_arguments < 8 * 4) ? size_arguments : (8 * 4));
 
 				// return error code as data
 				out_length = 8;
@@ -81,7 +106,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 				void* src = (void*)command_buffer[2];
 				int size = command_buffer[3];
 
-				memcpy(dst, src, size);
+				MCP_memcpy(dst, src, size);
 			}
 
 			break;
@@ -111,7 +136,7 @@ static int serverCommandHandler(u32* command_buffer, u32 length)
 					else
 					{
 						svcInvalidateDCache(cache_range, 0x100);
-						usleep(50);
+						MCP_usleep(50);
 					}
 				}
 			}
@@ -190,8 +215,8 @@ static int wupserver_thread(void *arg)
 {
 	while (ifmgrnclInit() <= 0)
 	{
-		//print(0, 0, "opening /dev/net/ifmgr/ncl...");
-		usleep(1000);
+		//_printf(0, 0, "opening /dev/net/ifmgr/ncl...");
+		MCP_usleep(1000);
 	}
 
 	while (true)
@@ -206,22 +231,22 @@ static int wupserver_thread(void *arg)
 		if (!ret1 && out1 == 1)
 			break;
 
-		//print(0, 0, "initializing /dev/net/ifmgr/ncl... %08X %08X %08X %08X ", ret0, ret1, out0, out1);
+		//_printf(0, 0, "initializing /dev/net/ifmgr/ncl... %08X %08X %08X %08X ", ret0, ret1, out0, out1);
 
-		usleep(1000);
+		MCP_usleep(1000);
 	}
 
 	while (socketInit() <= 0)
 	{
-		//print(0, 0, "opening /dev/socket...");
-		usleep(1000);
+		//_printf(0, 0, "opening /dev/socket...");
+		MCP_usleep(1000);
 	}
 
 	log_init(0xC0A8B203);
 
-	//print(0, 0, "opened /dev/socket !");
-	usleep(5*1000*1000);
-	//print(0, 10, "attempting sockets !");
+	//_printf(0, 0, "opened /dev/socket !");
+	MCP_usleep(5*1000*1000);
+	//_printf(0, 10, "attempting sockets !");
 
 	while (1)
 	{
@@ -229,7 +254,7 @@ static int wupserver_thread(void *arg)
 			serverListenClients();
 		else
 			break;
-		usleep(1000*1000);
+		MCP_usleep(1000*1000);
 	}
 
 	log_deinit();
