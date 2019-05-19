@@ -167,7 +167,7 @@ int Menu_Main(void)
 
 	if (launch)
 	{
-		console_print_pos(x_offset, y_offset, "Handing over control to IOSUHAX...");
+		console_print_pos(x_offset, y_offset, "Handing over control to uhshax...");
 		y_offset += 1;
 		if (usleep_TimeOut > 0)
 			os_usleep(usleep_TimeOut);

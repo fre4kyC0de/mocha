@@ -28,7 +28,8 @@
 #include <string.h>
 #include <errno.h>
 
-#include "../libs/libc.h"
+#include <stdio_addition.h>
+
 #include "logger.h"
 #include "dynamic_libs/os_functions.h"
 #include "dynamic_libs/socket_functions.h"

@@ -36,7 +36,7 @@ void InitAcquireNim(void)
 
 void InitNimFunctionPointers(void)
 {
-	u32 *funcPointer = 0;
+	//u32 *funcPointer = 0;
 
 	InitAcquireNim();
 }

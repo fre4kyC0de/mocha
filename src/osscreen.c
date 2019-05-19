@@ -30,13 +30,14 @@
 #include <stdio.h>
 #include <fcntl.h>
 
+#include <stdio_addition.h>
+
 #include "dynamic_libs/os_functions.h"
 #include "dynamic_libs/fs_functions.h"
 #include "dynamic_libs/gx2_functions.h"
 #include "dynamic_libs/sys_functions.h"
 #include "dynamic_libs/vpad_functions.h"
 #include "dynamic_libs/socket_functions.h"
-#include "../libs/libc.h"
 #include "version.h"
 #include "id.h"
 #include "osscreen.h"

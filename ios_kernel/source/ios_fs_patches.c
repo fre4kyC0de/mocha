@@ -40,7 +40,7 @@ u32 fs_get_phys_code_base(void)
 
 void fs_run_patches(u32 ios_elf_start)
 {
-	// write wupserver code and bss
+	// write ios_fs code and bss
 	section_write(ios_elf_start, ios_fs__text_start, (void*)fs_get_phys_code_base(), ios_fs__text_end - ios_fs__text_start);
 	section_write_bss(ios_elf_start, ios_fs__bss_start, ios_fs__bss_end - ios_fs__bss_start);
 

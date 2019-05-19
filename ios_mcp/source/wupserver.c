@@ -35,6 +35,7 @@
 #include "logger.h"
 #include "ipc.h"
 
+static int serverRunning;
 static int serverKilled;
 static int serverSocket;
 static u8 threadStack[0x1000] __attribute__((aligned(0x20)));
@@ -265,6 +266,7 @@ void wupserver_init(void)
 {
 	serverSocket = -1;
 	serverKilled = 0;
+	serverRunning = 1;
 
 	int threadId = svcCreateThread(wupserver_thread, 0, (u32*)(threadStack + sizeof(threadStack)), sizeof(threadStack), 0x78, 1);
 	if (threadId >= 0)
@@ -273,6 +275,9 @@ void wupserver_init(void)
 
 void wupserver_deinit(void)
 {
+	if (serverRunning == 0)
+		return;
+	
 	serverKilled = 1;
 	shutdown(serverSocket, SHUT_RDWR);
 }

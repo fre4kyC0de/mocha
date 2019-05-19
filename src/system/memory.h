@@ -24,6 +24,8 @@ extern "C" {
 
 #include <malloc.h>
 
+#include "dynamic_libs/os_types.h"
+
 void memoryInitialize(void);
 void memoryRelease(void);
 
