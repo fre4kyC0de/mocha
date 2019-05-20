@@ -50,6 +50,7 @@
 #include "ios_exploit.h"
 #include "id.h"
 #include "nnu.h"
+#include "dumper.h"
 
 #define	usleep_TimeOut	0
 //#define	usleep_TimeOut	1000000
@@ -200,6 +201,24 @@ int Menu_Main(void)
 		OSScreenShutdown();
 		free(screenBuffer);
 	}
+
+	/*DoMemoryDump(0x04000000, 0x30000, "sd:/IOS-CRYPTO.bin");
+	DoMemoryDump(0x05000000, 0xC0000, "sd:/IOS-MCP.bin");
+	DoMemoryDump(0x05100000, 0x20000, "sd:/IOS-MCP_D_R.bin");
+	DoMemoryDump(0x08120000, 0xA0000, "sd:/IOS-KERNEL.bin");
+	DoMemoryDump(0x0D400000, 0x10000, "sd:/BOOT1.bin");
+	DoMemoryDump(0x0D410000, 0x10000, "sd:/BOOT0.bin");
+	DoMemoryDump(0x10100000, 0x3D0000, "sd:/IOS-USB.bin");
+	DoMemoryDump(0x10700000, 0x1540000, "sd:/IOS-FS.bin");
+	DoMemoryDump(0x11F00000, 0x260000, "sd:/IOS-PAD.bin");
+	DoMemoryDump(0x12300000, 0x590000, "sd:/IOS-NET.bin");
+	DoMemoryDump(0xE0000000, 0x270000, "sd:/IOS-ACP.bin");
+	DoMemoryDump(0xE1000000, 0x2F0000, "sd:/IOS-NSEC.bin");
+	DoMemoryDump(0xE2000000, 0x6D0000, "sd:/IOS-NIM-BOSS.bin");
+	DoMemoryDump(0xE3000000, 0x300000, "sd:/IOS-FPD.bin");
+	DoMemoryDump(0xE4000000, 0x160000, "sd:/IOS-TEST.bin");
+	DoMemoryDump(0xE5000000, 0x70000, "sd:/IOS-AUXIL.bin");
+	DoMemoryDump(0xE6000000, 0x50000, "sd:/IOS-BSP.bin");*/
 
 	unmount_sd_fat("sd");
 
