@@ -275,9 +275,10 @@ void wupserver_init(void)
 
 void wupserver_deinit(void)
 {
-	if (serverRunning == 0)
+	if ((serverRunning == 0) || (serverKilled != 0))
 		return;
 	
 	serverKilled = 1;
+	serverRunning = 0;
 	shutdown(serverSocket, SHUT_RDWR);
 }
