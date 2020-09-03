@@ -65,6 +65,9 @@ void log_deinit()
 
 static void log_print(const char *str, int len)
 {
+	if (log_socket < 0)
+		return;
+
 	int ret;
 	while (len > 0)
 	{

@@ -42,6 +42,37 @@ void* IOSMCPPAYLOAD_memset(void* dst, int val, size_t size)
 	return i;
 }*/
 
+/*int IOSMCPPAYLOAD_strncmp(const char* s1, const char* s2, size_t n)
+{
+	while ( n && *s1 && ( *s1 == *s2 ) ) {
+		++s1;
+		++s2;
+		--n;
+	}
+	if ( n == 0 ) {
+		return 0;
+	} else {
+		return ( *(unsigned char*)s1 - *(unsigned char*)s2 );
+	}
+}*/
+
+/*// Function to implement strncat() function in C
+char* IOSMCPPAYLOAD_strncat(char* destination, const char* source, size_t num)
+{
+	// make ptr point to the end of destination string
+	char* ptr = destination + strlen(destination);
+
+	// Appends characters of source to the destination string
+	while (*source != '\0' && num--)
+		*ptr++ = *source++;
+
+	// null terminate destination string
+	*ptr = '\0';
+
+	// destination string is returned by standard strncat()
+	return destination;
+}*/
+
 char* IOSMCPPAYLOAD_strncpy(char* dst, const char* src, size_t size)
 {
 	for (int i = 0; i < size; i++)

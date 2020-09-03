@@ -220,6 +220,10 @@ int Menu_Main(void)
 	DoMemoryDump(0xE5000000, 0x70000, "sd:/IOS-AUXIL.bin");
 	DoMemoryDump(0xE6000000, 0x50000, "sd:/IOS-BSP.bin");*/
 
+	/*DoMemoryDump(0x01E70110, 4, "sd:/HaxChi_fromCBHC.bin");
+	DoMemoryDump(0x01E7010C, 4, "sd:/HaxChi_launchmode.bin");
+	DoMemoryDump(0x01E70108, 4, "sd:/HaxChi_titleprotID.bin");*/
+
 	unmount_sd_fat("sd");
 
 	return returnCode;

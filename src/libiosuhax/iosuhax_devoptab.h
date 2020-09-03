@@ -1,5 +1,5 @@
 /***************************************************************************
- * Copyright (C) 2016
+ * Copyright (C) 2015
  * by Dimok
  *
  * This software is provided 'as-is', without any express or implied
@@ -21,25 +21,22 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+#ifndef __IOSUHAX_DEVOPTAB_H_
+#define __IOSUHAX_DEVOPTAB_H_
 
-#ifndef IMPORTS_H
-#define IMPORTS_H
-
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include "../../src/dynamic_libs/os_types.h"
-
-#define	IOSMCP_SVC_BASE						((void*)0x050567EC)
-
-#define	IOSMCP_usleep						((void (*)(u32 time))0x050564E4)
-#define	IOSMCP_memcpy						((void* (*)(void*, const void*, u32))0x05054E54)
-#define	IOSMCP_vsnprintf					((int (*)(char * s, u32 n, const char * format, va_list arg))0x05055C40)
-
-void* IOSMCPPAYLOAD_memset(void* dst, int val, size_t size);
-//int IOSMCPPAYLOAD_strlen(const char* str);
-//int IOSMCPPAYLOAD_strncmp(const char* s1, const char* s2, size_t n);
-//char* IOSMCPPAYLOAD_strncat(char* destination, const char* source, size_t num);
-char* IOSMCPPAYLOAD_strncpy(char* dst, const char* src, size_t size);
-
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+//! virtual name example:   sd or odd (for sd:/ or odd:/ access)
+//! fsaFd:                  fd received by IOSUHAX_FSA_Open();
+//! dev_path:               (optional) if a device should be mounted to the mount_path. If NULL no IOSUHAX_FSA_Mount is not executed.
+//! mount_path:             path to map to virtual device name
+int mount_fs(const char *virt_name, int fsaFd, const char *dev_path, const char *mount_path);
+int unmount_fs(const char *virt_name);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // __IOSUHAX_DEVOPTAB_H_

@@ -39,7 +39,6 @@
 #include "dynamic_libs/vpad_functions.h"
 #include "dynamic_libs/socket_functions.h"
 #include "version.h"
-#include "id.h"
 #include "osscreen.h"
 
 void console_print_pos(int x, int y, const char *format, ...)
