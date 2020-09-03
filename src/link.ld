@@ -4,7 +4,7 @@ OUTPUT(mocha.elf);
 ENTRY(__entry_menu);
 
 SECTIONS {
-	. = 0x00800000;
+	. = 0x00802000;
 	.text : {
 		*(.kernel_code*);
 		*(.text*);
