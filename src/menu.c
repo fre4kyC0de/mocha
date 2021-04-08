@@ -152,26 +152,20 @@ int ShowMenu(cfw_config_t * currentConfig)
 		{
 			console_clear();
 
-			console_print_header();
-
-			console_print_pos(x_offset, 3, "Select your options and press A to launch.");
-			console_print_pos(x_offset, 4, "Press HOME to exit back to HBL.");
-			console_print_pos(x_offset, 5, "Hold B on start to force enter this menu");
-
-			int y_offset = 6;
+			console_print_line("Select your options and press A to launch.");
+			console_print_line("Press HOME to exit back to HBL.");
+			console_print_line("Hold B on start to force enter this menu");
 
 			for (int idx = 0; idx < option_count && idx < max_config_item; idx++)
 			{
 				if (selection_options[idx].pSetting != NULL)
-					console_print_pos(x_offset, y_offset++, "%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option,
-																						TEXT_SEL(*selection_options[idx].pSetting, "<", " "), selection_options[idx].enabled,  TEXT_SEL(*selection_options[idx].pSetting, ">", " "),
-																						TEXT_SEL(*selection_options[idx].pSetting, " ", "<"), selection_options[idx].disabled, TEXT_SEL(*selection_options[idx].pSetting, " ", ">"));
+					console_print_line("%s %-29s : %s%s%s %s%s%s", TEXT_SEL((selected == idx), "--->", "    "), selection_options[idx].option, TEXT_SEL(*selection_options[idx].pSetting, "<", " "), selection_options[idx].enabled,  TEXT_SEL(*selection_options[idx].pSetting, ">", " "), TEXT_SEL(*selection_options[idx].pSetting, " ", "<"), selection_options[idx].disabled, TEXT_SEL(*selection_options[idx].pSetting, " ", ">"));
 			}
 
-			y_offset += 1;
-			console_print_pos(x_offset, y_offset++, "Credits go to everyone who contributed to Wii U scene publicly");
-			console_print_pos(x_offset, y_offset++, "Special thanks to smealum, plutoo, yellows8, naehrwert and derrek");
-			console_print_pos(x_offset, y_offset++, "FSHax by Zarklord1 and Maschell; multiple small changes by fre4kyC0de");
+			console_print_line("");
+			console_print_line("Credits go to everyone who contributed to Wii U scene publicly");
+			console_print_line("Special thanks to smealum, plutoo, yellows8, naehrwert and derrek");
+			console_print_line("FSHax by Zarklord1 and Maschell");
 
 			refreshScreen = 0;
 		}

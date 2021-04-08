@@ -33,10 +33,9 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#define	x_offset	-2
-
-void console_print_pos(int x, int y, const char *format, ...);
-void console_print_header();
+void console_init();
+void console_deinit();
+void console_print_line(const char *format, ...);
 void console_clear();
 
 #endif

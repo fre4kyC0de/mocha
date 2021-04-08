@@ -87,27 +87,74 @@ int Menu_Main(void)
 		return 0;
 
 	// Init screen and screen buffers
-	int y_offset = 3;
-	OSScreenInit();
-	u32 screen_buf0_size = OSScreenGetBufferSizeEx(0);
-	u32 screen_buf1_size = OSScreenGetBufferSizeEx(1);
-	u8 * screenBuffer = (u8*) memalign(0x100, screen_buf0_size + screen_buf1_size);
-	OSScreenSetBufferEx(0, (void *)screenBuffer);
-	OSScreenSetBufferEx(1, (void *)(screenBuffer + screen_buf0_size));
-	OSScreenEnableEx(0, 1);
-	OSScreenEnableEx(1, 1);
-	// Clear screens
-	console_clear();
+	console_init();
 
-	console_print_header();
-
-	/*console_print_pos(x_offset, y_offset, "systemTitleId: %08X%08X", systemTitleId_high, systemTitleId_low);
-	y_offset += 1;
+	/*console_print_line("1");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("2");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("3");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("4");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("5");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("6");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("7");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("8");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("9");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("10");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("11");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("12");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("13");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("14");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("15");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("16");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("17");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("18");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("19");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);
+	console_print_line("20");
 	if (usleep_TimeOut > 0)
 		os_usleep(usleep_TimeOut);*/
 
-	console_print_pos(x_offset, y_offset, "Initializing VPAD...");
-	y_offset += 1;
+	/*console_print_line("systemTitleId: %08X%08X", systemTitleId_high, systemTitleId_low);
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);*/
+
+	console_print_line("Initializing VPAD...");
 	if (usleep_TimeOut > 0)
 		os_usleep(usleep_TimeOut);
 
@@ -123,15 +170,13 @@ int Menu_Main(void)
 			forceMenu = (vpad.btns_d | vpad.btns_h) & VPAD_BUTTON_B;
 	}
 
-	console_print_pos(x_offset, y_offset, "Mounting SD...");
-	y_offset += 1;
+	console_print_line("Mounting SD...");
 	if (usleep_TimeOut > 0)
 		os_usleep(usleep_TimeOut);
 
 	mount_sd_fat("sd");
 
-	console_print_pos(x_offset, y_offset, "Reading config...");
-	y_offset += 1;
+	console_print_line("Reading config...");
 	if (usleep_TimeOut > 0)
 		os_usleep(usleep_TimeOut);
 
@@ -148,14 +193,13 @@ int Menu_Main(void)
 	
 	if (launchable && (forceMenu || (config.directLaunch == 0)))
 	{
-		console_print_pos(x_offset, y_offset, "Displaying menu...");
-		y_offset += 1;
+		console_print_line("Displaying menu...");
+		if (usleep_TimeOut > 0)
+			os_usleep(usleep_TimeOut);
 
 		launch = ShowMenu(&config);
 
 		console_clear();
-		console_print_header();
-		y_offset = 3;
 		if (usleep_TimeOut > 0)
 			os_usleep(usleep_TimeOut);
 	} else
@@ -168,21 +212,18 @@ int Menu_Main(void)
 
 	if (launch)
 	{
-		console_print_pos(x_offset, y_offset, "Handing over control to uhshax...");
-		y_offset += 1;
+		console_print_line("Handing over control to uhshax...");
 		if (usleep_TimeOut > 0)
 			os_usleep(usleep_TimeOut);
 
 		int res = ExecuteIOSExploit(&config);
 		if (res == 0)
 		{
-			console_print_pos(x_offset, y_offset, "OSForceFullRelaunch()");
-			y_offset += 1;
+			console_print_line("OSForceFullRelaunch()");
 			if (usleep_TimeOut > 0)
 				os_usleep(usleep_TimeOut);
 
-			OSScreenShutdown();
-			free(screenBuffer);
+			console_deinit();
 
 			OSForceFullRelaunch();
 
@@ -198,8 +239,7 @@ int Menu_Main(void)
 	}
 	else
 	{
-		OSScreenShutdown();
-		free(screenBuffer);
+		console_deinit();
 	}
 
 	/*DoMemoryDump(0x04000000, 0x30000, "sd:/IOS-CRYPTO.bin");

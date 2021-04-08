@@ -41,22 +41,110 @@
 #include "version.h"
 #include "osscreen.h"
 
-void console_print_pos(int x, int y, const char *format, ...)
+void _console_print_pos(int x, int y, const char *format, ...);
+void _console_print_header();
+void _console_clear();
+void _flush_log();
+
+#define		console_x_offset		-2
+#define		console_y_offset		0
+#define		console_width			68	// -2 to 66 [was 79 in vanilla mocha code]
+#define		console_height			17	// 0 to 16
+#define		log_offset				2
+
+
+int console_initialized = 0;
+
+int current_log_position = 0;
+
+u8 * screenBuffer;
+
+char* log_content[console_height - log_offset];
+
+void console_init()
 {
+	OSScreenInit();
+	u32 screen_buf0_size = OSScreenGetBufferSizeEx(0);
+	u32 screen_buf1_size = OSScreenGetBufferSizeEx(1);
+	screenBuffer = (u8*) memalign(0x100, screen_buf0_size + screen_buf1_size);
+	OSScreenSetBufferEx(0, (void *)screenBuffer);
+	OSScreenSetBufferEx(1, (void *)(screenBuffer + screen_buf0_size));
+	OSScreenEnableEx(0, 1);
+	OSScreenEnableEx(1, 1);
+
+	_console_clear();
+	_flush_log();
+
+	console_initialized = 1;
+
+	_console_print_header();
+}
+
+void console_deinit()
+{
+	console_initialized = 0;
+
+	OSScreenShutdown();
+	free(screenBuffer);
+	screenBuffer = NULL;
+}
+
+void console_print_line(const char *format, ...)
+{
+	if (console_initialized == 0)
+		return;
+
 	char * tmp = NULL;
 
 	va_list va;
 	va_start(va, format);
 	if ((vasprintf(&tmp, format, va) >= 0) && tmp)
 	{
-		if (strlen(tmp) > 79)
-			tmp[79] = 0;
+		if (strlen(tmp) > console_width)
+			tmp[console_width] = '\0';
+
+		if ((log_offset + current_log_position) <= (console_height - 1)) {
+			_console_print_pos(0, (log_offset + current_log_position), "%s", tmp);
+			log_content[current_log_position] = tmp;
+			current_log_position += 1;
+		} else {
+			// shift upwards
+			for (int idx = 0; idx <= (((console_height - log_offset) - 1) - 1); idx++)
+				log_content[idx] = log_content[idx + 1];
+
+			// add new content
+			log_content[(console_height - log_offset) - 1] = tmp;
+
+			// print to screen
+			_console_clear();
+			_console_print_header();
+			for (int idx = 0; idx <= ((console_height - log_offset) - 1); idx++)
+				if (log_content[idx] != NULL)
+					_console_print_pos(0, (log_offset + idx), "%s", log_content[idx]);
+		}
+	}
+	va_end(va);
+}
+
+void _console_print_pos(int x, int y, const char *format, ...)
+{
+	if (console_initialized == 0)
+		return;
+
+	char * tmp = NULL;
+
+	va_list va;
+	va_start(va, format);
+	if ((vasprintf(&tmp, format, va) >= 0) && tmp)
+	{
+		if (strlen(tmp) > console_width)
+			tmp[console_width] = '\0';
 
 		for (int i = 0; i <= 1; i++)
 		{
 			// double-buffered
-			OSScreenPutFontEx(0, x, y, tmp);
-			OSScreenPutFontEx(1, x, y, tmp);
+			OSScreenPutFontEx(0, (console_x_offset + x), (console_y_offset + y), tmp);
+			OSScreenPutFontEx(1, (console_x_offset + x), (console_y_offset + y), tmp);
 			OSScreenFlipBuffersEx(0);
 			OSScreenFlipBuffersEx(1);
 		}
@@ -67,15 +155,20 @@ void console_print_pos(int x, int y, const char *format, ...)
 		free(tmp);
 }
 
-void console_print_header()
+void _console_print_header()
 {
+	if (console_initialized == 0)
+		return;
+
+	char* strHeader = "%s-- MOCHA CFW %s for 5.5.0 - 5.5.4 by Dimok --";
+
 	char* indent;
 	int indent_counter, indent_counter_bak;
-	
-	indent_counter = 68; // max_length = 69 - 1 (Abstand zum Rand einhalten)
-	indent_counter -= 35; // == strlen(TITLE)
+
+	indent_counter = (console_width - 1); // max_length = 68 - 1 (Abstand zum Rand einhalten)
+	indent_counter -= (strlen(strHeader) - (2 * strlen("%s"))); // == strlen(TITLE)
 	indent_counter -= strlen(APP_VERSION);
-	if ((indent_counter < 0) || (indent_counter > 68))
+	if ((indent_counter < 0) || (indent_counter > console_width))
 		indent_counter = 0;
 
 	indent_counter_bak = indent_counter;
@@ -83,16 +176,16 @@ void console_print_header()
 	if ((indent_counter * 2) > indent_counter_bak) // just to be sure
 		indent_counter -= 1;
 
-	indent = (char*)malloc(35); // 34 [== 68 / 2] + 1 ('\0')
-	memset(indent, '\0', 35);
-	if ((indent_counter > 0) && (indent_counter < 35))
+	indent = (char*)malloc(indent_counter + 1);
+	memset(indent, '\0', (indent_counter + 1));
+	if ((indent_counter > 0) && ((2 * indent_counter) < console_width))
 		for (int i = 0; i <= (indent_counter - 1); i++)
 			indent[i] = ' ';
 
-	console_print_pos(x_offset, 1, "%s-- MOCHA CFW %s for 5.5.x by Dimok --", indent, APP_VERSION);
+	_console_print_pos(0, 0, strHeader, indent, APP_VERSION);
 }
 
-void console_clear()
+void _console_clear()
 {
 	for (int i = 0; i <= 1; i++)
 	{
@@ -102,4 +195,20 @@ void console_clear()
 		OSScreenFlipBuffersEx(0);
 		OSScreenFlipBuffersEx(1);
 	}
+}
+void _flush_log() {
+	current_log_position = 0;
+	for (int idx = 0; idx <= ((console_height - log_offset) - 1); idx++)
+		log_content[idx] = NULL;
+}
+void console_clear()
+{
+	if (console_initialized == 0)
+		return;
+
+	_console_clear();
+
+	_flush_log();
+
+	_console_print_header();
 }
