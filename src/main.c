@@ -150,6 +150,10 @@ int Menu_Main(void)
 	if (usleep_TimeOut > 0)
 		os_usleep(usleep_TimeOut);*/
 
+	/*console_print_line("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+	if (usleep_TimeOut > 0)
+		os_usleep(usleep_TimeOut);*/
+
 	/*console_print_line("systemTitleId: %08X%08X", systemTitleId_high, systemTitleId_low);
 	if (usleep_TimeOut > 0)
 		os_usleep(usleep_TimeOut);*/

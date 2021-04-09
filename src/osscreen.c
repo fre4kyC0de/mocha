@@ -41,7 +41,7 @@
 #include "version.h"
 #include "osscreen.h"
 
-void _console_print_pos(int x, int y, const char *format, ...);
+void _console_print_pos(int x, int y, const char*format, ...);
 void _console_print_header();
 void _console_clear();
 void _flush_log();
@@ -97,19 +97,29 @@ void console_deinit()
 	screenBuffer = NULL;
 }
 
-void console_print_line(const char *format, ...)
+void console_print_line(const char*format, ...)
 {
 	if (console_initialized == 0)
 		return;
 
-	char * tmp = NULL;
+	char* tmp = NULL;
+	int tmp2_size = 0;
+	char* tmp2 = NULL;
 
 	va_list va;
 	va_start(va, format);
 	if ((vasprintf(&tmp, format, va) >= 0) && tmp)
 	{
 		if (strlen(tmp) > console_width)
-			tmp[console_width] = '\0';
+		{
+			tmp2_size = strlen(tmp) - console_width;
+			if (tmp2_size > 0) {
+				tmp2 = (char*)malloc(tmp2_size + 1);
+				memset(tmp2, '\0', (tmp2_size + 1));
+				memcpy(tmp2, ((char*)(tmp + (console_width * sizeof(char)))), tmp2_size);
+			}
+			tmp[(console_width - 1) + 1] = '\0';
+		}
 
 		if ((log_offset + current_log_position) <= (console_height - 1)) {
 			_console_print_pos(0, (log_offset + current_log_position), "%s", tmp);
@@ -134,21 +144,32 @@ void console_print_line(const char *format, ...)
 		}
 	}
 	va_end(va);
+	
+	if ((tmp2_size > 0) && (tmp2 != NULL))
+	{
+		console_print_line("%s", tmp2);
+		free(tmp2);
+	}
 }
 
-void _console_print_pos(int x, int y, const char *format, ...)
+void _console_print_pos(int x, int y, const char*format, ...)
 {
 	if (console_initialized == 0)
 		return;
 
-	char * tmp = NULL;
+	if ((x < 0) || (x > (console_width - 1)))
+		return;
+	if ((y < 0) || (y > (console_height - 1)))
+		return;
+
+	char* tmp = NULL;
 
 	va_list va;
 	va_start(va, format);
 	if ((vasprintf(&tmp, format, va) >= 0) && tmp)
 	{
-		if (strlen(tmp) > console_width)
-			tmp[console_width] = '\0';
+		if ((x + strlen(tmp)) > console_width)
+			tmp[((console_width - 1) - x) + 1] = '\0';
 
 		for (int i = 0; i <= 1; i++)
 		{
