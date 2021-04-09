@@ -63,6 +63,9 @@ char* log_content[console_height - log_offset];
 
 void console_init()
 {
+	if (console_initialized > 0)
+		return;
+
 	OSScreenInit();
 	u32 screen_buf0_size = OSScreenGetBufferSizeEx(0);
 	u32 screen_buf1_size = OSScreenGetBufferSizeEx(1);
@@ -82,7 +85,12 @@ void console_init()
 
 void console_deinit()
 {
+	if (console_initialized == 0)
+		return;
+
 	console_initialized = 0;
+
+	_flush_log(); // free "log_content[*]"
 
 	OSScreenShutdown();
 	free(screenBuffer);
@@ -109,6 +117,8 @@ void console_print_line(const char *format, ...)
 			current_log_position += 1;
 		} else {
 			// shift upwards
+			if (log_content[0] != NULL)
+				free(log_content[0]);
 			for (int idx = 0; idx <= (((console_height - log_offset) - 1) - 1); idx++)
 				log_content[idx] = log_content[idx + 1];
 
@@ -199,7 +209,12 @@ void _console_clear()
 void _flush_log() {
 	current_log_position = 0;
 	for (int idx = 0; idx <= ((console_height - log_offset) - 1); idx++)
-		log_content[idx] = NULL;
+	{
+		if (log_content[idx] != NULL) {
+			free(log_content[idx]);
+			log_content[idx] = NULL;
+		}
+	}
 }
 void console_clear()
 {
